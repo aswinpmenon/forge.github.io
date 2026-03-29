@@ -62,9 +62,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── BOTTOM NAV ──────────────────────────────────────── */
-.bnav{position:absolute;bottom:0;left:0;right:0;height:var(--nav-h);background:var(--bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 10px;z-index:200}
-.ni{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:8px 12px;border-radius:var(--radius-sm);background:none;border:none;color:var(--text3);min-width:60px;transition:color .2s;-webkit-tap-highlight-color:transparent}
-.ni.on{color:var(--text)}
+.bnav{position:absolute;left:12px;right:12px;bottom:10px;height:calc(var(--nav-h) - 8px);display:flex;align-items:center;justify-content:space-around;padding:8px;z-index:200;border:1px solid rgba(255,255,255,.08);border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.06));backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2);overflow:hidden}
+.bnav::before{content:'';position:absolute;inset:-35%;background:radial-gradient(160px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.24),transparent 58%);opacity:.28;transition:opacity .25s ease;pointer-events:none}
+.bnav.touching::before{opacity:.9}
+.ni{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:10px 14px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid transparent;color:rgba(255,255,255,.5);min-width:68px;transition:transform .22s ease,color .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.ni::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.2),transparent 58%);opacity:0;transition:opacity .22s ease;pointer-events:none}
+.ni.on{color:var(--text);background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.22)}
+.ni.on::before{opacity:1}
+.ni:active{transform:scale(.94)}
 .ni svg{width:20px;height:20px}
 .nl{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase}
 
@@ -81,11 +86,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .prow{display:flex;align-items:center;justify-content:space-between}
 .big-pct{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--text);letter-spacing:1px}
 .pct-lbl{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.ring-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s}
+.ring-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;z-index:2}
 .ring-btn:hover{border-color:var(--accent);background:var(--surface3)}
 .bar-track{height:3px;background:var(--border);border-radius:2px;margin-top:18px;overflow:hidden}
 .bar-fill{height:100%;background:var(--green);border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1)}
 .ghost{position:absolute;right:16px;top:14px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(255,255,255,.03);line-height:1;pointer-events:none;user-select:none}
+.dashboard-ghost{right:22px;top:10px;font-size:88px;color:rgba(255,255,255,.022)}
 
 /* ── MENU ────────────────────────────────────────────── */
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
@@ -218,6 +224,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .auth-card{width:min(100%,340px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px}
 .auth-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:3px;line-height:1}
 .auth-copy{font-size:13px;color:var(--text2);line-height:1.5;margin:12px 0 20px}
+.auth-actions{display:flex;flex-direction:column;gap:8px}
 .lbrand{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:4px}
 .ltrack{width:120px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
 .lfill{height:100%;background:var(--green);border-radius:2px;animation:lb 1.3s ease forwards}
@@ -244,6 +251,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
   </div>
 </div>
 
+<div class="auth-gate hidden" id="logout-gate">
+  <div class="auth-card">
+    <div class="phase">SESSION</div>
+    <div class="auth-title">LOG OUT?</div>
+    <div class="auth-copy">Your session will be removed from this device. You can sign back in any time with Google.</div>
+    <div class="auth-actions">
+      <button class="sbtn" onclick="signOutUser()">Yes, Log Out</button>
+      <button class="dbtn" onclick="toggleLogoutGate(false)">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════════ SCREEN: DASHBOARD ════════ -->
 <div class="screen" id="s-dashboard">
   <div class="topbar">
@@ -252,7 +271,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <button class="icon-btn" onclick="go('database')" title="Data Centre">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/><path d="M3 11v6c0 1.657 4.03 3 9 3s9-1.343 9-3v-6"/></svg>
       </button>
-      <button class="icon-btn" onclick="signOutUser()" title="Log Out">
+      <button class="icon-btn" onclick="toggleLogoutGate(true)" title="Log Out">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
       </button>
     </div>
@@ -261,7 +280,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
     <div class="phase">DASHBOARD_01</div>
     <div class="h1">WELCOME,<br><span id="dash-name">ATHLETE</span>.</div>
     <div class="pcard">
-      <div class="ghost">01</div>
+      <div class="ghost dashboard-ghost">01</div>
       <div class="pcard-lbl">DAILY PROGRESS</div>
       <div class="pcard-sub">METRIC SYNC: ACTIVE</div>
       <div class="prow">
@@ -283,7 +302,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       </div>
       <div class="mc" onclick="go('record-workout')">
         <div class="mc-arr"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-        <div class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg></div>
+        <div class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4"/><path d="M6 8v8"/><path d="M9 9h6"/><path d="M15 8v8"/><path d="M18 10v4"/><path d="M21 10v4"/></svg></div>
         <div class="mc-lbl">RECORD<br>WORKOUT</div>
       </div>
     </div>
@@ -301,7 +320,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
   <div class="bnav">
     <button class="ni on" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="nl">HOME</span></button>
     <button class="ni" onclick="go('record-calorie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><span class="nl">CALS</span></button>
-    <button class="ni" onclick="go('record-workout')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg><span class="nl">GYM</span></button>
+    <button class="ni" onclick="go('record-workout')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4"/><path d="M6 8v8"/><path d="M9 9h6"/><path d="M15 8v8"/><path d="M18 10v4"/><path d="M21 10v4"/></svg><span class="nl">GYM</span></button>
     <button class="ni" onclick="go('progress-weekly')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span class="nl">PROGRESS</span></button>
   </div>
 </div>
@@ -544,6 +563,32 @@ function updateUserUI(){
 }
 function toggleAuthGate(show){
   document.getElementById('auth-gate').classList.toggle('hidden',!show);
+  if(show) toggleLogoutGate(false);
+}
+function toggleLogoutGate(show){
+  document.getElementById('logout-gate').classList.toggle('hidden',!show);
+}
+function initGlassNav(){
+  const nav=document.querySelector('.bnav');
+  if(!nav || nav.dataset.glassInit==='1') return;
+  nav.dataset.glassInit='1';
+  const move=e=>{
+    const touch=e.touches?.[0];
+    const point=touch || e;
+    const rect=nav.getBoundingClientRect();
+    const x=((point.clientX-rect.left)/rect.width)*100;
+    const y=((point.clientY-rect.top)/rect.height)*100;
+    nav.style.setProperty('--mx',`${Math.max(0,Math.min(100,x))}%`);
+    nav.style.setProperty('--my',`${Math.max(0,Math.min(100,y))}%`);
+    nav.classList.add('touching');
+  };
+  const clear=()=>nav.classList.remove('touching');
+  nav.addEventListener('pointermove',move);
+  nav.addEventListener('pointerdown',move);
+  nav.addEventListener('pointerleave',clear);
+  nav.addEventListener('touchstart',move,{passive:true});
+  nav.addEventListener('touchmove',move,{passive:true});
+  nav.addEventListener('touchend',clear);
 }
 
 // ══════════════════════════════════════════════
@@ -839,6 +884,7 @@ async function signOutUser(){
   if(error){ toast('LOGOUT FAILED',false,true); return; }
   currentUser = null;
   updateUserUI();
+  toggleLogoutGate(false);
   toggleAuthGate(true);
   toast('LOGGED OUT',true);
 }
@@ -1294,6 +1340,7 @@ window.addEventListener('load',async ()=>{
       d.classList.add('is-active');
       CUR='dashboard';
       NAV_STACK=['dashboard'];
+      initGlassNav();
       updateUserUI();
       renderDash();
 
