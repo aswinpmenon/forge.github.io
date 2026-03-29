@@ -62,18 +62,18 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── BOTTOM NAV ──────────────────────────────────────── */
-.bnav{position:absolute;left:18px;right:18px;bottom:14px;height:auto;display:flex;align-items:center;justify-content:center;gap:14px;padding:12px 14px;z-index:200;border:1px solid rgba(255,255,255,.06);border-radius:999px;background:rgba(12,12,12,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 22px 44px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08);overflow:visible}
-.ni{--gradient-from:#a955ff;--gradient-to:#ea51ff;position:relative;display:flex;align-items:center;justify-content:center;width:60px;height:60px;cursor:pointer;border-radius:999px;background:#fff;border:none;color:#666;transition:width .45s cubic-bezier(.22,1,.36,1),transform .22s ease,box-shadow .35s ease,color .25s ease;-webkit-tap-highlight-color:transparent;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.28)}
-.ni::before{content:'';position:absolute;inset:0;border-radius:999px;background:linear-gradient(45deg,var(--gradient-from),var(--gradient-to));opacity:0;transition:opacity .35s ease}
-.ni::after{content:'';position:absolute;top:10px;left:12px;right:12px;bottom:-12px;border-radius:999px;background:linear-gradient(45deg,var(--gradient-from),var(--gradient-to));filter:blur(18px);opacity:0;transition:opacity .35s ease;z-index:-1}
-.ni.on,.ni:hover{width:148px;color:#fff;box-shadow:none}
-.ni.on::before,.ni:hover::before{opacity:1}
-.ni.on::after,.ni:hover::after{opacity:.55}
-.ni:active{transform:scale(.96)}
-.ni svg{width:22px;height:22px;position:relative;z-index:2;transition:transform .3s ease,opacity .3s ease}
-.ni.on svg,.ni:hover svg{transform:scale(0);opacity:0}
-.ni-label{position:absolute;z-index:2;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1.8px;text-transform:uppercase;transform:scale(.2);opacity:0;transition:transform .3s ease .12s,opacity .3s ease .12s;white-space:nowrap}
-.ni.on .ni-label,.ni:hover .ni-label{transform:scale(1);opacity:1}
+.bnav{position:absolute;left:18px;right:18px;bottom:14px;height:84px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;z-index:200;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -10px 18px rgba(255,255,255,.04);overflow:visible}
+.bnav::before{content:'';position:absolute;inset:6px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.03));opacity:.9;pointer-events:none}
+.bnav::after{content:'';position:absolute;left:14px;right:14px;top:8px;height:24px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0));opacity:.7;pointer-events:none}
+.ni{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;flex:1;height:62px;cursor:pointer;border-radius:999px;background:transparent;border:none;color:rgba(255,255,255,.58);transition:transform .3s ease,color .3s ease,-webkit-tap-highlight-color 0s;z-index:1;-webkit-tap-highlight-color:transparent}
+.ni::before{content:'';position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.12));box-shadow:0 10px 30px rgba(0,0,0,.18),inset 0 2px 0 rgba(255,255,255,.45),inset 0 -6px 12px rgba(255,255,255,.05);opacity:0;transform:scale(.72);transition:opacity .36s cubic-bezier(.22,1,.36,1),transform .36s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
+.ni::after{content:'';position:absolute;left:16px;right:16px;top:6px;height:14px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));opacity:0;transition:opacity .36s ease}
+.ni.on{color:#fff;transform:translateY(-12px)}
+.ni.on::before{opacity:1;transform:scale(1.05)}
+.ni.on::after{opacity:1}
+.ni:active{transform:translateY(-10px) scale(.97)}
+.ni svg{width:22px;height:22px;position:relative;z-index:2}
+.ni-label{position:relative;z-index:2;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
 
 /* ── TYPE ────────────────────────────────────────────── */
 .phase{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
@@ -532,7 +532,7 @@ let GOAL = 2400;
 let workbookName = 'architect_data.xlsx';
 let supabaseClient = null;
 let currentUser = null;
-const APP_VERSION = '1.4';
+const APP_VERSION = '1.5';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
 const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
@@ -574,28 +574,6 @@ function toggleAuthGate(show){
 }
 function toggleLogoutGate(show){
   document.getElementById('logout-gate').classList.toggle('hidden',!show);
-}
-function initGlassNav(){
-  const nav=document.querySelector('.bnav');
-  if(!nav || nav.dataset.glassInit==='1') return;
-  nav.dataset.glassInit='1';
-  const move=e=>{
-    const touch=e.touches?.[0];
-    const point=touch || e;
-    const rect=nav.getBoundingClientRect();
-    const x=((point.clientX-rect.left)/rect.width)*100;
-    const y=((point.clientY-rect.top)/rect.height)*100;
-    nav.style.setProperty('--mx',`${Math.max(0,Math.min(100,x))}%`);
-    nav.style.setProperty('--my',`${Math.max(0,Math.min(100,y))}%`);
-    nav.classList.add('touching');
-  };
-  const clear=()=>nav.classList.remove('touching');
-  nav.addEventListener('pointermove',move);
-  nav.addEventListener('pointerdown',move);
-  nav.addEventListener('pointerleave',clear);
-  nav.addEventListener('touchstart',move,{passive:true});
-  nav.addEventListener('touchmove',move,{passive:true});
-  nav.addEventListener('touchend',clear);
 }
 
 // ══════════════════════════════════════════════
@@ -1348,7 +1326,6 @@ window.addEventListener('load',async ()=>{
       d.classList.add('is-active');
       CUR='dashboard';
       NAV_STACK=['dashboard'];
-      initGlassNav();
       updateUserUI();
       renderDash();
 
