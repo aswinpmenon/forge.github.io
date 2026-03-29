@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ARCHITECT</title>
+<title>FORGE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
@@ -213,6 +213,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 /* ── LOADING ─────────────────────────────────────────── */
 .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:14px;transition:opacity .5s}
 .loading.gone{opacity:0;pointer-events:none}
+.auth-gate{position:fixed;inset:0;background:rgba(10,10,10,.98);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1001;gap:18px;padding:24px;text-align:center}
+.auth-gate.hidden{display:none}
+.auth-card{width:min(100%,340px);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 22px}
+.auth-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:3px;line-height:1}
+.auth-copy{font-size:13px;color:var(--text2);line-height:1.5;margin:12px 0 20px}
 .lbrand{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:4px}
 .ltrack{width:120px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
 .lfill{height:100%;background:var(--green);border-radius:2px;animation:lb 1.3s ease forwards}
@@ -225,22 +230,36 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 
 <!-- LOADING -->
 <div class="loading" id="loading">
-  <div class="lbrand">ARCHITECT</div>
+  <div class="lbrand">FORGE</div>
   <div class="ltrack"><div class="lfill"></div></div>
   <div class="lsub">SYNCING DATABASE…</div>
+</div>
+
+<div class="auth-gate hidden" id="auth-gate">
+  <div class="auth-card">
+    <div class="phase">AUTH</div>
+    <div class="auth-title">FORGE</div>
+    <div class="auth-copy">Sign in with Google to load your personal progress and keep your session active on this device.</div>
+    <button class="sbtn" onclick="signInWithGoogle()">Continue With Google</button>
+  </div>
 </div>
 
 <!-- ════════ SCREEN: DASHBOARD ════════ -->
 <div class="screen" id="s-dashboard">
   <div class="topbar">
-    <div class="brand"><div class="avatar">🧍</div>ARCHITECT</div>
-    <button class="icon-btn" onclick="go('database')" title="Data Centre">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/><path d="M3 11v6c0 1.657 4.03 3 9 3s9-1.343 9-3v-6"/></svg>
-    </button>
+    <div class="brand"><div class="avatar" id="nav-avatar">F</div>FORGE</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="icon-btn" onclick="go('database')" title="Data Centre">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/><path d="M3 11v6c0 1.657 4.03 3 9 3s9-1.343 9-3v-6"/></svg>
+      </button>
+      <button class="icon-btn" onclick="signOutUser()" title="Log Out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="18" height="18"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
+      </button>
+    </div>
   </div>
   <div class="scroll">
     <div class="phase">DASHBOARD_01</div>
-    <div class="h1">WELCOME,<br>ASWIN.</div>
+    <div class="h1">WELCOME,<br><span id="dash-name">ATHLETE</span>.</div>
     <div class="pcard">
       <div class="ghost">01</div>
       <div class="pcard-lbl">DAILY PROGRESS</div>
@@ -278,7 +297,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="mc-lbl">DAILY PROGRESS</div>
       <div class="fw-meta"><div class="fw-val" id="d-cal-today">0 KCAL</div><div class="fw-lbl">TODAY</div></div>
     </div>
-    <div class="dotrow"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
   </div>
   <div class="bnav">
     <button class="ni on" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="nl">HOME</span></button>
@@ -292,7 +310,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 <div class="screen" id="s-record-calorie">
   <div class="topbar">
     <button class="back-btn" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>BACK</button>
-    <div class="brand">ARCHITECT</div>
+    <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
   <div class="scroll">
@@ -334,7 +352,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 <div class="screen" id="s-record-workout">
   <div class="topbar">
     <button class="back-btn" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>BACK</button>
-    <div class="brand">ARCHITECT</div>
+    <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
   <div class="scroll">
@@ -365,7 +383,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 <div class="screen" id="s-progress-daily">
   <div class="topbar">
     <button class="back-btn" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>BACK</button>
-    <div class="brand">ARCHITECT</div>
+    <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
   <div class="scroll">
@@ -398,6 +416,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
         <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);padding:10px 0">No meals logged today.</div>
       </div>
     </div>
+    <button class="dbtn" onclick="clearProgress()">DELETE ALL PROGRESS</button>
   </div>
 </div>
 
@@ -405,7 +424,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 <div class="screen" id="s-progress-weekly">
   <div class="topbar">
     <button class="back-btn" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>BACK</button>
-    <div class="brand">ARCHITECT</div>
+    <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
   <div class="scroll">
@@ -438,7 +457,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 <div class="screen" id="s-database">
   <div class="topbar">
     <button class="back-btn" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>BACK</button>
-    <div class="brand">ARCHITECT</div>
+    <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
   <div class="scroll">
@@ -487,6 +506,7 @@ let DB = { calLog:[], workoutLog:[] };
 let GOAL = 2400;
 let workbookName = 'architect_data.xlsx';
 let supabaseClient = null;
+let currentUser = null;
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
 const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
@@ -507,6 +527,24 @@ function dow(iso){
 }
 function fmt(n){return Number(n).toLocaleString()}
 const TODAY = todayISO();
+
+function userDisplayName(user=currentUser){
+  if(!user) return 'ATHLETE';
+  const meta=user.user_metadata||{};
+  return meta.full_name || meta.name || user.email?.split('@')[0] || 'ATHLETE';
+}
+function userAvatarLabel(user=currentUser){
+  return userDisplayName(user).trim().charAt(0).toUpperCase() || 'F';
+}
+function updateUserUI(){
+  const nameEl=document.getElementById('dash-name');
+  if(nameEl) nameEl.textContent=userDisplayName();
+  const avatarEl=document.getElementById('nav-avatar');
+  if(avatarEl) avatarEl.textContent=userAvatarLabel();
+}
+function toggleAuthGate(show){
+  document.getElementById('auth-gate').classList.toggle('hidden',!show);
+}
 
 // ══════════════════════════════════════════════
 //  NAVIGATION  — fully rebuilt, race-condition free
@@ -764,7 +802,45 @@ function exportXLSX(){
 async function initSupabase(){
   if(!HAS_SUPABASE) return false;
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseClient.auth.onAuthStateChange((_event, session)=>{
+    currentUser = session?.user || null;
+    updateUserUI();
+    if(currentUser){
+      toggleAuthGate(false);
+      loadFromSupabase().catch(()=>toast('LOAD FAILED',false,true));
+    }else{
+      DB = {calLog:[], workoutLog:[]};
+      WB = buildStarterWB();
+      parseWB(WB);
+      renderDash();
+      renderDaily();
+      renderWeekly();
+      renderDB();
+      toggleAuthGate(true);
+    }
+  });
   return true;
+}
+async function signInWithGoogle(){
+  if(!supabaseClient){ toast('SUPABASE NOT READY',false,true); return; }
+  if(window.location.protocol === 'file:'){
+    toast('OPEN VIA HTTP OR GITHUB PAGES',false,true);
+    return;
+  }
+  const {error} = await supabaseClient.auth.signInWithOAuth({
+    provider:'google',
+    options:{ redirectTo: window.location.origin + window.location.pathname }
+  });
+  if(error) toast('LOGIN FAILED',false,true);
+}
+async function signOutUser(){
+  if(!supabaseClient) return;
+  const {error} = await supabaseClient.auth.signOut({scope:'local'});
+  if(error){ toast('LOGOUT FAILED',false,true); return; }
+  currentUser = null;
+  updateUserUI();
+  toggleAuthGate(true);
+  toast('LOGGED OUT',true);
 }
 async function loadFromSupabase(){
   if(!supabaseClient) return false;
@@ -786,6 +862,10 @@ async function loadFromSupabase(){
   GOAL = Number(goalRow?.value) || GOAL;
   if(!WB) WB = buildStarterWB();
   syncWB();
+  renderDash();
+  renderDaily();
+  renderWeekly();
+  renderDB();
   return true;
 }
 async function seedSupabaseFromDB(){
@@ -796,25 +876,25 @@ async function seedSupabaseFromDB(){
   ]);
   if(DB.calLog.length){
     const {error} = await supabaseClient.from('calorie_log').insert(DB.calLog.map(r=>({
-      id:r.ID, date:r.Date, day:r.Day, course:r.Course, calories_kcal:r.Calories_kcal,
+      owner_id:currentUser.id, id:r.ID, date:r.Date, day:r.Day, course:r.Course, calories_kcal:r.Calories_kcal,
       timestamp:r.Timestamp, location:r.Location || 'Home Office', notes:r.Notes || ''
     })));
     if(error) throw error;
   }
   if(DB.workoutLog.length){
     const {error} = await supabaseClient.from('workout_log').insert(DB.workoutLog.map(r=>({
-      id:r.ID, date:r.Date, day:r.Day, session_id:r.Session_ID, exercise:r.Exercise,
+      owner_id:currentUser.id, id:r.ID, date:r.Date, day:r.Day, session_id:r.Session_ID, exercise:r.Exercise,
       muscle_group:r.Muscle_Group, set_no:r.Set_No, weight_lbs:r.Weight_lbs, reps:r.Reps, notes:r.Notes || ''
     })));
     if(error) throw error;
   }
-  await supabaseClient.from('app_config').upsert([{setting:'Calorie_Goal_Daily', value:String(GOAL)}],{onConflict:'setting'});
+  await supabaseClient.from('app_config').upsert([{owner_id:currentUser.id, setting:'Calorie_Goal_Daily', value:String(GOAL)}],{onConflict:'owner_id,setting'});
   return true;
 }
 async function insertCalorieRow(row){
   if(!supabaseClient) return;
   const {error} = await supabaseClient.from('calorie_log').insert({
-    id:row.ID, date:row.Date, day:row.Day, course:row.Course, calories_kcal:row.Calories_kcal,
+    owner_id:currentUser.id, id:row.ID, date:row.Date, day:row.Day, course:row.Course, calories_kcal:row.Calories_kcal,
     timestamp:row.Timestamp, location:row.Location || 'Home Office', notes:row.Notes || ''
   });
   if(error) throw error;
@@ -822,10 +902,38 @@ async function insertCalorieRow(row){
 async function insertWorkoutRows(rows){
   if(!supabaseClient || !rows.length) return;
   const {error} = await supabaseClient.from('workout_log').insert(rows.map(r=>({
-    id:r.ID, date:r.Date, day:r.Day, session_id:r.Session_ID, exercise:r.Exercise,
+    owner_id:currentUser.id, id:r.ID, date:r.Date, day:r.Day, session_id:r.Session_ID, exercise:r.Exercise,
     muscle_group:r.Muscle_Group, set_no:r.Set_No, weight_lbs:r.Weight_lbs, reps:r.Reps, notes:r.Notes || ''
   })));
   if(error) throw error;
+}
+async function clearProgress(){
+  if(!window.confirm('Delete all saved progress? This will remove calorie and workout records from the database.')) return;
+  try{
+    if(HAS_SUPABASE && !supabaseClient) throw new Error('Supabase not connected');
+    if(supabaseClient){
+      const [{error: calErr}, {error: wkErr}] = await Promise.all([
+        supabaseClient.from('calorie_log').delete().gte('id',0),
+        supabaseClient.from('workout_log').delete().gte('id',0)
+      ]);
+      if(calErr || wkErr) throw (calErr || wkErr);
+    }
+    DB.calLog = [];
+    DB.workoutLog = [];
+    aDay = null;
+    aSets = {};
+    aSID = '';
+    syncWB();
+    try{ localStorage.removeItem('arch_wb'); }catch(e){}
+    renderDash();
+    renderDaily();
+    renderWeekly();
+    if(CUR==='database') renderDB();
+    toast('ALL PROGRESS DELETED',true);
+    setTimeout(()=>go('dashboard'),500);
+  }catch(e){
+    toast('DELETE FAILED',false,true);
+  }
 }
 async function importXLSX(inp){
   const f=inp.files[0]; if(!f) return;
@@ -1098,7 +1206,9 @@ function renderWeekly(){
 
 function renderDB(){
   const syncMsg = supabaseClient
-    ? 'SUPABASE BACKEND ACTIVE - LIVE DATABASE WRITES ON'
+    ? currentUser
+      ? 'SUPABASE ACTIVE - SYNCED AS ' + userDisplayName().toUpperCase()
+      : 'SUPABASE READY - SIGN IN REQUIRED'
     : HAS_SUPABASE
       ? 'SUPABASE CONFIGURED - CONNECTION FAILED'
       : 'SUPABASE NOT CONFIGURED - LOCAL DEMO MODE';
@@ -1157,8 +1267,19 @@ window.addEventListener('load',async ()=>{
     (async ()=>{
       try{
         const connected = await initSupabase();
-        if(connected) await loadFromSupabase();
-        else if(saved) parseWB(XLSX.read(saved,{type:'base64'}));
+        if(connected){
+          const {data:{session}} = await supabaseClient.auth.getSession();
+          currentUser = session?.user || null;
+          updateUserUI();
+          if(currentUser){
+            toggleAuthGate(false);
+            await loadFromSupabase();
+          }else{
+            WB = buildStarterWB();
+            parseWB(WB);
+            toggleAuthGate(true);
+          }
+        }else if(saved) parseWB(XLSX.read(saved,{type:'base64'}));
         else parseWB(buildStarterWB());
       }catch(e){
         try{
@@ -1173,6 +1294,7 @@ window.addEventListener('load',async ()=>{
       d.classList.add('is-active');
       CUR='dashboard';
       NAV_STACK=['dashboard'];
+      updateUserUI();
       renderDash();
 
       document.getElementById('loading').classList.add('gone');
