@@ -64,13 +64,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── BOTTOM NAV ──────────────────────────────────────── */
-.bnav{position:absolute;left:20px;right:20px;bottom:14px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px;z-index:200;border-radius:999px;background:#050505;border:1px solid #0d0d0d;box-shadow:0 14px 30px rgba(0,0,0,.48)}
-.ni{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;cursor:pointer;border-radius:999px;border:none;background:#131317;color:#8d8d92;transition:width .22s ease,background .22s ease,color .22s ease,transform .18s ease,padding .22s ease; padding:0;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.bnav{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;height:58px;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px;z-index:200;border-radius:999px;background:#050505;border:1px solid #0d0d0d;box-shadow:0 14px 30px rgba(0,0,0,.48);width:max-content}
+.ni{position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;flex:0 0 42px;cursor:pointer;border-radius:999px;border:none;background:#131317;color:#8d8d92;transition:width .22s ease,background .22s ease,color .22s ease,transform .18s ease,padding .22s ease; padding:0;overflow:hidden;-webkit-tap-highlight-color:transparent}
 .ni:active{transform:scale(.97)}
-.ni.on{width:94px;justify-content:flex-start;background:#1a1a1f;color:#fff;padding:0 14px 0 10px}
-.ni-icon{width:40px;height:40px;min-width:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9a9aa0;transition:color .22s ease}
-.ni.on .ni-icon{color:var(--green)}
-.ni-label{font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translateX(6px);transition:opacity .2s ease,transform .2s ease;display:block}
+.ni.on{width:122px;justify-content:flex-start;background:#1a1a1f;color:#fff;padding:0 16px 0 8px}
+.ni-icon{width:42px;height:42px;min-width:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9a9aa0;transition:background .22s ease,color .22s ease}
+.ni.on .ni-icon{background:var(--green);color:#050505}
+.ni-label{font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;letter-spacing:.2px;white-space:nowrap;opacity:0;transform:translateX(6px);transition:opacity .2s ease,transform .2s ease;display:block}
 .ni.on .ni-label{opacity:1;transform:translateX(0)}
 
 /* ── TYPE ────────────────────────────────────────────── */
@@ -525,7 +525,7 @@ let GOAL = 2400;
 let workbookName = 'architect_data.xlsx';
 let supabaseClient = null;
 let currentUser = null;
-const APP_VERSION = '1.8';
+const APP_VERSION = '1.9';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
 const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
@@ -631,7 +631,7 @@ function go(to,{direction=null,pushHistory=true}={}){
     toEl.classList.add('is-active');
 
     // Update bottom nav
-    const navMap = {dashboard:0,'record-calorie':1,'record-workout':2,'progress-weekly':3};
+    const navMap = {dashboard:0,'record-calorie':1,'record-workout':2,'progress-daily':3,'progress-weekly':3};
     document.querySelectorAll('.ni').forEach((n,i)=>n.classList.toggle('on',i===navMap[to]));
 
     // Cleanup after transition
