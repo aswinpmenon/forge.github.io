@@ -544,7 +544,7 @@ let supabaseClient = null;
 let currentUser = null;
 let aiFoodItems = [];
 let aiFoodPreviewUrl = '';
-const APP_VERSION = '2.1';
+const APP_VERSION = '2.2';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -1072,14 +1072,14 @@ async function analyzeFoodImage(input){
       confidence:item.confidence
     }));
     if(!aiFoodItems.length){
-      document.getElementById('aiFoodResults').textContent='No supported food items detected above 0.5 confidence.';
+      document.getElementById('aiFoodResults').textContent='No food items were confidently identified in this image.';
       return;
     }
     renderAiFoodResults();
     toast('AI ESTIMATE READY',true);
   }catch(e){
     aiFoodItems=[];
-    document.getElementById('aiFoodResults').textContent='AI analysis failed. Check the Flask backend and try again.';
+    document.getElementById('aiFoodResults').textContent='AI analysis failed. Check the Gemini backend and try again.';
     toast('AI ANALYSIS FAILED',false,true);
   }finally{
     input.value='';
