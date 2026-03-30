@@ -64,13 +64,14 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .scroll::-webkit-scrollbar{display:none}
 
 /* ── BOTTOM NAV ──────────────────────────────────────── */
-.bnav{position:absolute;left:20px;right:20px;bottom:14px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;z-index:200;border-radius:999px;background:#050505;border:1px solid #0d0d0d;box-shadow:0 14px 30px rgba(0,0,0,.48)}
-.ni{position:relative;display:flex;align-items:center;justify-content:center;width:48px;height:48px;flex:0 0 48px;cursor:pointer;border-radius:999px;border:none;background:#131317;color:#8d8d92;transition:width .22s ease,background .22s ease,color .22s ease,transform .18s ease;padding:0;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.bnav{position:absolute;left:20px;right:20px;bottom:14px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px;z-index:200;border-radius:999px;background:#050505;border:1px solid #0d0d0d;box-shadow:0 14px 30px rgba(0,0,0,.48)}
+.ni{position:relative;display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex:0 0 40px;cursor:pointer;border-radius:999px;border:none;background:#131317;color:#8d8d92;transition:width .22s ease,background .22s ease,color .22s ease,transform .18s ease,padding .22s ease; padding:0;overflow:hidden;-webkit-tap-highlight-color:transparent}
 .ni:active{transform:scale(.97)}
-.ni.on{width:92px;background:#141418;color:#fff}
-.ni-icon{width:48px;height:48px;min-width:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#9a9aa0;transition:background .22s ease,color .22s ease}
-.ni.on .ni-icon{background:var(--green);color:#050505}
-.ni-label{display:none}
+.ni.on{width:94px;justify-content:flex-start;background:#1a1a1f;color:#fff;padding:0 14px 0 10px}
+.ni-icon{width:40px;height:40px;min-width:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9a9aa0;transition:color .22s ease}
+.ni.on .ni-icon{color:var(--green)}
+.ni-label{font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translateX(6px);transition:opacity .2s ease,transform .2s ease;display:block}
+.ni.on .ni-label{opacity:1;transform:translateX(0)}
 
 /* ── TYPE ────────────────────────────────────────────── */
 .phase{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:24px;margin-bottom:4px}
@@ -285,7 +286,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="prow">
         <div>
           <div class="big-pct" id="d-pct">—%</div>
-          <div class="pct-lbl">COMPLETION RATE</div>
+          <div class="pct-lbl">COMPLETION RATE • <span id="d-pct-cals">0 KCAL</span></div>
         </div>
         <div class="ring-btn" onclick="go('progress-daily')">
           <i class="fa-solid fa-bolt"></i>
@@ -310,17 +311,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="mc-lbl">WEEKLY PROGRESS</div>
       <div class="fw-meta"><div class="fw-val" id="d-wvol">—%</div><div class="fw-lbl">VS LAST WEEK</div></div>
     </div>
-    <div class="mc fw" onclick="go('progress-daily')">
-      <div class="mc-icon"><i class="fa-solid fa-calendar-days"></i></div>
-      <div class="mc-lbl">DAILY PROGRESS</div>
-      <div class="fw-meta"><div class="fw-val" id="d-cal-today">0 KCAL</div><div class="fw-lbl">TODAY</div></div>
-    </div>
-  </div>
-  <div class="bnav">
-    <button class="ni on" onclick="go('dashboard')"><span class="ni-icon"><i class="fa-solid fa-house"></i></span><span class="ni-label">Home</span></button>
-    <button class="ni" onclick="go('record-calorie')"><span class="ni-icon"><i class="fa-solid fa-fire-flame-curved"></i></span><span class="ni-label">Cals</span></button>
-    <button class="ni" onclick="go('record-workout')"><span class="ni-icon"><i class="fa-solid fa-dumbbell"></i></span><span class="ni-label">Gym</span></button>
-    <button class="ni" onclick="go('progress-weekly')"><span class="ni-icon"><i class="fa-solid fa-chart-line"></i></span><span class="ni-label">Progress</span></button>
   </div>
 </div>
 
@@ -331,11 +321,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
     <div class="brand">FORGE</div>
     <div style="width:36px"></div>
   </div>
-  <div class="scroll">
+  <div class="scroll" style="padding:0 16px calc(var(--nav-h) + 8px)">
     <div class="phase">PHASE 01</div>
-    <div class="h1b">LOG DATA.</div>
-    <div class="desc">Precision tracking for metabolic optimization. Input nutritional metrics below.</div>
-    <div class="fb">
+    <div class="h1b" style="font-size:42px;margin-bottom:4px">LOG DATA.</div>
+    <div class="desc" style="margin-bottom:14px;font-size:12px">Precision tracking for metabolic optimization. Input nutritional metrics below.</div>
+    <div class="fb" style="padding:14px;margin-bottom:10px">
       <span class="flbl">SELECT COURSE</span>
       <div class="cgrid">
         <button class="cbtn sel" id="cb-b" onclick="selCourse(this,'Breakfast')"><i class="fa-solid fa-mug-saucer"></i><span class="cbtn-lbl">BREAKFAST</span></button>
@@ -344,25 +334,24 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
         <button class="cbtn" id="cb-s" onclick="selCourse(this,'Snack')"><i class="fa-solid fa-cookie-bite"></i><span class="cbtn-lbl">SNACK</span></button>
       </div>
     </div>
-    <div class="fb">
+    <div class="fb" style="padding:14px;margin-bottom:10px">
       <span class="flbl">CALORIC VALUE (KCAL)</span>
-      <div class="cal-disp-wrap">
-        <div class="cal-disp" id="calDisp">0000</div>
+      <div class="cal-disp-wrap" style="padding:16px">
+        <div class="cal-disp" id="calDisp" style="font-size:52px;min-height:60px">0000</div>
         <div class="cal-unit">KILOCALORIES</div>
       </div>
-      <div class="npad">
-        <button class="nb" onclick="np('1')">1</button><button class="nb" onclick="np('2')">2</button><button class="nb" onclick="np('3')">3</button>
-        <button class="nb" onclick="np('4')">4</button><button class="nb" onclick="np('5')">5</button><button class="nb" onclick="np('6')">6</button>
-        <button class="nb" onclick="np('7')">7</button><button class="nb" onclick="np('8')">8</button><button class="nb" onclick="np('9')">9</button>
-        <button class="nb z2" onclick="np('0')">0</button><button class="nb del" onclick="nd()">⌫</button>
+      <div class="npad" style="gap:6px;margin-top:10px">
+        <button class="nb" style="padding:11px;font-size:20px" onclick="np('1')">1</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('2')">2</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('3')">3</button>
+        <button class="nb" style="padding:11px;font-size:20px" onclick="np('4')">4</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('5')">5</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('6')">6</button>
+        <button class="nb" style="padding:11px;font-size:20px" onclick="np('7')">7</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('8')">8</button><button class="nb" style="padding:11px;font-size:20px" onclick="np('9')">9</button>
+        <button class="nb z2" style="padding:11px;font-size:20px" onclick="np('0')">0</button><button class="nb del" style="padding:11px" onclick="nd()">⌫</button>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-bottom:14px">
-      <div class="fb" style="flex:1;margin-bottom:0"><span class="flbl">TIME</span><div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--text)" id="cal-time">—</div></div>
-      <div class="fb" style="flex:1;margin-bottom:0"><span class="flbl">DATE</span><div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--text)" id="cal-date">—</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <div class="fb" style="flex:1;margin-bottom:0;padding:12px"><span class="flbl">TIME</span><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text)" id="cal-time">—</div></div>
+      <div class="fb" style="flex:1;margin-bottom:0;padding:12px"><span class="flbl">DATE</span><div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--text)" id="cal-date">—</div></div>
     </div>
-    <button class="sbtn" onclick="submitCal()">COMMIT RECORD <i class="fa-solid fa-arrow-right"></i></button>
-    <div class="dotrow" style="margin-top:10px"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <button class="sbtn" style="padding:15px" onclick="submitCal()">COMMIT RECORD <i class="fa-solid fa-arrow-right"></i></button>
   </div>
 </div>
 
@@ -516,6 +505,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
   </div>
 </div>
 
+<div class="bnav">
+  <button class="ni on" onclick="go('dashboard')"><span class="ni-icon"><i class="fa-solid fa-house"></i></span><span class="ni-label">Home</span></button>
+  <button class="ni" onclick="go('record-calorie')"><span class="ni-icon"><i class="fa-solid fa-fire-flame-curved"></i></span><span class="ni-label">Cals</span></button>
+  <button class="ni" onclick="go('record-workout')"><span class="ni-icon"><i class="fa-solid fa-dumbbell"></i></span><span class="ni-label">Gym</span></button>
+  <button class="ni" onclick="go('progress-weekly')"><span class="ni-icon"><i class="fa-solid fa-chart-line"></i></span><span class="ni-label">Progress</span></button>
+</div>
+
 <div class="toast" id="toast"></div>
 </div>
 
@@ -529,7 +525,7 @@ let GOAL = 2400;
 let workbookName = 'architect_data.xlsx';
 let supabaseClient = null;
 let currentUser = null;
-const APP_VERSION = '1.7';
+const APP_VERSION = '1.8';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
 const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
@@ -1171,8 +1167,8 @@ function weekCals(off=0){ return weekDates(off).map(d=>DB.calLog.filter(r=>r.Dat
 function renderDash(){
   const c=todayCals(), p=Math.min(Math.round(c/GOAL*100),100);
   document.getElementById('d-pct').textContent=p+'%';
+  document.getElementById('d-pct-cals').textContent=fmt(c)+' KCAL';
   document.getElementById('d-bar').style.width=p+'%';
-  document.getElementById('d-cal-today').textContent=fmt(c)+' KCAL';
   const tw=weekCals(0), lw=weekCals(-7);
   if(lw>0){ const ch=Math.round((tw-lw)/lw*100); document.getElementById('d-wvol').textContent=(ch>=0?'+':'')+ch+'%'; }
   else document.getElementById('d-wvol').textContent=tw>0?'NEW WEEK':'—';
