@@ -166,17 +166,38 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .wk-select:focus{border-color:var(--accent)}
 .wk-add-row{display:flex;gap:8px;align-items:center}
 .wk-add-btn{width:auto;flex-shrink:0;padding:14px 18px}
+.timer-fab{position:absolute;right:18px;bottom:calc(var(--nav-h) + 24px);width:58px;height:58px;border-radius:50%;border:none;background:var(--green);color:#050505;box-shadow:0 16px 34px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:250}
+.timer-modal{position:fixed;inset:0;background:rgba(5,5,5,.86);display:flex;align-items:center;justify-content:center;padding:22px;z-index:1200;opacity:0;pointer-events:none;transition:opacity .24s ease}
+.timer-modal.show{opacity:1;pointer-events:auto}
+.timer-panel{width:min(100%,360px);background:var(--surface);border:1px solid var(--border2);border-radius:22px;padding:22px 18px 18px;box-shadow:0 20px 48px rgba(0,0,0,.55)}
+.timer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
+.timer-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;line-height:1}
+.timer-copy{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.timer-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.timer-field{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px}
+.timer-field span{display:block;font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.timer-input{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px}
+.timer-presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.timer-chip{padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer}
+.timer-status{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1px;text-transform:uppercase;min-height:16px;margin-bottom:12px}
+.timer-actions{display:flex;gap:8px}
+.timer-actions .sbtn{padding:14px}
 .restcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;margin-bottom:12px}
 .restcard .ri{font-size:36px;margin-bottom:14px}
 .restcard .rl{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--text3);margin-bottom:8px}
 .restcard .rs{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:1px}
 .excard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;border-left:2px solid var(--border2)}
-.exhdr{padding:14px 16px 12px;border-bottom:1px solid var(--border)}
+.exhdr{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .exname{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.5px;color:var(--text);margin-bottom:5px}
+.exmeta{display:flex;flex-direction:column;gap:5px}
+.extrash{width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .extag{display:inline-flex;padding:2px 8px;border-radius:3px;background:var(--surface2);border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
 .sethdr{display:grid;grid-template-columns:30px 1fr 76px 68px;gap:8px;padding:7px 16px;font-family:'Space Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
-.setrow{display:grid;grid-template-columns:30px 1fr 76px 68px;gap:8px;padding:9px 16px;align-items:center;border-bottom:1px solid var(--border)}
-.setrow:last-of-type{border-bottom:none}
+.setswipe{position:relative;overflow:hidden;border-bottom:1px solid var(--border);touch-action:pan-y}
+.setswipe:last-of-type{border-bottom:none}
+.setswipe.show-delete .setrow{transform:translateX(-72px)}
+.setrow{display:grid;grid-template-columns:30px 1fr 76px 68px;gap:8px;padding:9px 16px;align-items:center;background:var(--surface);position:relative;z-index:2;transition:transform .2s ease}
+.setdelete{position:absolute;right:0;top:0;bottom:0;width:72px;border:none;background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;z-index:1}
 .setnum{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--text2)}
 .setprev{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3)}
 .si{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 8px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:var(--text);text-align:center;outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none}
@@ -235,6 +256,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{border-color:rgba(200,255,0,.4);color:var(--green)}
 .toast.err{border-color:rgba(255,68,68,.4);color:var(--red)}
+.confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1300}
+.confetti-piece{position:absolute;top:-24px;width:10px;height:18px;border-radius:3px;animation:confetti-fall 2.8s linear forwards}
+@keyframes confetti-fall{to{transform:translateY(115vh) rotate(720deg);opacity:.2}}
 
 /* ── LOADING ─────────────────────────────────────────── */
 .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:14px;transition:opacity .5s}
@@ -391,7 +415,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
   </div>
   <div class="scroll">
     <div class="sid-row">
-      <div><div class="h1b" style="margin-bottom:2px">RECORD</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px">SELECT A SPLIT. DAY LOGS AUTOMATICALLY.</div></div>
+      <div><div class="h1b" style="margin-bottom:2px">WORKOUT</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px">SELECT A SPLIT. DAY LOGS AUTOMATICALLY.</div></div>
       <div class="sid">AUTO DAY<br><span id="wk-auto-day">—</span><br>SESSION ID<br><span id="sid-val">#ARC-—</span></div>
     </div>
     <div class="wk-grid" id="wk-split-grid">
@@ -404,6 +428,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
     </div>
     <div id="wk-content"></div>
   </div>
+  <button class="timer-fab" onclick="openRestTimer()" aria-label="Open rest timer"><i class="fa-regular fa-clock"></i></button>
 </div>
 
 <!-- ════════ SCREEN: DAILY PROGRESS ════════ -->
@@ -533,6 +558,33 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="timer-modal" id="timer-modal">
+  <div class="timer-panel">
+    <div class="timer-head">
+      <div>
+        <div class="timer-title" id="timer-display">00:00</div>
+        <div class="timer-copy">REST TIMER</div>
+      </div>
+      <button class="icon-btn" onclick="closeRestTimer()" aria-label="Close rest timer"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="timer-grid">
+      <label class="timer-field"><span>Minutes</span><input id="timer-minutes" class="timer-input" type="number" min="0" max="59" value="1"></label>
+      <label class="timer-field"><span>Seconds</span><input id="timer-seconds" class="timer-input" type="number" min="0" max="59" value="30"></label>
+    </div>
+    <div class="timer-presets">
+      <button class="timer-chip" onclick="setTimerPreset(30)">30 sec</button>
+      <button class="timer-chip" onclick="setTimerPreset(60)">1 min</button>
+      <button class="timer-chip" onclick="setTimerPreset(90)">90 sec</button>
+      <button class="timer-chip" onclick="setTimerPreset(120)">2 min</button>
+    </div>
+    <div class="timer-status" id="timer-status">Ready for next set</div>
+    <div class="timer-actions">
+      <button class="sbtn" onclick="startRestTimer()">Start Timer</button>
+      <button class="dbtn" style="margin-top:0" onclick="resetRestTimer()">Reset</button>
+    </div>
+  </div>
+</div>
+<div class="confetti-layer" id="confetti-layer"></div>
 </div>
 
 <script>
@@ -547,7 +599,10 @@ let supabaseClient = null;
 let currentUser = null;
 let aiFoodItems = [];
 let aiFoodPreviewUrl = '';
-const APP_VERSION = '2.4';
+let timerInterval = null;
+let timerRemainingMs = 0;
+let timerEndAt = 0;
+const APP_VERSION = '2.5';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -1236,16 +1291,43 @@ function renderWK(d){
       <button class="dbtn" onclick="discardSess()">DISCARD WORKOUT</button>`;
   el.innerHTML=h;
 }
+function findPreviousWeight(exerciseName,setNo){
+  const match=[...DB.workoutLog]
+    .filter(r=>String(r.Exercise||'').trim().toUpperCase()===String(exerciseName||'').trim().toUpperCase() && Number(r.Set_No)===Number(setNo) && Number(r.Weight_lbs)>0)
+    .sort((a,b)=>{
+      const dateCmp=String(b.Date||'').localeCompare(String(a.Date||''));
+      if(dateCmp!==0) return dateCmp;
+      return Number(b.ID||0)-Number(a.ID||0);
+    })[0];
+  if(!match) return '—';
+  const value=Number(match.Weight_lbs);
+  return `${value % 1 === 0 ? value.toFixed(0) : value.toFixed(1)} kg`;
+}
+function removeExercise(index){
+  aPlan.splice(index,1);
+  const nextSets={};
+  Object.keys(aSets).forEach(key=>{
+    const num=Number(key);
+    if(num<index) nextSets[num]=aSets[num];
+    if(num>index) nextSets[num-1]=aSets[num];
+  });
+  aSets=nextSets;
+  renderWK(aDay);
+  toast('EXERCISE REMOVED',true);
+}
 function buildEC(e,i){
   let rows=(aSets[i]||[{lbs:'',reps:''}]).map((s,si)=>`
-    <div class="setrow">
-      <div class="setnum">${si+1}</div><div class="setprev">—</div>
-      <input class="si" type="number" placeholder="${e.r.split('–')[0]}" inputmode="decimal" value="${s.lbs}" oninput="ss(${i},${si},'lbs',this.value)">
-      <input class="si" type="number" placeholder="${e.r.split('–')[0]}" inputmode="decimal" value="${s.reps}" oninput="ss(${i},${si},'reps',this.value)">
+    <div class="setswipe" id="setswipe-${i}-${si}" ontouchstart="setSwipeStart(event,${i},${si})" ontouchmove="setSwipeMove(event,${i},${si})" ontouchend="setSwipeEnd(event,${i},${si})">
+      <div class="setrow">
+        <div class="setnum">${si+1}</div><div class="setprev">${findPreviousWeight(e.n,si+1)}</div>
+        <input class="si" type="number" step="0.5" placeholder="kg" inputmode="decimal" value="${s.lbs}" oninput="ss(${i},${si},'lbs',this.value)">
+        <input class="si" type="number" placeholder="${e.r.split('–')[0]}" inputmode="decimal" value="${s.reps}" oninput="ss(${i},${si},'reps',this.value)">
+      </div>
+      <button class="setdelete" onclick="deleteSet(${i},${si})">Delete</button>
     </div>`).join('');
   return `<div class="excard" id="ec-${i}">
-    <div class="exhdr"><div class="exname">${e.n}</div><span class="extag">${e.t}</span></div>
-    <div class="sethdr"><div>SET</div><div>PREV</div><div>LBS</div><div>REPS</div></div>
+    <div class="exhdr"><div class="exmeta"><div class="exname">${e.n}</div><span class="extag">${e.t}</span></div><button class="extrash" onclick="removeExercise(${i})" aria-label="Remove exercise"><i class="fa-solid fa-trash"></i></button></div>
+    <div class="sethdr"><div>SET</div><div>PREV</div><div>KG</div><div>REPS</div></div>
     ${rows}
     <button class="addbtn" onclick="addS(${i},'${e.r}')"><i class="fa-solid fa-plus"></i>ADD SET</button>
   </div>`;
@@ -1256,10 +1338,36 @@ function addS(ei,rStr){
   aSets[ei].push({lbs:'',reps:''});
   const si=aSets[ei].length-1, ph=rStr.split('–')[0];
   document.getElementById('ec-'+ei).querySelector('.addbtn').insertAdjacentHTML('beforebegin',
-    `<div class="setrow"><div class="setnum">${si+1}</div><div class="setprev">—</div>
-     <input class="si" type="number" placeholder="${ph}" inputmode="decimal" oninput="ss(${ei},${si},'lbs',this.value)">
+    `<div class="setswipe" id="setswipe-${ei}-${si}" ontouchstart="setSwipeStart(event,${ei},${si})" ontouchmove="setSwipeMove(event,${ei},${si})" ontouchend="setSwipeEnd(event,${ei},${si})"><div class="setrow"><div class="setnum">${si+1}</div><div class="setprev">${findPreviousWeight(aPlan[ei].n,si+1)}</div>
+     <input class="si" type="number" step="0.5" placeholder="kg" inputmode="decimal" oninput="ss(${ei},${si},'lbs',this.value)">
      <input class="si" type="number" placeholder="${ph}" inputmode="decimal" oninput="ss(${ei},${si},'reps',this.value)">
-     </div>`);
+     </div><button class="setdelete" onclick="deleteSet(${ei},${si})">Delete</button></div>`);
+}
+function deleteSet(exerciseIndex,setIndex){
+  if(!aSets[exerciseIndex]) return;
+  aSets[exerciseIndex].splice(setIndex,1);
+  if(!aSets[exerciseIndex].length) aSets[exerciseIndex]=[{lbs:'',reps:''}];
+  renderWK(aDay);
+}
+function setSwipeStart(event,exerciseIndex,setIndex){
+  const el=document.getElementById(`setswipe-${exerciseIndex}-${setIndex}`);
+  if(!el) return;
+  el.dataset.startX=String(event.changedTouches[0].clientX);
+}
+function setSwipeMove(event,exerciseIndex,setIndex){
+  const el=document.getElementById(`setswipe-${exerciseIndex}-${setIndex}`);
+  if(!el || !el.dataset.startX) return;
+  const delta=event.changedTouches[0].clientX-Number(el.dataset.startX);
+  if(delta < -36) el.classList.add('show-delete');
+  if(delta > 24) el.classList.remove('show-delete');
+}
+function setSwipeEnd(event,exerciseIndex,setIndex){
+  const el=document.getElementById(`setswipe-${exerciseIndex}-${setIndex}`);
+  if(!el || !el.dataset.startX) return;
+  const delta=event.changedTouches[0].clientX-Number(el.dataset.startX);
+  if(delta < -36) el.classList.add('show-delete');
+  if(delta > -20) el.classList.remove('show-delete');
+  delete el.dataset.startX;
 }
 function escapeAttr(v){ return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function prettyGroupLabel(group){
@@ -1317,6 +1425,78 @@ function discardSess(){
   document.getElementById('sid-val').textContent='#ARC-—';
   document.querySelectorAll('#wk-split-grid .wk-card').forEach(card=>card.classList.remove('sel'));
   toast('WORKOUT DISCARDED');
+}
+function openRestTimer(){
+  document.getElementById('timer-modal').classList.add('show');
+  updateTimerDisplay(timerRemainingMs || getTimerInputMs());
+}
+function closeRestTimer(){
+  document.getElementById('timer-modal').classList.remove('show');
+}
+function getTimerInputMs(){
+  const minutes=Math.max(0,parseInt(document.getElementById('timer-minutes').value||'0',10)||0);
+  const seconds=Math.max(0,parseInt(document.getElementById('timer-seconds').value||'0',10)||0);
+  return ((minutes*60)+seconds)*1000;
+}
+function updateTimerDisplay(ms){
+  const totalSeconds=Math.max(0,Math.ceil(ms/1000));
+  const minutes=Math.floor(totalSeconds/60);
+  const seconds=totalSeconds%60;
+  document.getElementById('timer-display').textContent=`${S(minutes)}:${S(seconds)}`;
+}
+function setTimerPreset(seconds){
+  document.getElementById('timer-minutes').value=String(Math.floor(seconds/60));
+  document.getElementById('timer-seconds').value=String(seconds%60);
+  timerRemainingMs=seconds*1000;
+  updateTimerDisplay(timerRemainingMs);
+}
+function startRestTimer(){
+  clearInterval(timerInterval);
+  timerRemainingMs=getTimerInputMs();
+  if(timerRemainingMs<=0){
+    toast('SET A TIMER',false,true);
+    return;
+  }
+  timerEndAt=Date.now()+timerRemainingMs;
+  document.getElementById('timer-status').textContent='Timer running';
+  updateTimerDisplay(timerRemainingMs);
+  timerInterval=setInterval(()=>{
+    timerRemainingMs=Math.max(0,timerEndAt-Date.now());
+    updateTimerDisplay(timerRemainingMs);
+    if(timerRemainingMs<=0){
+      clearInterval(timerInterval);
+      timerInterval=null;
+      timerFinished();
+    }
+  },250);
+}
+function resetRestTimer(){
+  clearInterval(timerInterval);
+  timerInterval=null;
+  timerRemainingMs=getTimerInputMs();
+  updateTimerDisplay(timerRemainingMs);
+  document.getElementById('timer-status').textContent='Ready for next set';
+}
+function timerFinished(){
+  document.getElementById('timer-status').textContent='Rest complete';
+  if(navigator.vibrate) navigator.vibrate([250,120,250]);
+  launchConfetti();
+  toast('REST COMPLETE',true);
+}
+function launchConfetti(){
+  const layer=document.getElementById('confetti-layer');
+  layer.innerHTML='';
+  const colors=['#c8ff00','#ffffff','#ff6b6b','#4ecdc4','#ffd166'];
+  for(let i=0;i<28;i++){
+    const piece=document.createElement('div');
+    piece.className='confetti-piece';
+    piece.style.left=`${Math.random()*100}%`;
+    piece.style.background=colors[i%colors.length];
+    piece.style.transform=`translateY(-20px) rotate(${Math.random()*180}deg)`;
+    piece.style.animationDelay=`${Math.random()*0.4}s`;
+    layer.appendChild(piece);
+  }
+  setTimeout(()=>{ layer.innerHTML=''; },3200);
 }
 
 // ══════════════════════════════════════════════
