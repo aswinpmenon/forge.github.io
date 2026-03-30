@@ -156,6 +156,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .chev.open{transform:rotate(180deg)}
 
 /* ── WORKOUT ─────────────────────────────────────────── */
+.wk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.wk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px;text-align:left;cursor:pointer;transition:border-color .2s,background .2s,transform .15s;color:var(--text);-webkit-tap-highlight-color:transparent}
+.wk-card:hover{border-color:var(--border2);background:var(--surface2);transform:translateY(-1px)}
+.wk-card.sel{border-color:rgba(200,255,0,.35);background:rgba(200,255,0,.06)}
+.wk-card-main{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1.5px;line-height:1}
+.wk-card-sub{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.wk-select{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);outline:none}
+.wk-select:focus{border-color:var(--accent)}
+.wk-add-row{display:flex;gap:8px;align-items:center}
+.wk-add-btn{width:auto;flex-shrink:0;padding:14px 18px}
 .restcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;margin-bottom:12px}
 .restcard .ri{font-size:36px;margin-bottom:14px}
 .restcard .rl{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:var(--text3);margin-bottom:8px}
@@ -381,23 +391,16 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
   </div>
   <div class="scroll">
     <div class="sid-row">
-      <div><div class="h1b" style="margin-bottom:2px">RECORD</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px">PRECISION TRAINING SESSION</div></div>
-      <div class="sid">SESSION ID<br><span id="sid-val">#ARC-—</span></div>
+      <div><div class="h1b" style="margin-bottom:2px">RECORD</div><div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px">SELECT A SPLIT. DAY LOGS AUTOMATICALLY.</div></div>
+      <div class="sid">AUTO DAY<br><span id="wk-auto-day">—</span><br>SESSION ID<br><span id="sid-val">#ARC-—</span></div>
     </div>
-    <div class="ddwrap" id="day-dd">
-      <button class="ddbtn" onclick="toggleDD()">
-        <span class="ddbtn-txt" id="day-txt">SELECT DAY</span>
-        <i class="fa-solid fa-chevron-down chev" id="day-chev"></i>
-      </button>
-      <div class="ddlist" id="day-list">
-        <div class="ddi" onclick="selDay('monday')">💪 MONDAY — BACK + BICEPS</div>
-        <div class="ddi rest" onclick="selDay('tuesday')">🌙 TUESDAY — REST</div>
-        <div class="ddi" onclick="selDay('wednesday')">💪 WEDNESDAY — SHOULDERS + ARMS</div>
-        <div class="ddi" onclick="selDay('thursday')">💪 THURSDAY — ABS + CHEST</div>
-        <div class="ddi rest" onclick="selDay('friday')">🌙 FRIDAY — REST</div>
-        <div class="ddi" onclick="selDay('saturday')">💪 SATURDAY — LEGS + CORE</div>
-        <div class="ddi" onclick="selDay('sunday')">💪 SUNDAY — CHEST + BICEPS PUMP</div>
-      </div>
+    <div class="wk-grid" id="wk-split-grid">
+      <button class="wk-card" data-split="back_biceps" onclick="selDay('back_biceps')"><div class="wk-card-main">BACK +<br>BICEPS</div><div class="wk-card-sub">PULL + CURL</div></button>
+      <button class="wk-card" data-split="shoulders_arms" onclick="selDay('shoulders_arms')"><div class="wk-card-main">SHOULDER +<br>ARMS</div><div class="wk-card-sub">PRESS + ISOLATION</div></button>
+      <button class="wk-card" data-split="abs_chest" onclick="selDay('abs_chest')"><div class="wk-card-main">ABS +<br>CHEST</div><div class="wk-card-sub">CORE + PRESS</div></button>
+      <button class="wk-card" data-split="legs_abs" onclick="selDay('legs_abs')"><div class="wk-card-main">LEGS +<br>ABS</div><div class="wk-card-sub">LOWER BODY</div></button>
+      <button class="wk-card" data-split="chest_biceps_pump" onclick="selDay('chest_biceps_pump')"><div class="wk-card-main">CHEST +<br>BICEPS PUMP</div><div class="wk-card-sub">UPPER PUMP</div></button>
+      <button class="wk-card" data-split="rest" onclick="selDay('rest')"><div class="wk-card-main">REST</div><div class="wk-card-sub">RECOVERY DAY</div></button>
     </div>
     <div id="wk-content"></div>
   </div>
@@ -544,7 +547,7 @@ let supabaseClient = null;
 let currentUser = null;
 let aiFoodItems = [];
 let aiFoodPreviewUrl = '';
-const APP_VERSION = '2.3';
+const APP_VERSION = '2.4';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -688,6 +691,7 @@ function back(){
 function onEnter(s){
   if(s==='dashboard')       renderDash();
   if(s==='record-calorie')  { updateCalClock(); }
+  if(s==='record-workout')  { updateWorkoutMeta(); }
   if(s==='progress-daily')  renderDaily();
   if(s==='progress-weekly') renderWeekly();
   if(s==='database')        renderDB();
@@ -966,6 +970,7 @@ async function clearProgress(){
     DB.workoutLog = [];
     aDay = null;
     aSets = {};
+    aPlan = [];
     aSID = '';
     syncWB();
     try{ localStorage.removeItem('arch_wb'); }catch(e){}
@@ -1133,7 +1138,7 @@ async function submitCal(){
 //  WORKOUT TRACKER
 // ══════════════════════════════════════════════
 const WP={
-  monday:{title:'BACK + BICEPS',ex:[
+  back_biceps:{title:'BACK + BICEPS',groups:['Back','Bicep'],ex:[
     {n:'LAT PULLDOWN',t:'VERTICAL PULL',s:4,r:'8–10'},
     {n:'SEATED CABLE ROW',t:'HORIZONTAL PULL',s:3,r:'10–12'},
     {n:'MACHINE ROW',t:'HORIZONTAL PULL',s:3,r:'10'},
@@ -1143,8 +1148,7 @@ const WP={
     {n:'CABLE CRUNCH',t:'ABS',s:3,r:'15'},
     {n:'HANGING KNEE RAISES',t:'ABS',s:3,r:'12–15'},
   ]},
-  tuesday:{rest:true},
-  wednesday:{title:'SHOULDERS + ARMS',ex:[
+  shoulders_arms:{title:'SHOULDERS + ARMS',groups:['Shoulder','Bicep','Triceps'],ex:[
     {n:'DB SHOULDER PRESS',t:'COMPOUND PUSH',s:4,r:'8–10'},
     {n:'LATERAL RAISES',t:'ISOLATION',s:4,r:'12–15'},
     {n:'REAR DELT FLY',t:'REAR DELT',s:3,r:'12–15'},
@@ -1153,7 +1157,7 @@ const WP={
     {n:'PREACHER CURL',t:'ISOLATION',s:3,r:'10–12'},
     {n:'ROPE PUSHDOWN',t:'TRICEP',s:3,r:'12–15'},
   ]},
-  thursday:{title:'ABS + CHEST',ex:[
+  abs_chest:{title:'ABS + CHEST',groups:['Ab','Chest'],ex:[
     {n:'DECLINE SIT-UPS',t:'ABS',s:3,r:'15–20'},
     {n:'HANGING LEG RAISES',t:'ABS',s:3,r:'12–15'},
     {n:'CABLE CRUNCH',t:'ABS',s:3,r:'15'},
@@ -1162,8 +1166,7 @@ const WP={
     {n:'INCLINE DB PRESS',t:'UPPER CHEST',s:3,r:'10–12'},
     {n:'MACHINE FLY',t:'ISOLATION',s:3,r:'12–15'},
   ]},
-  friday:{rest:true},
-  saturday:{title:'LEGS + CORE',ex:[
+  legs_abs:{title:'LEGS + ABS',groups:['Leg','Glute','Ab','Calves'],ex:[
     {n:'LEG PRESS',t:'COMPOUND',s:4,r:'10–12'},
     {n:'HIP THRUST / SQUAT',t:'GLUTE DOMINANT',s:4,r:'8–10'},
     {n:'LEG CURL',t:'HAMSTRINGS',s:3,r:'10–12'},
@@ -1171,7 +1174,7 @@ const WP={
     {n:'RUSSIAN TWISTS',t:'CORE',s:3,r:'20'},
     {n:'PLANK',t:'CORE',s:3,r:'45–60s'},
   ]},
-  sunday:{title:'CHEST + BICEPS PUMP',ex:[
+  chest_biceps_pump:{title:'CHEST + BICEPS PUMP',groups:['Chest','Bicep'],ex:[
     {n:'INCLINE DB PRESS',t:'UPPER CHEST',s:4,r:'10–12'},
     {n:'CABLE FLY',t:'ISOLATION',s:3,r:'12–15'},
     {n:'PUSH-UPS',t:'BODYWEIGHT',s:3,r:'15–20'},
@@ -1181,27 +1184,32 @@ const WP={
     {n:'LATERAL RAISES',t:'SHOULDERS',s:3,r:'12–15'},
     {n:'HANGING LEG RAISES',t:'ABS',s:3,r:'12–15'},
   ]},
-};
-let aDay=null, aSets={}, aSID='';
-
-const DAY_LABELS={
-  monday:'MONDAY — BACK + BICEPS',tuesday:'TUESDAY — REST',
-  wednesday:'WEDNESDAY — SHOULDERS + ARMS',thursday:'THURSDAY — ABS + CHEST',
-  friday:'FRIDAY — REST',saturday:'SATURDAY — LEGS + CORE',
-  sunday:'SUNDAY — CHEST + BICEPS PUMP'
+  rest:{title:'REST',rest:true,groups:[],ex:[]},
 };
 
-function toggleDD(){
-  document.getElementById('day-list').classList.toggle('open');
-  document.getElementById('day-chev').classList.toggle('open');
+const EXERCISE_DIRECTORY={
+  Chest:['Assisted Dip','Band-Assisted Bench Press','Bar Dip','Bench Press','Bench Press Against Band','Board Press','Cable Chest Press','Clap Push-Up','Close-Grip Bench Press','Close-Grip Feet-Up Bench Press','Cobra Push-Up','Decline Bench Press','Decline Push-Up','Dumbbell Chest Fly','Dumbbell Chest Press','Dumbbell Decline Chest Press','Dumbbell Floor Press','Dumbbell Pullover','Feet-Up Bench Press','Floor Press','Incline Bench Press','Incline Dumbbell Press','Incline Push-Up','Kettlebell Floor Press','Kneeling Incline Push-Up','Kneeling Push-Up','Machine Chest Fly','Machine Chest Press','Medicine Ball Chest Pass','Pec Deck','Pin Bench Press','Plank to Push-Up','Push-Up','Push-Up Against Wall','Push-Ups With Feet in Rings','Resistance Band Chest Fly','Ring Dip','Seated Cable Chest Fly','Smith Machine Bench Press','Smith Machine Incline Bench Press','Smith Machine Reverse Grip Bench Press','Standing Cable Chest Fly','Standing Resistance Band Chest Fly'],
+  Shoulder:['Arnold Press','Band External Shoulder Rotation','Band Internal Shoulder Rotation','Band Pull-Apart','Banded Face Pull','Barbell Front Raise','Barbell Rear Delt Row','Barbell Upright Row','Behind the Neck Press','Cable Internal Shoulder Rotation','Cable External Shoulder Rotation','Cable Front Raise','Cable Lateral Raise','Cable Rear Delt Row','Cuban Press','Devils Press','Dumbbell Front Raise','Dumbbell Horizontal Internal Shoulder Rotation','Dumbbell Horizontal External Shoulder Rotation','Dumbbell Lateral Raise','Dumbbell Rear Delt Row','Dumbbell Shoulder Press','Face Pull','Front Hold','Handstand Push-Up','Jerk','Kettlebell Halo','Kettlebell Press','Kettlebell Push Press','Landmine Press','Lying Dumbbell External Shoulder Rotation','Lying Dumbbell Internal Shoulder Rotation','Machine Lateral Raise','Machine Shoulder Press','Monkey Row','One-Arm Landmine Press','Overhead Press','Plate Front Raise','Poliquin Raise','Power Jerk','Push Press','Resistance Band Lateral Raise','Reverse Cable Flyes','Reverse Dumbbell Flyes','Reverse Dumbbell Flyes on Incline Bench','Reverse Machine Fly','Seated Dumbbell Shoulder Press','Seated Barbell Overhead Press','Seated Kettlebell Press','Seated Smith Machine Shoulder Press','Smith Machine Landmine Press','Snatch Grip Behind the Neck Press','Squat Jerk','Split Jerk','Turkish Get-Up','Wall Walk','Z Press'],
+  Bicep:['Barbell Curl','Barbell Preacher Curl','Bayesian Curl','Bodyweight Curl','Cable Crossover Bicep Curl','Cable Curl With Bar','Cable Curl With Rope','Concentration Curl','Drag Curl','Dumbbell Curl','Dumbbell Preacher Curl','EZ Curl','Hammer Curl','Incline Dumbbell Curl','Kettlebell Curl','Lying Bicep Cable Curl on Bench','Lying Bicep Cable Curl on Floor','Machine Bicep Curl','Overhead Cable Curl','Reverse Barbell Curl','Reverse Dumbbell Curl','Resistance Band Curl','Spider Curl','Zottman Curl'],
+  Triceps:['Barbell Standing Triceps Extension','Barbell Incline Triceps Extension','Barbell Lying Triceps Extension','Bench Dip','Crossbody Cable Triceps Extension','Close-Grip Push-Up','Dumbbell Lying Triceps Extension','Dumbbell Standing Triceps Extension','EZ Bar Lying Triceps Extension','Machine Overhead Triceps Extension','Overhead Cable Triceps Extension (Lower Position)','Overhead Cable Triceps Extension (Upper Position)','Smith Machine Skull Crushers','Tate Press','Tricep Bodyweight Extension','Tricep Pushdown With Bar','Tricep Pushdown With Rope'],
+  Leg:['Air Squat','Banded Hip March','Barbell Hack Squat','Barbell Lunge','Barbell Walking Lunge','Belt Squat','Body Weight Lunge','Bodyweight Leg Curl','Box Jump','Box Squat','Bulgarian Split Squat','Cable Machine Hip Adduction','Chair Squat','Curtsy Lunge','Depth Jump','Dumbbell Lunge','Dumbbell Walking Lunge','Dumbbell Squat','Front Squat','Glute Ham Raise','Goblet Squat','Ground to Overhead','Hack Squat Machine','Half Air Squat','Heel Walk','Hip Adduction Against Band','Hip Adduction Machine','Jump Squat','Jumping Lunge','Kettlebell Front Squat','Kettlebell Thrusters','Kettlebell Tibialis Raise','Landmine Hack Squat','Landmine Squat','Lateral Bound','Leg Curl On Ball','Leg Extension','Leg Press','Lying Leg Curl','Nordic Hamstring Eccentric','One-Legged Leg Extension','One-Legged Lying Leg Curl','One-Legged Seated Leg Curl','Pause Squat','Pendulum Squat','Pin Squat','Pistol Squat','Poliquin Step-Up','Prisoner Get Up','Reverse Barbell Lunge','Reverse Body Weight Lunge','Reverse Dumbbell Lunge','Reverse Nordic','Romanian Deadlift','Safety Bar Squat','Seated Leg Curl','Shallow Body Weight Lunge','Side Lunges (Bodyweight)','Smith Machine Bulgarian Split Squat','Smith Machine Front Squat','Smith Machine Lunge','Smith Machine Romanian Deadlift','Smith Machine Squat','Sumo Squat','Squat','Standing Cable Leg Extension','Standing Hip Flexor Raise','Standing Leg Curl','Step Up','Tibialis Band Pull','Tibialis Raise','Vertical Leg Press','Zercher Squat','Zombie Squat'],
+  Back:['Assisted Chin-Up','Assisted Pull-Up','Back Extension','Banded Muscle-Up','Barbell Row','Barbell Shrug','Block Clean','Block Snatch','Cable Close Grip Seated Row','Cable Wide Grip Seated Row','Chest-Supported Dumbbell Row','Chest to Bar','Chin-Up','Clean','Clean and Jerk','Close-Grip Chin-Up','Close-Grip Lat Pulldown','Deadlift','Deficit Deadlift','Dumbbell Deadlift','Dumbbell Row','Dumbbell Shrug','Floor Back Extension','Good Morning','Gorilla Row','Hang Clean','Hang Power Clean','Hang Power Snatch','Hang Snatch','Inverted Row','Inverted Row with Underhand Grip','Jefferson Curl','Jumping Muscle-Up','Kettlebell Clean','Kettlebell Clean & Jerk','Kettlebell Clean & Press','Kettlebell Row','Kettlebell Snatch','Kettlebell Swing','Kroc Row','Lat Pulldown With Neutral Grip','Lat Pulldown With Pronated Grip','Lat Pulldown With Supinated Grip','Machine Lat Pulldown','Muscle-Up (Bar)','Muscle-Up (Rings)','Neutral Close-Grip Lat Pulldown','One-Handed Cable Row','One-Handed Kettlebell Swing','One-Handed Lat Pulldown','Pause Deadlift','Pendlay Row','Power Clean','Power Snatch','Pull-Up','Pull-Up With a Neutral Grip','Rack Pull','Renegade Row','Rope Pulldown','Ring Pull-Up','Ring Row','Scap Pull-Up','Seal Row','Seated Machine Row','Single Leg Deadlift with Kettlebell','Smith Machine Deadlift','Smith Machine One-Handed Row','Snatch','Snatch Grip Deadlift','Stiff-Legged Deadlift','Straight Arm Lat Pulldown','Sumo Deadlift','Superman Raise','T-Bar Row','Towel Row','Trap Bar Deadlift With High Handles','Trap Bar Deadlift With Low Handles'],
+  Glute:['Banded Side Kicks','Cable Glute Kickback','Cable Pull Through','Cable Machine Hip Abduction','Clamshells','Cossack Squat','Death March with Dumbbells','Donkey Kicks','Dumbbell Romanian Deadlift','Dumbbell Frog Pumps','Fire Hydrants','Frog Pumps','Glute Bridge','Hip Abduction Against Band','Hip Abduction Machine','Hip Thrust','Hip Thrust Machine','Hip Thrust With Band Around Knees','Kettlebell Windmill','Lateral Walk With Band','Machine Glute Kickbacks','One-Legged Glute Bridge','One-Legged Hip Thrust','Reverse Hyperextension','Romanian Deadlift','Smith Machine Hip Thrust','Single Leg Romanian Deadlift','Standing Hip Abduction Against Band','Standing Glute Kickback in Machine','Standing Glute Push Down','Step Up'],
+  Ab:['Ball Slams','Bicycle Crunch','Cable Crunch','Captain’s Chair Knee Raise','Captain’s Chair Leg Raise','Copenhagen Plank','Core Twist','Crunch','Dead Bug','Dead Bug With Dumbbells','Dragon Flag','Dumbbell Side Bend','Dynamic Side Plank','Hanging Knee Raise','Hanging Leg Raise','Hanging Sit-Up','Hanging Windshield Wiper','High to Low Wood Chop with Band','High to Low Wood Chop with Cable','Hollow Body Crunch','Hollow Hold','Horizontal Wood Chop with Band','Horizontal Wood Chop with Cable','Jackknife Sit-Up','Kettlebell Plank Pull Through','Kneeling Ab Wheel Roll-Out','Kneeling Plank','Kneeling Side Plank','Landmine Rotation','L-Sit','Low to High Wood Chop with Band','Low to High Wood Chop with Cable','Lying Leg Raise','Lying Windshield Wiper','Lying Windshield Wiper with Bent Knees','Machine Crunch','Mountain Climbers','Oblique Crunch','Oblique Sit-Up','Pallof Press','Plank','Plank with Leg Lifts','Plank with Shoulder Taps','Side Plank','Sit-Up','Weighted Plank'],
+  Calves:['Barbell Standing Calf Raise','Barbell Seated Calf Raise','Calf Raise in Leg Press','Donkey Calf Raise','Eccentric Heel Drop','Heel Raise','Seated Calf Raise','Standing Calf Raise']
+};
+let aDay=null, aSets={}, aSID='', aPlan=[];
+
+function updateWorkoutMeta(){
+  const autoDayEl=document.getElementById('wk-auto-day');
+  if(autoDayEl) autoDayEl.textContent=dow(TODAY).toUpperCase();
 }
 function selDay(d){
-  document.getElementById('day-list').classList.remove('open');
-  document.getElementById('day-chev').classList.remove('open');
   aDay=d;
-  document.getElementById('day-txt').textContent=DAY_LABELS[d];
+  document.querySelectorAll('#wk-split-grid .wk-card').forEach(card=>card.classList.toggle('sel',card.dataset.split===d));
   aSID='#ARC-'+Math.floor(Math.random()*900+100)+'-'+String.fromCharCode(65+Math.floor(Math.random()*26));
   document.getElementById('sid-val').textContent=aSID;
+  aPlan=WP[d].ex.map(e=>({...e}));
   aSets={}; renderWK(d);
 }
 function renderWK(d){
@@ -1211,7 +1219,19 @@ function renderWK(d){
     return;
   }
   let h='';
-  plan.ex.forEach((e,i)=>{ aSets[i]=[{lbs:'',reps:''}]; h+=buildEC(e,i); });
+  aPlan.forEach((e,i)=>{
+    if(!aSets[i] || !aSets[i].length) aSets[i]=[{lbs:'',reps:''}];
+    h+=buildEC(e,i);
+  });
+  const addable=getAvailableExercises(d);
+  h+=`<div class="fb" style="padding:14px;margin-top:12px">
+    <span class="flbl">ADD EXERCISE</span>
+    ${addable.length ? `
+      <div class="wk-add-row">
+        <select id="wk-add-select" class="wk-select">${addable.map(name=>`<option value="${escapeAttr(name)}">${name}</option>`).join('')}</select>
+        <button class="sbtn wk-add-btn" onclick="addExerciseToSession()">ADD</button>
+      </div>` : `<div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3)">All matching exercises are already in this session.</div>`}
+  </div>`;
   h+=`<button class="sbtn" style="margin-top:6px" onclick="completeSess()">Complete Session <i class="fa-solid fa-check"></i></button>
       <button class="dbtn" onclick="discardSess()">DISCARD WORKOUT</button>`;
   el.innerHTML=h;
@@ -1241,12 +1261,46 @@ function addS(ei,rStr){
      <input class="si" type="number" placeholder="${ph}" inputmode="decimal" oninput="ss(${ei},${si},'reps',this.value)">
      </div>`);
 }
+function escapeAttr(v){ return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function prettyGroupLabel(group){
+  return group==='Ab' ? 'ABS' : group.toUpperCase();
+}
+function getAvailableExercises(splitKey){
+  const plan=WP[splitKey];
+  if(!plan || plan.rest) return [];
+  const current=new Set(aPlan.map(e=>String(e.n).trim().toLowerCase()));
+  return [...new Set(plan.groups.flatMap(group=>(EXERCISE_DIRECTORY[group]||[]).map(name=>({name,group}))))]
+    .filter(item=>!current.has(item.name.trim().toLowerCase()))
+    .map(item=>item.name)
+    .sort((a,b)=>a.localeCompare(b));
+}
+function inferExerciseGroup(splitKey,exerciseName){
+  const plan=WP[splitKey];
+  if(!plan) return 'ACCESSORY';
+  const lower=exerciseName.trim().toLowerCase();
+  for(const group of plan.groups){
+    if((EXERCISE_DIRECTORY[group]||[]).some(name=>name.trim().toLowerCase()===lower)){
+      return prettyGroupLabel(group);
+    }
+  }
+  return prettyGroupLabel(plan.groups[0] || 'ACCESSORY');
+}
+function addExerciseToSession(){
+  if(!aDay || !aPlan.length) return;
+  const select=document.getElementById('wk-add-select');
+  if(!select || !select.value) return;
+  const name=select.value;
+  aPlan.push({n:name.toUpperCase(),t:inferExerciseGroup(aDay,name),s:3,r:'10–12'});
+  aSets[aPlan.length-1]=[{lbs:'',reps:''}];
+  renderWK(aDay);
+}
 async function completeSess(){
   if(!aDay){ toast('SELECT A DAY',false,true); return; }
   const plan=WP[aDay], dStr=TODAY, dn=dow(dStr);
+  if(plan.rest){ toast('REST DAY SELECTED',true); return; }
   let nid=DB.workoutLog.length?Math.max(...DB.workoutLog.map(r=>r.ID||0))+1:1;
   const rows = [];
-  plan.ex.forEach((e,i)=>{ (aSets[i]||[]).forEach((s,si)=>{ rows.push({ID:nid++,Date:dStr,Day:dn,Session_ID:aSID,Exercise:e.n,Muscle_Group:e.t,Set_No:si+1,Weight_lbs:parseFloat(s.lbs)||0,Reps:parseInt(s.reps)||0,Notes:''}); }); });
+  aPlan.forEach((e,i)=>{ (aSets[i]||[]).forEach((s,si)=>{ rows.push({ID:nid++,Date:dStr,Day:dn,Session_ID:aSID,Exercise:e.n,Muscle_Group:e.t,Set_No:si+1,Weight_lbs:parseFloat(s.lbs)||0,Reps:parseInt(s.reps)||0,Notes:''}); }); });
   try{
     await insertWorkoutRows(rows);
   }catch(e){
@@ -1258,10 +1312,10 @@ async function completeSess(){
   setTimeout(()=>go('dashboard'),900);
 }
 function discardSess(){
-  aDay=null; aSets={};
+  aDay=null; aSets={}; aPlan=[];
   document.getElementById('wk-content').innerHTML='';
-  document.getElementById('day-txt').textContent='SELECT DAY';
   document.getElementById('sid-val').textContent='#ARC-—';
+  document.querySelectorAll('#wk-split-grid .wk-card').forEach(card=>card.classList.remove('sel'));
   toast('WORKOUT DISCARDED');
 }
 
@@ -1386,15 +1440,6 @@ function toast(msg,ok=false,err=false){
   t.classList.add('show');
   tTimer=setTimeout(()=>t.classList.remove('show'),2400);
 }
-
-// Close dropdown on outside click
-document.addEventListener('click',e=>{
-  const w=document.getElementById('day-dd');
-  if(w&&!w.contains(e.target)){
-    document.getElementById('day-list').classList.remove('open');
-    document.getElementById('day-chev').classList.remove('open');
-  }
-});
 
 // ══════════════════════════════════════════════
 //  INIT
