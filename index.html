@@ -162,7 +162,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .wk-card.sel{border-color:rgba(200,255,0,.35);background:rgba(200,255,0,.06)}
 .wk-card-main{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1.5px;line-height:1}
 .wk-card-sub{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:8px}
-.wk-select{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);outline:none}
+.wk-select{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:var(--text);outline:none;width:100%;min-width:0;display:block}
 .wk-select:focus{border-color:var(--accent)}
 .wk-add-row{display:flex;gap:8px;align-items:center}
 .wk-add-btn{width:auto;flex-shrink:0;padding:14px 18px}
@@ -170,10 +170,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .voice-fab{position:absolute;right:18px;bottom:calc(var(--nav-h) + 24px);width:58px;height:58px;border-radius:50%;border:none;background:var(--green);color:#050505;box-shadow:0 16px 34px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:250}
 .timer-modal{position:fixed;inset:0;background:rgba(5,5,5,.86);display:flex;align-items:center;justify-content:center;padding:22px;z-index:1200;opacity:0;pointer-events:none;transition:opacity .24s ease}
 .timer-modal.show{opacity:1;pointer-events:auto}
-.timer-panel{width:min(100%,360px);background:var(--surface);border:1px solid var(--border2);border-radius:22px;padding:22px 18px 18px;box-shadow:0 20px 48px rgba(0,0,0,.55)}
-.voice-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;min-height:88px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-bottom:12px}
+.timer-panel{width:min(100%,360px);max-height:calc(100dvh - 44px);overflow-y:auto;background:var(--surface);border:1px solid var(--border2);border-radius:22px;padding:22px 18px 18px;box-shadow:0 20px 48px rgba(0,0,0,.55)}
+.voice-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;min-height:88px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-bottom:12px;width:100%;resize:none}
 .voice-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px}
-.voice-grid{display:grid;grid-template-columns:1fr 110px;gap:10px;margin-bottom:12px}
+.voice-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,110px);gap:10px;margin-bottom:12px}
+@media (max-width:390px){.voice-grid{grid-template-columns:1fr}.timer-actions{flex-direction:column}}
 .timer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
 .timer-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;line-height:1}
 .timer-copy{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
@@ -579,7 +580,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       </div>
       <button class="icon-btn" onclick="closeVoiceModal()" aria-label="Close voice entry"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="voice-box" id="voice-transcript">Tap start and speak your meal.</div>
+    <textarea class="voice-box" id="voice-transcript" placeholder="Tap start and speak, or use your keyboard microphone on iPhone.">Tap start and speak your meal.</textarea>
     <div class="voice-meta" id="voice-parsed">Waiting for voice input.</div>
     <div class="voice-grid">
       <label class="timer-field"><span>Item</span><input id="voice-item" class="wk-select" type="text" placeholder="Chicken curry"></label>
@@ -649,7 +650,7 @@ let voiceListening = false;
 let voiceParsedItem = '';
 let voiceParsedCalories = 0;
 let voiceParsedCourse = 'Breakfast';
-const APP_VERSION = '2.8';
+const APP_VERSION = '2.8.1';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -1198,7 +1199,7 @@ function resetVoiceState(){
   voiceParsedItem='';
   voiceParsedCalories=0;
   voiceParsedCourse=selCourseVal;
-  document.getElementById('voice-transcript').textContent='Tap start and speak your meal.';
+  document.getElementById('voice-transcript').value='';
   document.getElementById('voice-parsed').textContent='Waiting for voice input.';
   document.getElementById('voice-item').value='';
   document.getElementById('voice-calories').value='';
@@ -1219,6 +1220,11 @@ function updateCalClock(){
 }
 function openVoiceModal(){
   resetVoiceState();
+  const recognition=ensureVoiceRecognition();
+  const safariFallback = !recognition && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  document.getElementById('voice-parsed').textContent = safariFallback
+    ? 'Safari fallback: tap the text box and use the iPhone keyboard microphone.'
+    : 'Waiting for voice input.';
   document.getElementById('voice-modal').classList.add('show');
 }
 function closeVoiceModal(){
@@ -1253,6 +1259,21 @@ function parseVoiceMeal(text){
     course
   };
 }
+function parseVoiceDraft(){
+  const transcript=document.getElementById('voice-transcript').value.trim();
+  const parsed=parseVoiceMeal(transcript);
+  if(parsed){
+    voiceParsedItem=parsed.item;
+    voiceParsedCalories=parsed.calories;
+    voiceParsedCourse=parsed.course;
+    document.getElementById('voice-item').value=voiceParsedItem;
+    document.getElementById('voice-calories').value=String(voiceParsedCalories);
+    document.getElementById('voice-course').value=voiceParsedCourse;
+    document.getElementById('voice-parsed').textContent=`Parsed: ${voiceParsedItem} • ${voiceParsedCalories} kcal • ${voiceParsedCourse}`;
+  }else{
+    document.getElementById('voice-parsed').textContent='Could not find “item + calorie count” yet.';
+  }
+}
 function ensureVoiceRecognition(){
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognition) return null;
@@ -1263,22 +1284,8 @@ function ensureVoiceRecognition(){
   voiceRecognition.maxAlternatives=1;
   voiceRecognition.onresult = event => {
     const transcript=[...event.results].map(result=>result[0].transcript).join(' ').trim();
-    document.getElementById('voice-transcript').textContent=transcript || 'Listening...';
-    const parsed=parseVoiceMeal(transcript);
-    if(parsed){
-      voiceParsedItem=parsed.item;
-      voiceParsedCalories=parsed.calories;
-      voiceParsedCourse=parsed.course;
-      document.getElementById('voice-item').value=voiceParsedItem;
-      document.getElementById('voice-calories').value=String(voiceParsedCalories);
-      document.getElementById('voice-course').value=voiceParsedCourse;
-      document.getElementById('voice-parsed').textContent=`Parsed: ${voiceParsedItem} • ${voiceParsedCalories} kcal • ${voiceParsedCourse}`;
-    }else{
-      voiceParsedItem='';
-      voiceParsedCalories=0;
-      voiceParsedCourse=selCourseVal;
-      document.getElementById('voice-parsed').textContent='Could not find “item + calorie count” yet.';
-    }
+    document.getElementById('voice-transcript').value=transcript || '';
+    parseVoiceDraft();
   };
   voiceRecognition.onerror = () => {
     voiceListening=false;
@@ -1294,7 +1301,10 @@ function ensureVoiceRecognition(){
 function toggleVoiceCapture(){
   const recognition=ensureVoiceRecognition();
   if(!recognition){
-    toast('VOICE INPUT NOT SUPPORTED',false,true);
+    const box=document.getElementById('voice-transcript');
+    box.focus();
+    document.getElementById('voice-parsed').textContent='Use your keyboard microphone here, then tap Log Meal.';
+    toast('USE KEYBOARD MIC ON SAFARI',false,true);
     return;
   }
   if(voiceListening){
@@ -1308,6 +1318,7 @@ function toggleVoiceCapture(){
   recognition.start();
 }
 async function logVoiceMeal(){
+  parseVoiceDraft();
   const itemInput=document.getElementById('voice-item').value.trim();
   const calorieInput=parseInt(document.getElementById('voice-calories').value||'0',10)||0;
   const courseInput=document.getElementById('voice-course').value || selCourseVal;
