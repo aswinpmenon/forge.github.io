@@ -167,9 +167,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .wk-add-row{display:flex;gap:8px;align-items:center}
 .wk-add-btn{width:auto;flex-shrink:0;padding:14px 18px}
 .timer-fab{position:absolute;right:18px;bottom:calc(var(--nav-h) + 24px);width:58px;height:58px;border-radius:50%;border:none;background:var(--green);color:#050505;box-shadow:0 16px 34px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:250}
+.voice-fab{position:absolute;right:18px;bottom:calc(var(--nav-h) + 24px);width:58px;height:58px;border-radius:50%;border:none;background:var(--green);color:#050505;box-shadow:0 16px 34px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:250}
 .timer-modal{position:fixed;inset:0;background:rgba(5,5,5,.86);display:flex;align-items:center;justify-content:center;padding:22px;z-index:1200;opacity:0;pointer-events:none;transition:opacity .24s ease}
 .timer-modal.show{opacity:1;pointer-events:auto}
 .timer-panel{width:min(100%,360px);background:var(--surface);border:1px solid var(--border2);border-radius:22px;padding:22px 18px 18px;box-shadow:0 20px 48px rgba(0,0,0,.55)}
+.voice-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;min-height:88px;font-family:'Space Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-bottom:12px}
+.voice-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:12px}
+.voice-grid{display:grid;grid-template-columns:1fr 110px;gap:10px;margin-bottom:12px}
 .timer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}
 .timer-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;line-height:1}
 .timer-copy{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
@@ -406,6 +410,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
     </div>
     <button class="sbtn" style="padding:15px" onclick="submitCal()">COMMIT RECORD <i class="fa-solid fa-arrow-right"></i></button>
   </div>
+  <button class="voice-fab" onclick="openVoiceModal()" aria-label="Open voice calorie entry"><i class="fa-solid fa-microphone"></i></button>
 </div>
 
 <!-- ════════ SCREEN: RECORD WORKOUT ════════ -->
@@ -565,6 +570,35 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="timer-modal" id="voice-modal">
+  <div class="timer-panel">
+    <div class="timer-head">
+      <div>
+        <div class="timer-title">VOICE LOG</div>
+        <div class="timer-copy">Say something like “Chicken curry 500 calories”</div>
+      </div>
+      <button class="icon-btn" onclick="closeVoiceModal()" aria-label="Close voice entry"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="voice-box" id="voice-transcript">Tap start and speak your meal.</div>
+    <div class="voice-meta" id="voice-parsed">Waiting for voice input.</div>
+    <div class="voice-grid">
+      <label class="timer-field"><span>Item</span><input id="voice-item" class="wk-select" type="text" placeholder="Chicken curry"></label>
+      <label class="timer-field"><span>Calories</span><input id="voice-calories" class="wk-select" type="number" min="0" placeholder="500"></label>
+    </div>
+    <label class="timer-field" style="display:block;margin-bottom:12px"><span>Course</span>
+      <select id="voice-course" class="wk-select">
+        <option>Breakfast</option>
+        <option>Lunch</option>
+        <option>Dinner</option>
+        <option>Snack</option>
+      </select>
+    </label>
+    <div class="timer-actions">
+      <button class="sbtn" id="voice-primary-btn" onclick="toggleVoiceCapture()">Start Listening</button>
+      <button class="dbtn" style="margin-top:0" onclick="logVoiceMeal()">Log Meal</button>
+    </div>
+  </div>
+</div>
 <div class="timer-modal" id="timer-modal">
   <div class="timer-panel">
     <div class="timer-head">
@@ -610,7 +644,12 @@ let timerInterval = null;
 let timerRemainingMs = 0;
 let timerEndAt = 0;
 let lastTapTime = 0;
-const APP_VERSION = '2.7';
+let voiceRecognition = null;
+let voiceListening = false;
+let voiceParsedItem = '';
+let voiceParsedCalories = 0;
+let voiceParsedCourse = 'Breakfast';
+const APP_VERSION = '2.8';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -1143,6 +1182,11 @@ function selCourse(btn,c){
   document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel'); selCourseVal=c;
 }
+function setCourseByName(course){
+  const map={Breakfast:'cb-b',Lunch:'cb-l',Dinner:'cb-d',Snack:'cb-s'};
+  const btn=document.getElementById(map[course] || map.Breakfast);
+  if(btn) selCourse(btn,course in map ? course : 'Breakfast');
+}
 function np(d){ if(calVal.length>=5) return; if(!calVal&&d==='0') return; calVal+=d; updCalDisp(); }
 function nd(){ calVal=calVal.slice(0,-1); updCalDisp(); }
 function updCalDisp(){
@@ -1150,9 +1194,145 @@ function updCalDisp(){
   if(!calVal){ el.textContent='0000'; el.classList.remove('hv'); }
   else { el.textContent=parseInt(calVal,10).toString().padStart(4,'0'); el.classList.add('hv'); }
 }
+function resetVoiceState(){
+  voiceParsedItem='';
+  voiceParsedCalories=0;
+  voiceParsedCourse=selCourseVal;
+  document.getElementById('voice-transcript').textContent='Tap start and speak your meal.';
+  document.getElementById('voice-parsed').textContent='Waiting for voice input.';
+  document.getElementById('voice-item').value='';
+  document.getElementById('voice-calories').value='';
+  document.getElementById('voice-course').value=selCourseVal;
+  updateVoiceButton(false);
+}
+function updateVoiceButton(listening){
+  const btn=document.getElementById('voice-primary-btn');
+  if(!btn) return;
+  btn.textContent=listening ? 'Stop Listening' : 'Start Listening';
+  btn.style.background=listening ? 'transparent' : '';
+  btn.style.color=listening ? 'var(--red)' : '';
+  btn.style.border=listening ? '1px solid rgba(255,68,68,.35)' : '';
+}
 function updateCalClock(){
   document.getElementById('cal-time').textContent=nowTime();
   document.getElementById('cal-date').textContent=TODAY;
+}
+function openVoiceModal(){
+  resetVoiceState();
+  document.getElementById('voice-modal').classList.add('show');
+}
+function closeVoiceModal(){
+  if(voiceRecognition && voiceListening) voiceRecognition.stop();
+  voiceListening=false;
+  updateVoiceButton(false);
+  document.getElementById('voice-modal').classList.remove('show');
+}
+function parseVoiceMeal(text){
+  const normalized=String(text||'').trim();
+  const lowered=normalized.toLowerCase();
+  let course='Breakfast';
+  if(/\bbreakfast\b/.test(lowered)) course='Breakfast';
+  else if(/\blunch\b/.test(lowered)) course='Lunch';
+  else if(/\bdinner\b/.test(lowered)) course='Dinner';
+  else if(/\bsnack\b/.test(lowered)) course='Snack';
+  const match=normalized.match(/(\d+)\s*(?:k?cal(?:ories?)?)\b/i) || normalized.match(/\b(\d+)\b/);
+  if(!match) return null;
+  const calories=parseInt(match[1],10);
+  let item=normalized
+    .replace(/\bfor\s+(breakfast|lunch|dinner|snack)\b/ig,'')
+    .replace(/\b(breakfast|lunch|dinner|snack)\b/ig,'')
+    .replace(/(\d+)\s*(?:k?cal(?:ories?)?)\b/ig,'')
+    .replace(/\b(i had|i ate|i logged|log|add|ate|had|please|about|around|roughly|with)\b/ig,'')
+    .replace(/[.,]+/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+  if(!item) item='Meal';
+  return {
+    item,
+    calories,
+    course
+  };
+}
+function ensureVoiceRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) return null;
+  if(voiceRecognition) return voiceRecognition;
+  voiceRecognition = new SpeechRecognition();
+  voiceRecognition.lang='en-AU';
+  voiceRecognition.interimResults=true;
+  voiceRecognition.maxAlternatives=1;
+  voiceRecognition.onresult = event => {
+    const transcript=[...event.results].map(result=>result[0].transcript).join(' ').trim();
+    document.getElementById('voice-transcript').textContent=transcript || 'Listening...';
+    const parsed=parseVoiceMeal(transcript);
+    if(parsed){
+      voiceParsedItem=parsed.item;
+      voiceParsedCalories=parsed.calories;
+      voiceParsedCourse=parsed.course;
+      document.getElementById('voice-item').value=voiceParsedItem;
+      document.getElementById('voice-calories').value=String(voiceParsedCalories);
+      document.getElementById('voice-course').value=voiceParsedCourse;
+      document.getElementById('voice-parsed').textContent=`Parsed: ${voiceParsedItem} • ${voiceParsedCalories} kcal • ${voiceParsedCourse}`;
+    }else{
+      voiceParsedItem='';
+      voiceParsedCalories=0;
+      voiceParsedCourse=selCourseVal;
+      document.getElementById('voice-parsed').textContent='Could not find “item + calorie count” yet.';
+    }
+  };
+  voiceRecognition.onerror = () => {
+    voiceListening=false;
+    updateVoiceButton(false);
+    toast('VOICE INPUT FAILED',false,true);
+  };
+  voiceRecognition.onend = () => {
+    voiceListening=false;
+    updateVoiceButton(false);
+  };
+  return voiceRecognition;
+}
+function toggleVoiceCapture(){
+  const recognition=ensureVoiceRecognition();
+  if(!recognition){
+    toast('VOICE INPUT NOT SUPPORTED',false,true);
+    return;
+  }
+  if(voiceListening){
+    recognition.stop();
+    voiceListening=false;
+    updateVoiceButton(false);
+    return;
+  }
+  voiceListening=true;
+  updateVoiceButton(true);
+  recognition.start();
+}
+async function logVoiceMeal(){
+  const itemInput=document.getElementById('voice-item').value.trim();
+  const calorieInput=parseInt(document.getElementById('voice-calories').value||'0',10)||0;
+  const courseInput=document.getElementById('voice-course').value || selCourseVal;
+  if(!itemInput || !calorieInput){
+    toast('SAY ITEM AND CALORIES',false,true);
+    return;
+  }
+  setCourseByName(courseInput);
+  const id=DB.calLog.length?Math.max(...DB.calLog.map(r=>r.ID||0))+1:1;
+  const row = {ID:id,Date:TODAY,Day:dow(TODAY),Course:courseInput,Calories_kcal:calorieInput,Timestamp:nowTime(),Location:'Voice Entry',Notes:`VOICE_ITEM:${itemInput}`};
+  try{
+    await insertCalorieRow(row);
+  }catch(e){
+    toast('SAVE FAILED',false,true);
+    return;
+  }
+  DB.calLog.push(row);
+  syncWB();
+  calVal=String(calorieInput);
+  updCalDisp();
+  closeVoiceModal();
+  renderDash();
+  renderDaily();
+  if(CUR==='database') renderDB();
+  toast(`${itemInput.toUpperCase()}: ${fmt(calorieInput)} KCAL LOGGED`,true);
 }
 function renderAiFoodResults(){
   const host=document.getElementById('aiFoodResults');
@@ -1610,6 +1790,9 @@ function launchConfetti(){
 // ══════════════════════════════════════════════
 function todayCals(){ return DB.calLog.filter(r=>r.Date===TODAY).reduce((s,r)=>s+(r.Calories_kcal||0),0); }
 function renderMealSubtext(notes=''){
+  if(String(notes).startsWith('VOICE_ITEM:')){
+    return `<div class="msub">${String(notes).slice('VOICE_ITEM:'.length)}</div>`;
+  }
   if(!String(notes).startsWith('AI_ITEMS:')) return '';
   try{
     const items=JSON.parse(String(notes).slice('AI_ITEMS:'.length));
