@@ -364,6 +364,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="mc-lbl">WEEKLY PROGRESS</div>
       <div class="fw-meta"><div class="fw-val" id="d-wvol">—%</div><div class="fw-lbl">VS LAST WEEK</div></div>
     </div>
+    <div class="pcard" style="margin-top:16px" id="coach-card">
+      <div class="ghost dashboard-ghost" style="font-size:60px">AI</div>
+      <div class="pcard-lbl" style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-robot" style="color:var(--green)"></i> AI PERSONAL COACH</div>
+      <div class="pcard-sub" id="coach-status" style="margin-bottom:12px">ANALYZING WEEKLY DATA...</div>
+      <div class="desc" id="coach-feedback" style="margin-bottom:0;color:var(--text);font-size:14px;font-style:italic">Loading insights...</div>
+    </div>
   </div>
 </div>
 
@@ -652,8 +658,9 @@ let voiceListening = false;
 let voiceParsedItem = '';
 let voiceParsedCalories = 0;
 let voiceParsedCourse = 'Breakfast';
-const APP_VERSION = '2.8.1';
+const APP_VERSION = '3.1.0';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
+const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
 const HAS_SUPABASE = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase);
@@ -1839,6 +1846,54 @@ function weekDates(off=0){
 }
 function weekCals(off=0){ return weekDates(off).map(d=>DB.calLog.filter(r=>r.Date===d).reduce((s,r)=>s+(r.Calories_kcal||0),0)).reduce((s,v)=>s+v,0); }
 
+async function fetchDailyCoach() {
+  const cacheKey = 'coach_feedback_' + TODAY;
+  const cached = localStorage.getItem(cacheKey);
+  const statusEl = document.getElementById('coach-status');
+  const feedEl = document.getElementById('coach-feedback');
+  if(!statusEl || !feedEl) return;
+  
+  if (cached) {
+    statusEl.textContent = 'DAILY INSIGHT LOADED';
+    feedEl.textContent = `"${cached}"`;
+    return;
+  }
+  
+  statusEl.textContent = 'ANALYZING WEEKLY DATA...';
+  feedEl.textContent = 'Loading insights...';
+  
+  const last7 = Array.from({length:7}, (_,i)=>{
+    const d=new Date(TODAY+'T12:00:00'); d.setDate(d.getDate()-i);
+    return d.getFullYear()+'-'+S(d.getMonth()+1)+'-'+S(d.getDate());
+  }).reverse();
+
+  const payload = { goal: GOAL, days: [] };
+  for (const d of last7) {
+    const cals = DB.calLog.filter(r=>r.Date===d).reduce((s,r)=>s+(r.Calories_kcal||0),0);
+    const splitSet = new Set(DB.workoutLog.filter(r=>r.Date===d).map(r=>r.Split_Name).filter(Boolean));
+    payload.days.push({ date: d, calories: cals, workouts: [...splitSet] });
+  }
+
+  try {
+    const res = await fetch(AI_COACH_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Coach API failed');
+    const data = await res.json();
+    if (data.feedback) {
+      localStorage.setItem(cacheKey, data.feedback);
+      statusEl.textContent = 'DAILY INSIGHT READY';
+      feedEl.textContent = `"${data.feedback}"`;
+    } else throw new Error(data.error || 'No feedback returned');
+  } catch(e) {
+    console.warn(e);
+    statusEl.textContent = 'COACH OFFLINE';
+    feedEl.textContent = 'Unable to generate insights at this time.';
+  }
+}
+
 function renderDash(){
   const c=todayCals(), p=Math.min(Math.round(c/GOAL*100),100);
   document.getElementById('d-pct').textContent=p+'%';
@@ -1847,6 +1902,7 @@ function renderDash(){
   const tw=weekCals(0), lw=weekCals(-7);
   if(lw>0){ const ch=Math.round((tw-lw)/lw*100); document.getElementById('d-wvol').textContent=(ch>=0?'+':'')+ch+'%'; }
   else document.getElementById('d-wvol').textContent=tw>0?'NEW WEEK':'—';
+  fetchDailyCoach();
 }
 
 function renderDaily(){
