@@ -22,8 +22,8 @@
   --green:#c8ff00;--red:#ff4444;
   --radius:14px;--radius-sm:8px;--nav-h:68px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
-#app{width:100%;max-width:430px;height:100dvh;margin:0 auto;position:relative;overflow:hidden;background:var(--bg)}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;touch-action:manipulation}
+#app{width:100%;max-width:430px;height:100dvh;margin:0 auto;position:relative;overflow:hidden;background:var(--bg);touch-action:manipulation}
 
 /* ── SCREENS ─────────────────────────────────────────── */
 .screen{
@@ -225,6 +225,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .mname{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text)}
 .mtime{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3)}
 .msub{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3)}
+.mtools{display:flex;align-items:center;gap:10px}
 .mcals{font-family:'Space Mono',monospace;font-size:13px;color:var(--green)}
 
 /* ── DATABASE SCREEN ─────────────────────────────────── */
@@ -464,10 +465,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
       <div class="srow"><span class="slbl">Today</span><span class="sval" id="dp-m-day">—</span></div>
     </div>
     <div class="fb">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
-        <span class="flbl" style="margin-bottom:0">MEALS TODAY</span>
-        <button class="icon-btn" onclick="clearTodayMeals()" title="Delete today's meals"><i class="fa-solid fa-trash"></i></button>
-      </div>
+      <span class="flbl">MEALS TODAY</span>
       <div id="dp-meals">
         <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);padding:10px 0">No meals logged today.</div>
       </div>
@@ -561,7 +559,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 
 <div class="bnav">
   <button class="ni on" onclick="go('dashboard')"><span class="ni-icon"><i class="fa-solid fa-house"></i></span><span class="ni-label">Home</span></button>
-  <button class="ni" onclick="go('record-calorie')"><span class="ni-icon"><i class="fa-solid fa-fire-flame-curved"></i></span><span class="ni-label">Cals</span></button>
+  <button class="ni" onclick="go('record-calorie')"><span class="ni-icon"><i class="fa-solid fa-utensils"></i></span><span class="ni-label">Cals</span></button>
   <button class="ni" onclick="go('record-workout')"><span class="ni-icon"><i class="fa-solid fa-dumbbell"></i></span><span class="ni-label">Gym</span></button>
   <button class="ni" onclick="go('progress-weekly')"><span class="ni-icon"><i class="fa-solid fa-chart-line"></i></span><span class="ni-label">Progress</span></button>
 </div>
@@ -611,7 +609,8 @@ let aiFoodPreviewUrl = '';
 let timerInterval = null;
 let timerRemainingMs = 0;
 let timerEndAt = 0;
-const APP_VERSION = '2.6';
+let lastTapTime = 0;
+const APP_VERSION = '2.7';
 const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
 const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = window.ARCHITECT_SUPABASE_ANON_KEY || '';
@@ -1073,21 +1072,21 @@ async function clearDailyData(){
     toast('DELETE FAILED',false,true);
   }
 }
-async function clearTodayMeals(){
-  if(!window.confirm(`Delete all meals logged for ${TODAY}?`)) return;
+async function deleteMeal(id){
+  if(!window.confirm('Delete this meal entry?')) return;
   try{
     if(HAS_SUPABASE && !supabaseClient) throw new Error('Supabase not connected');
     if(supabaseClient){
-      const {error} = await supabaseClient.from('calorie_log').delete().eq('date',TODAY);
+      const {error} = await supabaseClient.from('calorie_log').delete().eq('id',id);
       if(error) throw error;
     }
-    DB.calLog = DB.calLog.filter(r=>r.Date!==TODAY);
+    DB.calLog = DB.calLog.filter(r=>r.ID!==id);
     syncWB();
     renderDash();
     renderDaily();
     renderWeekly();
     if(CUR==='database') renderDB();
-    toast('TODAYS MEALS DELETED',true);
+    toast('MEAL DELETED',true);
   }catch(e){
     toast('DELETE FAILED',false,true);
   }
@@ -1656,7 +1655,7 @@ function renderDaily(){
   wkEl.innerHTML=wks>0?`<span class="tag g">DONE (${wks} sets)</span>`:`<span class="tag">NOT YET</span>`;
   const meals=DB.calLog.filter(r=>r.Date===TODAY);
   document.getElementById('dp-meals').innerHTML=meals.length?meals.map(m=>`
-    <div class="mrow"><div class="minfo"><div class="mname">${m.Course}</div><div class="mtime">${m.Timestamp||'—'}</div>${renderMealSubtext(m.Notes)}</div><div class="mcals">${fmt(m.Calories_kcal)} kcal</div></div>`).join('')
+    <div class="mrow"><div class="minfo"><div class="mname">${m.Course}</div><div class="mtime">${m.Timestamp||'—'}</div>${renderMealSubtext(m.Notes)}</div><div class="mtools"><div class="mcals">${fmt(m.Calories_kcal)} kcal</div><button class="icon-btn" onclick="deleteMeal(${m.ID})" title="Delete meal"><i class="fa-solid fa-trash"></i></button></div></div>`).join('')
     :`<div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);padding:10px 0">No meals logged today.</div>`;
 }
 
@@ -1738,6 +1737,13 @@ function toast(msg,ok=false,err=false){
   t.classList.add('show');
   tTimer=setTimeout(()=>t.classList.remove('show'),2400);
 }
+
+document.addEventListener('dblclick',event=>event.preventDefault(),{passive:false});
+document.addEventListener('touchend',event=>{
+  const now=Date.now();
+  if(now-lastTapTime<300) event.preventDefault();
+  lastTapTime=now;
+},{passive:false});
 
 // ══════════════════════════════════════════════
 //  INIT
