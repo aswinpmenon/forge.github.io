@@ -2192,9 +2192,9 @@
           <div style="font-size:12px; margin-top:8px; color:var(--text2)"><span id="lb-xp">0</span> XP TOTAL</div>
         </div>
 
-        <div class="fb" style="padding:16px 0">
-          <span class="flbl" style="padding:0 16px;">GLOBAL LEADERBOARD</span>
-          <div id="lb-list" style="display:flex; flex-direction:column; margin-top:12px">
+        <div class="fb" style="padding:0; overflow:hidden">
+          <div style="padding:16px 16px 8px;"><span class="flbl">GLOBAL LEADERBOARD</span></div>
+          <div id="lb-list" style="display:flex; flex-direction:column">
             <div style="color:var(--text2); font-size:13px; text-align:center; padding:16px"><i class="fa-solid fa-spinner fa-spin"></i> Fetching rankings...</div>
           </div>
         </div>
@@ -3738,24 +3738,29 @@
             } else if (!isMe) {
                name = 'UID:' + s.user_id.slice(-4);
             }
-            const rankClass = index === 0 ? 'color:var(--green);' : (index === 1 ? 'color:#ddd;' : (index === 2 ? 'color:#b87333;' : 'color:var(--text2);'));
-            const bgClass = isMe ? 'background:var(--surface3); border:1px solid var(--accent);' : 'background:var(--surface2);';
+            const rankEmoji = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : null));
+            const rankNum = rankEmoji ? `<span style="font-size:18px">${rankEmoji}</span>` : `<span style="font-size:18px; font-family:'Bebas Neue'; color:var(--text2); width:24px; display:inline-block; text-align:center">${index + 1}</span>`;
+            const borderLeft = isMe ? 'border-left: 3px solid var(--green);' : 'border-left: 3px solid transparent;';
+            const rowBg = isMe ? 'background:var(--surface2);' : 'background:transparent;';
+            const namePart = isMe
+              ? `<span style="font-size:15px; font-weight:800; letter-spacing:0.5px; color:var(--text)">YOU</span>`
+              : `<span style="font-size:15px; font-weight:700; letter-spacing:0.5px; color:var(--text)">${name}</span>`;
             return `
-              <div style="${bgClass} padding:12px 16px; border-radius:12px; display:flex; align-items:center; gap:16px; margin-bottom:8px">
-                 <div style="font-size:20px; font-family:'Bebas Neue'; ${rankClass} width:20px; text-align:center">${index + 1}</div>
-                 <div style="flex:1">
-                    <div style="font-weight:700; font-size:15px; display:flex; gap:8px; align-items:center">
-                       ${name} 
-                       <span style="font-family:'Space Mono'; font-size:10px; background:var(--surface); padding:2px 6px; border-radius:4px; font-weight:normal; letter-spacing:1px; color:var(--text)">LVL ${s.level}</span>
+              <div style="${rowBg} ${borderLeft} padding:12px 16px; display:flex; align-items:center; gap:14px; ${index < (stats.length - 1) ? 'border-bottom:1px solid var(--surface3)' : ''}">
+                 <div style="width:28px; text-align:center; flex-shrink:0">${rankNum}</div>
+                 <div style="flex:1; min-width:0">
+                    <div style="display:flex; gap:8px; align-items:center">
+                       ${namePart}
+                       <span style="font-family:'Space Mono'; font-size:9px; background:var(--surface); padding:2px 7px; border-radius:4px; color:var(--text2); letter-spacing:1px; flex-shrink:0">LVL ${s.level}</span>
                     </div>
-                    <div style="font-size:12px; color:var(--text2); margin-top:4px"><i class="fa-solid fa-fire" style="color:var(--green); font-size:10px"></i> ${s.streak} Days</div>
+                    <div style="font-size:11px; color:var(--text3); margin-top:3px"><i class="fa-solid fa-fire" style="color:var(--green); font-size:9px; margin-right:3px"></i>${s.streak} day streak</div>
                  </div>
-                 <div style="font-family:'Space Mono'; font-weight:700; color:var(--text); font-size:16px">${s.xp} <span style="font-size:10px; color:var(--text2); font-weight:normal">XP</span></div>
+                 <div style="font-family:'Space Mono'; font-weight:700; color:var(--text); font-size:17px; flex-shrink:0">${s.xp}<span style="font-size:10px; color:var(--text2); font-weight:400; margin-left:3px">XP</span></div>
               </div>
             `;
          }).join('');
       } else {
-         listEl.innerHTML = `<div style="color:var(--text2); font-size:13px; text-align:center; padding:16px">No data returned.</div>`;
+         listEl.innerHTML = `<div style="color:var(--text2); font-size:13px; text-align:center; padding:16px">No friends yet — add one above!</div>`;
       }
     };
 
