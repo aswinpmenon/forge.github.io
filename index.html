@@ -3550,77 +3550,110 @@
     }
 
     async function addXP(amount, reason) {
-      if (!amount) return;
-      userStats.xp += amount;
-      const newLevel = calcLevel(userStats.xp);
-      if (newLevel > userStats.level) {
-        userStats.level = newLevel;
-        toast(`LEVEL UP! You are now Level ${newLevel}`, true);
-        triggerConfetti(2);
+      if (!amount || !supabaseClient || !currentUser) return;
+      
+      // Always read the LIVE value from DB first to avoid race conditions
+      const { data: liveRow } = await supabaseClient.from('user_stats').select('xp, level, streak, last_active').eq('user_id', currentUser.id).single();
+      
+      const baseXP = liveRow ? (liveRow.xp || 0) : 0;
+      const newXP = baseXP + amount;
+      const newLevel = calcLevel(newXP);
+      const oldLevel = liveRow ? (liveRow.level || 1) : userStats.level;
+      
+      // Update in-memory state
+      userStats.xp = newXP;
+      userStats.level = newLevel;
+      
+      // Persist to DB atomically — include email so upsert never nulls it out
+      const userEmail = currentUser.email || null;
+      const { error } = await supabaseClient.from('user_stats').upsert(
+        { user_id: currentUser.id, email: userEmail, xp: newXP, level: newLevel, streak: userStats.streak, last_active: TODAY },
+        { onConflict: 'user_id' }
+      );
+      
+      if (error) {
+        console.error('XP save failed:', error);
+        toast('XP SAVE FAILED', false, true);
+        return;
+      }
+      
+      // Toast and level-up animation
+      if (newLevel > oldLevel) {
+        toast(`⚡ LEVEL UP! Now Level ${newLevel}`, true);
+        if (typeof triggerConfetti === 'function') triggerConfetti(2);
       } else {
-        toast(`+${amount} XP (${reason})`, true);
+        toast(`+${amount} XP — ${reason}`, true);
       }
+      
       updateGamificationUI();
-      if (supabaseClient && currentUser) {
-        await supabaseClient.from('user_stats').upsert({ user_id: currentUser.id, xp: userStats.xp, level: userStats.level, streak: userStats.streak, last_active: TODAY }, { onConflict: 'user_id' });
-      }
-      fetchLeaderboard();
+      if (typeof fetchLeaderboard === 'function') fetchLeaderboard();
     }
 
     async function refreshActiveStreak() {
       if (!currentUser || !supabaseClient) return;
-      let { data, error } = await supabaseClient.from('user_stats').select('streak, last_active, xp, level').eq('user_id', currentUser.id).single();
       
+      const userEmail = currentUser.email || null;
+      let { data } = await supabaseClient.from('user_stats').select('streak, last_active, xp, level').eq('user_id', currentUser.id).single();
+      
+      // Auto-create row for this user if it doesn't exist
       if (!data) {
-        data = { streak: 0, last_active: TODAY, xp: 0, level: 1 };
-        await supabaseClient.from('user_stats').upsert({ user_id: currentUser.id, xp: 0, level: 1, streak: 0, last_active: TODAY }, { onConflict: 'user_id' });
+        await supabaseClient.from('user_stats').upsert(
+          { user_id: currentUser.id, email: userEmail, xp: 0, level: 1, streak: 0, last_active: null },
+          { onConflict: 'user_id' }
+        );
+        data = { xp: 0, level: 1, streak: 0, last_active: null };
       }
       
-      if (data) {
-        let currentStreak = data.streak || 0;
-        let lastDate = data.last_active;
-        let diffDays = 0;
-        if (lastDate) {
-          const t1 = new Date(lastDate).setHours(0,0,0,0);
-          const t2 = new Date(TODAY).setHours(0,0,0,0);
-          diffDays = Math.floor((t2 - t1) / (1000*60*60*24));
-        } else {
-          diffDays = -1;
-        }
-        
-        let needsUpdate = false;
-        const hasLoggedToday = DB.calLog.some(r => r.Date === TODAY) || DB.workoutLog.some(r => r.Date === TODAY);
-        
-        if (hasLoggedToday) {
-           if (diffDays === 1) { 
-             currentStreak += 1;
-             needsUpdate = true;
-             if (currentStreak % 7 === 0) {
-                setTimeout(() => addXP(50, '7-Day Streak Bonus!'), 2000);
-             }
-           } else if (diffDays > 1 || diffDays === -1) {
-             currentStreak = 1; 
-             needsUpdate = true;
-           } else if (diffDays === 0 && currentStreak === 0) {
-             currentStreak = 1;
-             needsUpdate = true;
-           }
-        } else {
-           if (diffDays > 1) { 
-             currentStreak = 0;
-             needsUpdate = true;
-           }
-        }
-        
-        userStats.streak = currentStreak;
-        userStats.xp = data.xp || 0;
-        userStats.level = data.level || calcLevel(data.xp);
-        
-        if (needsUpdate) {
-            await supabaseClient.from('user_stats').update({ streak: currentStreak, last_active: TODAY }).eq('user_id', currentUser.id);
-        }
-        updateGamificationUI();
+      // Load XP/level into memory WITHOUT overwriting in-progress addXP calls
+      // Only set if memory is at default (first load)
+      if (userStats.xp === 0) userStats.xp = data.xp || 0;
+      if (userStats.level === 1) userStats.level = data.level || calcLevel(data.xp || 0);
+      
+      // ── Streak Logic ──────────────────────────────
+      let currentStreak = data.streak || 0;
+      const lastDate = data.last_active;
+      let diffDays = -1; // -1 = never logged before
+      
+      if (lastDate) {
+        const t1 = new Date(lastDate).setHours(0, 0, 0, 0);
+        const t2 = new Date(TODAY).setHours(0, 0, 0, 0);
+        diffDays = Math.floor((t2 - t1) / (1000 * 60 * 60 * 24));
       }
+      
+      const hasLoggedToday = DB.calLog.some(r => r.Date === TODAY) || DB.workoutLog.some(r => r.Date === TODAY);
+      let needsStreakUpdate = false;
+      
+      if (hasLoggedToday) {
+        if (diffDays === 0) {
+          // Already updated today — keep the existing streak value
+        } else if (diffDays === 1) {
+          // Consecutive day — increment streak
+          currentStreak += 1;
+          needsStreakUpdate = true;
+          if (currentStreak % 7 === 0) {
+            addXP(50, `${currentStreak}-Day Streak Bonus!`);
+          }
+        } else {
+          // Gap of 2+ days, or first time ever — start fresh at 1
+          currentStreak = 1;
+          needsStreakUpdate = true;
+        }
+      } else {
+        // Haven't logged today
+        if (diffDays > 1) {
+          // Missed a day — break streak
+          currentStreak = 0;
+          needsStreakUpdate = true;
+        }
+      }
+      
+      userStats.streak = currentStreak;
+      
+      if (needsStreakUpdate) {
+        await supabaseClient.from('user_stats').update({ streak: currentStreak, last_active: TODAY }).eq('user_id', currentUser.id);
+      }
+      
+      updateGamificationUI();
     }
 
     async function loadSocialData() {
