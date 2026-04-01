@@ -2202,7 +2202,7 @@
         <div class="fb">
           <span class="flbl">ADD FRIEND</span>
           <div style="display:flex; gap:8px">
-            <input type="text" id="lb-add-uuid" class="wk-select" placeholder="Friend's UID" style="flex:1">
+            <input type="text" id="lb-add-email" class="wk-select" placeholder="Friend's Email address" style="flex:1">
             <button class="db-acts dba" style="margin:0; flex:0 0 auto; padding:0 20px" onclick="sendFriendRequest()">ADD</button>
           </div>
           <div id="lb-pending" style="margin-top:16px; display:none;">
@@ -3627,10 +3627,15 @@
        const pendingBox = document.getElementById('lb-pending');
        const reqList = document.getElementById('lb-requests-list');
        if (reqs && reqs.length > 0) {
+           const senderIds = reqs.map(r => r.sender_id);
+           const { data: senders } = await supabaseClient.from('user_stats').select('user_id, email').in('user_id', senderIds);
+           const emailMap = {};
+           if (senders) senders.forEach(s => emailMap[s.user_id] = s.email || 'UID:...'+s.user_id.slice(-6));
+
            pendingBox.style.display = 'block';
            reqList.innerHTML = reqs.map(r => `
              <div style="background:var(--surface2); padding:12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center">
-                <span style="font-size:14px; font-family:'Space Mono'; color:var(--text2)">UID:...${r.sender_id.slice(-6)}</span>
+                <span style="font-size:14px; font-family:'Space Mono'; color:var(--text2)">${emailMap[r.sender_id] || 'UID:...'+r.sender_id.slice(-6)}</span>
                 <div>
                    <button class="db-acts dba" style="margin:0; padding:4px 12px; border-color:var(--green); color:var(--green)" onclick="acceptFriendRequest('${r.id}', '${r.sender_id}')">ACCEPT</button>
                 </div>
@@ -3645,13 +3650,21 @@
 
     async function sendFriendRequest() {
       if (!supabaseClient || !currentUser) { toast('Please sign in first.', false, true); return; }
-      const uuidObj = document.getElementById('lb-add-uuid');
-      const friend_id = String(uuidObj.value).trim();
-      if(!friend_id || friend_id === currentUser.id) return;
+      const emailObj = document.getElementById('lb-add-email');
+      const friend_email = String(emailObj.value).trim();
+      if(!friend_email) return;
       
+      const { data: friendRow, error: findError } = await supabaseClient.from('user_stats').select('user_id').eq('email', friend_email).single();
+      if (!friendRow || findError) {
+         toast('User not found. Invite them!', false, true);
+         return;
+      }
+      const friend_id = friendRow.user_id;
+      if (friend_id === currentUser.id) { toast('You cannot add yourself.', false, true); return; }
+
       const { error } = await supabaseClient.from('friend_requests').insert({ sender_id: currentUser.id, receiver_id: friend_id });
-      if (error) { toast('Failed to send request.', false, true); }
-      else { toast('Request Sent!', true); uuidObj.value = ''; }
+      if (error) { toast('Already requested or error.', false, true); }
+      else { toast('Request Sent!', true); emailObj.value = ''; }
     }
     
     async function acceptFriendRequest(req_id, sender_id) {
@@ -3674,13 +3687,18 @@
          userIds = userIds.concat(friends.map(f => f.friend_id));
       }
       
-      const { data: stats } = await supabaseClient.from('user_stats').select('user_id, xp, level, streak').in('user_id', userIds).order('xp', { ascending: false });
+      const { data: stats } = await supabaseClient.from('user_stats').select('user_id, email, xp, level, streak').in('user_id', userIds).order('xp', { ascending: false });
       
       const listEl = document.getElementById('lb-list');
       if (stats && stats.length > 0) {
          listEl.innerHTML = stats.map((s, index) => {
             const isMe = s.user_id === currentUser.id;
-            const name = isMe ? 'YOU' : 'UID: ...' + s.user_id.slice(-6);
+            let name = isMe ? 'YOU' : 'Friend';
+            if (!isMe && s.email) {
+               name = s.email.split('@')[0].toUpperCase();
+            } else if (!isMe) {
+               name = 'UID:' + s.user_id.slice(-4);
+            }
             const rankClass = index === 0 ? 'color:var(--green);' : (index === 1 ? 'color:#ddd;' : (index === 2 ? 'color:#b87333;' : 'color:var(--text2);'));
             const bgClass = isMe ? 'background:var(--surface3); border:1px solid var(--accent);' : 'background:var(--surface2);';
             return `
