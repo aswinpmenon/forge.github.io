@@ -12,9 +12,13 @@
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script src="./supabase-config.js"></script>
   <script src="./ai-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <style>
     *,
     *::before,
@@ -902,6 +906,148 @@
     .about-link:hover,
     .coffee-btn:hover {
       transform: translateY(-1px)
+    }
+
+    .run-map {
+      height: 260px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      background: var(--surface2)
+    }
+
+    .run-map-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .run-map-status .tag {
+      flex-shrink: 0
+    }
+
+    .run-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .run-stat {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px
+    }
+
+    .run-stat-label {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px
+    }
+
+    .run-stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 34px;
+      line-height: .95;
+      letter-spacing: 1px
+    }
+
+    .run-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px
+    }
+
+    .run-actions .sbtn {
+      padding: 15px
+    }
+
+    .run-history-row {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px
+    }
+
+    .run-history-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px
+    }
+
+    .run-history-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 1px
+    }
+
+    .run-history-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .run-history-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px
+    }
+
+    .run-history-metric {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px
+    }
+
+    .run-history-metric span {
+      display: block
+    }
+
+    .run-history-metric .mini {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    .run-history-metric .val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: .5px
+    }
+
+    .run-empty {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text3);
+      padding: 6px 0
+    }
+
+    @media (max-width:390px) {
+      .run-history-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
     }
 
     /* ── DROPDOWN ────────────────────────────────────────── */
@@ -2286,6 +2432,65 @@
       </div>
     </div>
 
+    <!-- ════════ SCREEN: RUN TRACKER ════════ -->
+    <div class="screen" id="s-track-run">
+      <div class="topbar">
+        <button class="back-btn" onclick="back()"><i class="fa-solid fa-arrow-left"></i>BACK</button>
+        <div class="brand">FORGE</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="scroll">
+        <div class="phase">ENDURANCE</div>
+        <div class="h1b">RUN<br>TRACKER.</div>
+        <div class="desc" style="margin-bottom:14px">Live GPS distance, pace, route mapping, and saved session history built right into FORGE.</div>
+        <div class="fb">
+          <div class="run-map-status">
+            <span id="run-status-text">READY TO TRACK</span>
+            <span class="tag" id="run-gps-tag">GPS OFF</span>
+          </div>
+          <div id="run-map" class="run-map"></div>
+          <div class="run-grid">
+            <div class="run-stat">
+              <span class="run-stat-label">Distance</span>
+              <div class="run-stat-value" id="run-distance">0.00 km</div>
+            </div>
+            <div class="run-stat">
+              <span class="run-stat-label">Duration</span>
+              <div class="run-stat-value" id="run-duration">00:00</div>
+            </div>
+            <div class="run-stat">
+              <span class="run-stat-label">Pace</span>
+              <div class="run-stat-value" id="run-pace">--:--</div>
+            </div>
+            <div class="run-stat">
+              <span class="run-stat-label">Steps</span>
+              <div class="run-stat-value" id="run-steps">0</div>
+            </div>
+          </div>
+          <div class="run-grid" style="margin-top:-4px">
+            <div class="run-stat">
+              <span class="run-stat-label">Calories</span>
+              <div class="run-stat-value" id="run-calories">0 kcal</div>
+            </div>
+            <div class="run-stat">
+              <span class="run-stat-label">Points</span>
+              <div class="run-stat-value" id="run-points">0 pts</div>
+            </div>
+          </div>
+          <div class="run-actions">
+            <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START RUN</button>
+            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH</button>
+          </div>
+        </div>
+        <div class="fb">
+          <span class="flbl">RUN HISTORY</span>
+          <div id="run-history">
+            <div class="run-empty">No runs saved yet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ════════ SCREEN: DATABASE ════════ -->
     <div class="screen" id="s-database">
       <div class="topbar">
@@ -2330,6 +2535,12 @@
           <div class="srow"><span class="slbl">Total Sets Logged</span><span class="sval" id="db-wsets">—</span></div>
           <div class="srow"><span class="slbl">Unique Sessions</span><span class="sval" id="db-wsess">—</span></div>
           <div class="srow"><span class="slbl">Latest Session</span><span class="sval" id="db-wlat">—</span></div>
+        </div>
+        <div class="fb">
+          <span class="flbl">RUN LOG</span>
+          <div class="srow"><span class="slbl">Total Runs</span><span class="sval" id="db-runs">—</span></div>
+          <div class="srow"><span class="slbl">Total Distance</span><span class="sval" id="db-rdist">—</span></div>
+          <div class="srow"><span class="slbl">Latest Run</span><span class="sval" id="db-rlatest">—</span></div>
         </div>
         <button class="dbtn" onclick="clearProgress()">DELETE ALL USER DATA</button>
         <div class="fb">
@@ -2427,8 +2638,8 @@
             class="fa-solid fa-utensils"></i></span><span class="ni-label">Cals</span></button>
       <button class="ni" onclick="go('record-workout')"><span class="ni-icon"><i
             class="fa-solid fa-dumbbell"></i></span><span class="ni-label">Gym</span></button>
-      <button class="ni" onclick="go('progress-weekly')"><span class="ni-icon"><i
-            class="fa-solid fa-chart-line"></i></span><span class="ni-label">Stats</span></button>
+      <button class="ni" onclick="go('track-run')"><span class="ni-icon"><i
+            class="fa-solid fa-person-running"></i></span><span class="ni-label">Run</span></button>
       <button class="ni" onclick="go('leaderboard')"><span class="ni-icon"><i
             class="fa-solid fa-gamepad"></i></span><span class="ni-label">Social</span></button>
     </div>
@@ -2505,7 +2716,7 @@
     //  STATE
     // ══════════════════════════════════════════════
     let WB = null;
-    let DB = { calLog: [], workoutLog: [] };
+    let DB = { calLog: [], workoutLog: [], runLog: [] };
     let GOAL = 2400;
     let workbookName = 'forge_data.xlsx';
     let supabaseClient = null;
@@ -2524,7 +2735,18 @@
     let userStats = { xp: 0, level: 1, streak: 0 };
     let friendsList = [];
     let friendRequests = [];
-    const APP_VERSION = '3.6.0';
+    let runWatchId = null;
+    let runTickInterval = null;
+    let runMap = null;
+    let runPathLine = null;
+    let runHistoryLayer = null;
+    let runSessionPoints = [];
+    let runDistanceKm = 0;
+    let runStartedAt = null;
+    let runLastPoint = null;
+    let runTrackingActive = false;
+    let runSupabaseEnabled = true;
+    const APP_VERSION = '3.7.0';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -2546,6 +2768,41 @@
       return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][new Date(iso + 'T12:00:00').getDay()];
     }
     function fmt(n) { return Number(n).toLocaleString() }
+    function safeParsePath(value) {
+      try {
+        const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function formatDurationShort(totalSeconds) {
+      const sec = Math.max(0, Math.round(Number(totalSeconds) || 0));
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return h > 0 ? `${S(h)}:${S(m)}:${S(s)}` : `${S(m)}:${S(s)}`;
+    }
+    function formatPace(secPerKm) {
+      if (!Number.isFinite(secPerKm) || secPerKm <= 0) return '--:--';
+      const mins = Math.floor(secPerKm / 60);
+      const secs = Math.round(secPerKm % 60);
+      return `${S(mins)}:${S(secs)}`;
+    }
+    function estimateRunSteps(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 1300); }
+    function estimateRunCalories(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 60); }
+    function haversineKm(a, b) {
+      const toRad = deg => deg * Math.PI / 180;
+      const R = 6371;
+      const dLat = toRad(b.lat - a.lat);
+      const dLng = toRad(b.lng - a.lng);
+      const lat1 = toRad(a.lat);
+      const lat2 = toRad(b.lat);
+      const sinLat = Math.sin(dLat / 2);
+      const sinLng = Math.sin(dLng / 2);
+      const h = sinLat * sinLat + Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
+      return 2 * R * Math.asin(Math.sqrt(h));
+    }
     const TODAY = todayISO();
 
     function userDisplayName(user = currentUser) {
@@ -2573,13 +2830,14 @@
     // ══════════════════════════════════════════════
     //  NAVIGATION  — fully rebuilt, race-condition free
     // ══════════════════════════════════════════════
-    const SCREEN_IDS = ['dashboard', 'record-calorie', 'record-workout', 'progress-daily', 'progress-weekly', 'database', 'leaderboard', 'forge-about'];
+    const SCREEN_IDS = ['dashboard', 'record-calorie', 'record-workout', 'progress-daily', 'progress-weekly', 'track-run', 'database', 'leaderboard', 'forge-about'];
     const SCREEN_DEPTHS = {
       dashboard: 0,
       'record-calorie': 1,
       'record-workout': 1,
       'progress-daily': 1,
       'progress-weekly': 1,
+      'track-run': 1,
       database: 1,
       leaderboard: 1,
       'forge-about': 2
@@ -2647,7 +2905,7 @@
         toEl.classList.add('is-active');
 
         // Update bottom nav
-        const navMap = { dashboard: 0, 'record-calorie': 1, 'record-workout': 2, 'progress-daily': 3, 'progress-weekly': 3, leaderboard: 4 };
+        const navMap = { dashboard: 0, 'record-calorie': 1, 'record-workout': 2, 'progress-daily': 3, 'progress-weekly': 3, 'track-run': 3, leaderboard: 4 };
         document.querySelectorAll('.ni').forEach((n, i) => n.classList.toggle('on', i === navMap[to]));
 
         // Cleanup after transition
@@ -2687,6 +2945,7 @@
       if (s === 'record-workout') { updateWorkoutMeta(); }
       if (s === 'progress-daily') renderDaily();
       if (s === 'progress-weekly') renderWeekly();
+      if (s === 'track-run') renderRunScreen();
       if (s === 'database') renderDB();
       if (s === 'leaderboard') {
         updateGamificationUI();
@@ -2738,6 +2997,16 @@
         [12, '2025-03-29', 'Saturday', 'ARC-005', 'Cable Fly', 'Chest', 2, 35, 15, ''],
       ];
       XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(wD), 'WorkoutLog');
+      const rH = ['ID', 'Date', 'Day', 'Start_Timestamp', 'End_Timestamp', 'Duration_Sec', 'Distance_Km', 'Avg_Pace_Sec_Per_Km', 'Estimated_Steps', 'Estimated_Calories', 'Path_JSON'];
+      const rD = [rH,
+        [1, '2025-03-29', 'Saturday', '2025-03-29T06:10:00.000Z', '2025-03-29T06:34:10.000Z', 1450, 3.42, 424, 4446, 205, JSON.stringify([
+          { lat: -33.8688, lng: 151.2093, timestamp: '2025-03-29T06:10:00.000Z' },
+          { lat: -33.8695, lng: 151.2104, timestamp: '2025-03-29T06:15:20.000Z' },
+          { lat: -33.8702, lng: 151.2119, timestamp: '2025-03-29T06:22:40.000Z' },
+          { lat: -33.8711, lng: 151.2131, timestamp: '2025-03-29T06:34:10.000Z' }
+        ])]
+      ];
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rD), 'RunLog');
       return wb;
     }
 
@@ -2745,6 +3014,7 @@
       WB = wb;
       DB.calLog = wb.Sheets['CalorieLog'] ? XLSX.utils.sheet_to_json(wb.Sheets['CalorieLog']) : [];
       DB.workoutLog = wb.Sheets['WorkoutLog'] ? XLSX.utils.sheet_to_json(wb.Sheets['WorkoutLog']) : [];
+      DB.runLog = wb.Sheets['RunLog'] ? XLSX.utils.sheet_to_json(wb.Sheets['RunLog']) : [];
       const config = wb.Sheets['Config'] ? XLSX.utils.sheet_to_json(wb.Sheets['Config']) : [];
       const goalRow = config.find(r => String(r.Setting || '').trim() === 'Calorie_Goal_Daily');
       GOAL = Number(goalRow?.Value) || 2400;
@@ -2831,6 +3101,8 @@
       WB.Sheets['CalorieLog'] = XLSX.utils.aoa_to_sheet([cH, ...DB.calLog.map(r => [r.ID, r.Date, r.Day, r.Course, r.Calories_kcal, r.Timestamp, r.Location || 'Home Office', r.Notes || ''])]);
       const wH = ['ID', 'Date', 'Day', 'Session_ID', 'Exercise', 'Muscle_Group', 'Set_No', 'Weight_lbs', 'Reps', 'Notes'];
       WB.Sheets['WorkoutLog'] = XLSX.utils.aoa_to_sheet([wH, ...DB.workoutLog.map(r => [r.ID, r.Date, r.Day, r.Session_ID, r.Exercise, r.Muscle_Group, r.Set_No, r.Weight_lbs, r.Reps, r.Notes || ''])]);
+      const rH = ['ID', 'Date', 'Day', 'Start_Timestamp', 'End_Timestamp', 'Duration_Sec', 'Distance_Km', 'Avg_Pace_Sec_Per_Km', 'Estimated_Steps', 'Estimated_Calories', 'Path_JSON'];
+      WB.Sheets['RunLog'] = XLSX.utils.aoa_to_sheet([rH, ...DB.runLog.map(r => [r.ID, r.Date, r.Day, r.Start_Timestamp, r.End_Timestamp, r.Duration_Sec, r.Distance_Km, r.Avg_Pace_Sec_Per_Km, r.Estimated_Steps, r.Estimated_Calories, r.Path_JSON || '[]'])]);
       const dH = ['Date', 'Day', 'Total_Calories', 'Calorie_Goal', 'Calories_Remaining', 'Workout_Done', 'Sessions', 'Completion_Pct'];
       WB.Sheets['DailySummary'] = XLSX.utils.aoa_to_sheet([dH, ...buildDailySummaryRows()]);
       const wsH = ['Week_Start', 'Week_End', 'Total_Calories', 'Avg_Daily_Calories', 'Calorie_Goal_Weekly', 'Training_Days', 'Rest_Days', 'Total_Sets', 'Avg_Weight_lbs', 'Notes'];
@@ -2853,12 +3125,13 @@
           toggleAuthGate(false);
           loadFromSupabase().catch(() => toast('LOAD FAILED', false, true));
         } else {
-          DB = { calLog: [], workoutLog: [] };
+          DB = { calLog: [], workoutLog: [], runLog: [] };
           WB = buildStarterWB();
           parseWB(WB);
           renderDash();
           renderDaily();
           renderWeekly();
+          renderRunScreen();
           renderDB();
           toggleAuthGate(true);
         }
@@ -2889,12 +3162,19 @@
     }
     async function loadFromSupabase() {
       if (!supabaseClient) return false;
-      const [{ data: calLog, error: calErr }, { data: workoutLog, error: wkErr }, { data: configRows, error: cfgErr }] = await Promise.all([
+      const [{ data: calLog, error: calErr }, { data: workoutLog, error: wkErr }, { data: configRows, error: cfgErr }, runResp] = await Promise.all([
         supabaseClient.from('calorie_log').select('*').order('id', { ascending: true }),
         supabaseClient.from('workout_log').select('*').order('id', { ascending: true }),
-        supabaseClient.from('app_config').select('setting,value')
+        supabaseClient.from('app_config').select('setting,value'),
+        runSupabaseEnabled
+          ? supabaseClient.from('run_log').select('*').order('id', { ascending: false })
+          : Promise.resolve({ data: [], error: null })
       ]);
       if (calErr || wkErr || cfgErr) throw (calErr || wkErr || cfgErr);
+      if (runResp?.error) {
+        runSupabaseEnabled = false;
+        console.warn('run_log unavailable, using workbook/local fallback only', runResp.error);
+      }
       DB.calLog = (calLog || []).map(r => ({
         ID: r.id, Date: r.date, Day: r.day, Course: r.course, Calories_kcal: r.calories_kcal,
         Timestamp: r.timestamp, Location: r.location || 'Home Office', Notes: r.notes || ''
@@ -2903,6 +3183,21 @@
         ID: r.id, Date: r.date, Day: r.day, Session_ID: r.session_id, Exercise: r.exercise,
         Muscle_Group: r.muscle_group, Set_No: r.set_no, Weight_lbs: r.weight_lbs, Reps: r.reps, Notes: r.notes || ''
       }));
+      if (runSupabaseEnabled && !runResp?.error) {
+        DB.runLog = (runResp?.data || []).map(r => ({
+          ID: r.id,
+          Date: r.date,
+          Day: r.day,
+          Start_Timestamp: r.start_timestamp,
+          End_Timestamp: r.end_timestamp,
+          Duration_Sec: r.duration_sec,
+          Distance_Km: r.distance_km,
+          Avg_Pace_Sec_Per_Km: r.avg_pace_sec_per_km,
+          Estimated_Steps: r.estimated_steps,
+          Estimated_Calories: r.estimated_calories,
+          Path_JSON: JSON.stringify(r.path_json || [])
+        }));
+      }
       const goalRow = (configRows || []).find(r => String(r.setting || '').trim() === 'Calorie_Goal_Daily');
       GOAL = Number(goalRow?.value) || GOAL;
       if (!WB) WB = buildStarterWB();
@@ -2910,6 +3205,7 @@
       renderDash();
       renderDaily();
       renderWeekly();
+      renderRunScreen();
       renderDB();
       refreshActiveStreak();
       loadSocialData();
@@ -2919,7 +3215,8 @@
       if (!supabaseClient) return false;
       await Promise.all([
         supabaseClient.from('calorie_log').delete().gte('id', 0),
-        supabaseClient.from('workout_log').delete().gte('id', 0)
+        supabaseClient.from('workout_log').delete().gte('id', 0),
+        runSupabaseEnabled ? supabaseClient.from('run_log').delete().gte('id', 0) : Promise.resolve()
       ]);
       if (DB.calLog.length) {
         const { error } = await supabaseClient.from('calorie_log').insert(DB.calLog.map(r => ({
@@ -2932,6 +3229,23 @@
         const { error } = await supabaseClient.from('workout_log').insert(DB.workoutLog.map(r => ({
           owner_id: currentUser.id, id: r.ID, date: r.Date, day: r.Day, session_id: r.Session_ID, exercise: r.Exercise,
           muscle_group: r.Muscle_Group, set_no: r.Set_No, weight_lbs: r.Weight_lbs, reps: r.Reps, notes: r.Notes || ''
+        })));
+        if (error) throw error;
+      }
+      if (runSupabaseEnabled && DB.runLog.length) {
+        const { error } = await supabaseClient.from('run_log').insert(DB.runLog.map(r => ({
+          owner_id: currentUser.id,
+          id: r.ID,
+          date: r.Date,
+          day: r.Day,
+          start_timestamp: r.Start_Timestamp,
+          end_timestamp: r.End_Timestamp,
+          duration_sec: r.Duration_Sec,
+          distance_km: r.Distance_Km,
+          avg_pace_sec_per_km: r.Avg_Pace_Sec_Per_Km,
+          estimated_steps: r.Estimated_Steps,
+          estimated_calories: r.Estimated_Calories,
+          path_json: safeParsePath(r.Path_JSON)
         })));
         if (error) throw error;
       }
@@ -2954,20 +3268,43 @@
       })));
       if (error) throw error;
     }
+    async function insertRunRow(row) {
+      if (!supabaseClient || !runSupabaseEnabled) return;
+      const { error } = await supabaseClient.from('run_log').insert({
+        owner_id: currentUser.id,
+        id: row.ID,
+        date: row.Date,
+        day: row.Day,
+        start_timestamp: row.Start_Timestamp,
+        end_timestamp: row.End_Timestamp,
+        duration_sec: row.Duration_Sec,
+        distance_km: row.Distance_Km,
+        avg_pace_sec_per_km: row.Avg_Pace_Sec_Per_Km,
+        estimated_steps: row.Estimated_Steps,
+        estimated_calories: row.Estimated_Calories,
+        path_json: safeParsePath(row.Path_JSON)
+      });
+      if (error) {
+        runSupabaseEnabled = false;
+        throw error;
+      }
+    }
     async function clearProgress() {
-      if (!window.confirm('Delete all saved progress? This will remove calorie and workout records from the database.')) return;
+      if (!window.confirm('Delete all saved progress? This will remove calorie, workout, and run records from the database.')) return;
       try {
         if (HAS_SUPABASE && !supabaseClient) throw new Error('Supabase not connected');
         if (supabaseClient) {
-          const [{ error: calErr }, { error: wkErr }, { error: cfgErr }] = await Promise.all([
+          const [{ error: calErr }, { error: wkErr }, { error: cfgErr }, runClear] = await Promise.all([
             supabaseClient.from('calorie_log').delete().gte('id', 0),
             supabaseClient.from('workout_log').delete().gte('id', 0),
-            supabaseClient.from('app_config').delete().eq('setting', 'Calorie_Goal_Daily')
+            supabaseClient.from('app_config').delete().eq('setting', 'Calorie_Goal_Daily'),
+            runSupabaseEnabled ? supabaseClient.from('run_log').delete().gte('id', 0) : Promise.resolve({ error: null })
           ]);
-          if (calErr || wkErr || cfgErr) throw (calErr || wkErr || cfgErr);
+          if (calErr || wkErr || cfgErr || runClear?.error) throw (calErr || wkErr || cfgErr || runClear?.error);
         }
         DB.calLog = [];
         DB.workoutLog = [];
+        DB.runLog = [];
         GOAL = 2400;
         aDay = null;
         aSets = {};
@@ -2978,6 +3315,7 @@
         renderDash();
         renderDaily();
         renderWeekly();
+        renderRunScreen();
         if (CUR === 'database') renderDB();
         toast('ALL PROGRESS DELETED', true);
         setTimeout(() => go('dashboard'), 500);
@@ -4112,6 +4450,249 @@
       }
     }
 
+    function ensureRunMap() {
+      if (!window.L) return null;
+      if (runMap) return runMap;
+      const mapEl = document.getElementById('run-map');
+      if (!mapEl) return null;
+      runMap = L.map(mapEl, { zoomControl: false, attributionControl: true }).setView([-33.8688, 151.2093], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(runMap);
+      runPathLine = L.polyline([], { color: '#c8ff00', weight: 5, opacity: .95 }).addTo(runMap);
+      runHistoryLayer = L.layerGroup().addTo(runMap);
+      return runMap;
+    }
+
+    function setRunStatus(text, gpsReady = false) {
+      const statusEl = document.getElementById('run-status-text');
+      const gpsEl = document.getElementById('run-gps-tag');
+      if (statusEl) statusEl.textContent = text;
+      if (gpsEl) {
+        gpsEl.textContent = gpsReady ? 'GPS LIVE' : 'GPS OFF';
+        gpsEl.className = gpsReady ? 'tag g' : 'tag';
+      }
+    }
+
+    function updateRunMetrics() {
+      const durationSec = runStartedAt ? Math.max(0, Math.floor((Date.now() - runStartedAt) / 1000)) : 0;
+      const paceSec = runDistanceKm > 0 ? durationSec / runDistanceKm : 0;
+      const steps = estimateRunSteps(runDistanceKm);
+      const calories = estimateRunCalories(runDistanceKm);
+      const pts = runSessionPoints.length;
+      const distanceEl = document.getElementById('run-distance');
+      const durationEl = document.getElementById('run-duration');
+      const paceEl = document.getElementById('run-pace');
+      const stepsEl = document.getElementById('run-steps');
+      const caloriesEl = document.getElementById('run-calories');
+      const pointsEl = document.getElementById('run-points');
+      if (distanceEl) distanceEl.textContent = `${runDistanceKm.toFixed(2)} km`;
+      if (durationEl) durationEl.textContent = formatDurationShort(durationSec);
+      if (paceEl) paceEl.textContent = formatPace(paceSec);
+      if (stepsEl) stepsEl.textContent = fmt(steps);
+      if (caloriesEl) caloriesEl.textContent = `${fmt(calories)} kcal`;
+      if (pointsEl) pointsEl.textContent = fmt(pts);
+      const primary = document.getElementById('run-primary-btn');
+      const secondary = document.getElementById('run-secondary-btn');
+      if (primary) primary.textContent = runTrackingActive ? 'PAUSE RUN' : (runSessionPoints.length ? 'RESUME RUN' : 'START RUN');
+      if (secondary) {
+        secondary.disabled = runSessionPoints.length < 2;
+        secondary.style.opacity = runSessionPoints.length < 2 ? '.45' : '1';
+      }
+    }
+
+    function resetRunSessionState() {
+      runSessionPoints = [];
+      runDistanceKm = 0;
+      runStartedAt = null;
+      runLastPoint = null;
+      runTrackingActive = false;
+      if (runPathLine) runPathLine.setLatLngs([]);
+      if (runHistoryLayer) runHistoryLayer.clearLayers();
+      setRunStatus('READY TO TRACK', false);
+      updateRunMetrics();
+      if (runTickInterval) {
+        clearInterval(runTickInterval);
+        runTickInterval = null;
+      }
+      if (runWatchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(runWatchId);
+        runWatchId = null;
+      }
+    }
+
+    function drawRunHistoryPreview() {
+      if (!runHistoryLayer) return;
+      runHistoryLayer.clearLayers();
+      const latest = DB.runLog.slice(0, 1)[0];
+      if (!latest) return;
+      const coords = safeParsePath(latest.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
+      if (!coords.length) return;
+      const poly = L.polyline(coords, { color: '#ffffff', weight: 3, opacity: .55, dashArray: '6 5' }).addTo(runHistoryLayer);
+      if (!runTrackingActive && !runSessionPoints.length) {
+        runMap.fitBounds(poly.getBounds(), { padding: [18, 18] });
+      }
+    }
+
+    function renderRunHistory() {
+      const host = document.getElementById('run-history');
+      if (!host) return;
+      const rows = [...DB.runLog].sort((a, b) => String(b.Start_Timestamp || '').localeCompare(String(a.Start_Timestamp || '')));
+      if (!rows.length) {
+        host.innerHTML = `<div class="run-empty">No runs saved yet.</div>`;
+        drawRunHistoryPreview();
+        return;
+      }
+      host.innerHTML = rows.slice(0, 8).map(row => `
+        <div class="run-history-row">
+          <div class="run-history-head">
+            <div>
+              <div class="run-history-title">${Number(row.Distance_Km || 0).toFixed(2)} KM</div>
+              <div class="run-history-sub">${row.Date} · ${row.Day || dow(row.Date)}</div>
+            </div>
+            <button class="dba" style="margin:0" onclick="previewRunRoute(${row.ID})">VIEW ROUTE</button>
+          </div>
+          <div class="run-history-metrics">
+            <div class="run-history-metric"><span class="mini">Time</span><span class="val">${formatDurationShort(row.Duration_Sec)}</span></div>
+            <div class="run-history-metric"><span class="mini">Pace</span><span class="val">${formatPace(row.Avg_Pace_Sec_Per_Km)}</span></div>
+            <div class="run-history-metric"><span class="mini">Steps</span><span class="val">${fmt(row.Estimated_Steps || 0)}</span></div>
+            <div class="run-history-metric"><span class="mini">Calories</span><span class="val">${fmt(row.Estimated_Calories || 0)}</span></div>
+          </div>
+        </div>
+      `).join('');
+      drawRunHistoryPreview();
+    }
+
+    window.previewRunRoute = function(runId) {
+      const row = DB.runLog.find(item => Number(item.ID) === Number(runId));
+      if (!row) return;
+      const map = ensureRunMap();
+      if (!map || !runHistoryLayer) return;
+      runHistoryLayer.clearLayers();
+      const coords = safeParsePath(row.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
+      if (!coords.length) return;
+      const poly = L.polyline(coords, { color: '#ffffff', weight: 4, opacity: .9 }).addTo(runHistoryLayer);
+      L.circleMarker(coords[0], { radius: 6, color: '#050505', fillColor: '#c8ff00', fillOpacity: 1 }).addTo(runHistoryLayer);
+      L.circleMarker(coords[coords.length - 1], { radius: 6, color: '#050505', fillColor: '#ffffff', fillOpacity: 1 }).addTo(runHistoryLayer);
+      map.fitBounds(poly.getBounds(), { padding: [18, 18] });
+    };
+
+    function appendRunPoint(position) {
+      const point = {
+        lat: Number(position.coords.latitude),
+        lng: Number(position.coords.longitude),
+        timestamp: new Date(position.timestamp || Date.now()).toISOString()
+      };
+      if (!Number.isFinite(point.lat) || !Number.isFinite(point.lng)) return;
+      if (!runStartedAt) runStartedAt = Date.now();
+      if (runLastPoint) {
+        const segment = haversineKm(runLastPoint, point);
+        if (segment > 0 && segment < 1) runDistanceKm += segment;
+      }
+      runSessionPoints.push(point);
+      runLastPoint = point;
+      if (runPathLine) runPathLine.setLatLngs(runSessionPoints.map(p => [p.lat, p.lng]));
+      if (runMap) runMap.setView([point.lat, point.lng], Math.max(runMap.getZoom(), 16), { animate: true });
+      setRunStatus(`TRACKING ${runSessionPoints.length} GPS POINTS`, true);
+      updateRunMetrics();
+    }
+
+    function handleRunPositionError(error) {
+      const code = error?.code;
+      const message = code === 1 ? 'LOCATION PERMISSION DENIED' : (code === 2 ? 'GPS UNAVAILABLE' : 'LOCATION UPDATE FAILED');
+      toast(message, false, true);
+      setRunStatus(message, false);
+      if (runTrackingActive) toggleRunTracking();
+    }
+
+    window.toggleRunTracking = function() {
+      if (!navigator.geolocation) {
+        toast('GEOLOCATION NOT SUPPORTED', false, true);
+        return;
+      }
+      if (runTrackingActive) {
+        navigator.geolocation.clearWatch(runWatchId);
+        runWatchId = null;
+        runTrackingActive = false;
+        if (runTickInterval) {
+          clearInterval(runTickInterval);
+          runTickInterval = null;
+        }
+        setRunStatus('RUN PAUSED', false);
+        updateRunMetrics();
+        return;
+      }
+      ensureRunMap();
+      runTrackingActive = true;
+      if (!runStartedAt) runStartedAt = Date.now();
+      setRunStatus(runSessionPoints.length ? 'RESUMING GPS...' : 'SEARCHING FOR GPS...', false);
+      runWatchId = navigator.geolocation.watchPosition(
+        appendRunPoint,
+        handleRunPositionError,
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+      );
+      if (runTickInterval) clearInterval(runTickInterval);
+      runTickInterval = setInterval(updateRunMetrics, 1000);
+      updateRunMetrics();
+    };
+
+    window.finishRunTracking = async function() {
+      if (runSessionPoints.length < 2 || !runStartedAt) {
+        toast('START A RUN FIRST', false, true);
+        return;
+      }
+      if (runWatchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(runWatchId);
+        runWatchId = null;
+      }
+      if (runTickInterval) {
+        clearInterval(runTickInterval);
+        runTickInterval = null;
+      }
+      runTrackingActive = false;
+      const endTimestamp = new Date().toISOString();
+      const durationSec = Math.max(1, Math.floor((new Date(endTimestamp).getTime() - runStartedAt) / 1000));
+      const paceSec = runDistanceKm > 0 ? Math.round(durationSec / runDistanceKm) : 0;
+      const row = {
+        ID: DB.runLog.length ? Math.max(...DB.runLog.map(item => Number(item.ID) || 0)) + 1 : 1,
+        Date: TODAY,
+        Day: dow(TODAY),
+        Start_Timestamp: new Date(runStartedAt).toISOString(),
+        End_Timestamp: endTimestamp,
+        Duration_Sec: durationSec,
+        Distance_Km: Number(runDistanceKm.toFixed(3)),
+        Avg_Pace_Sec_Per_Km: paceSec,
+        Estimated_Steps: estimateRunSteps(runDistanceKm),
+        Estimated_Calories: estimateRunCalories(runDistanceKm),
+        Path_JSON: JSON.stringify(runSessionPoints)
+      };
+      try {
+        await insertRunRow(row);
+      } catch (e) {
+        console.warn('run_log save failed, keeping local copy only', e);
+      }
+      DB.runLog.unshift(row);
+      syncWB();
+      renderRunHistory();
+      setRunStatus('RUN SAVED', false);
+      toast(`RUN SAVED • ${row.Distance_Km.toFixed(2)} KM`, true);
+      resetRunSessionState();
+      previewRunRoute(row.ID);
+      if (CUR === 'database') renderDB();
+    };
+
+    function renderRunScreen() {
+      ensureRunMap();
+      setTimeout(() => {
+        if (runMap) runMap.invalidateSize();
+        drawRunHistoryPreview();
+      }, 40);
+      updateRunMetrics();
+      renderRunHistory();
+      if (!runTrackingActive && !runSessionPoints.length) setRunStatus('READY TO TRACK', false);
+    }
+
     function renderDash() {
       const c = todayCals(), p = Math.min(Math.round(c / GOAL * 100), 100);
       document.getElementById('d-pct').textContent = p + '%';
@@ -4203,6 +4784,15 @@
       document.getElementById('db-wsess').textContent = [...new Set(DB.workoutLog.map(r => r.Session_ID).filter(Boolean))].length;
       if (ws) { const lw = DB.workoutLog[ws - 1]; document.getElementById('db-wlat').textContent = lw.Date + ' · ' + (lw.Session_ID || '—'); }
       else document.getElementById('db-wlat').textContent = '—';
+      const runs = DB.runLog.length;
+      document.getElementById('db-runs').textContent = runs;
+      document.getElementById('db-rdist').textContent = `${DB.runLog.reduce((sum, row) => sum + (Number(row.Distance_Km) || 0), 0).toFixed(2)} km`;
+      if (runs) {
+        const latestRun = [...DB.runLog].sort((a, b) => String(b.Start_Timestamp || '').localeCompare(String(a.Start_Timestamp || '')))[0];
+        document.getElementById('db-rlatest').textContent = `${latestRun.Date} · ${(Number(latestRun.Distance_Km) || 0).toFixed(2)} km`;
+      } else {
+        document.getElementById('db-rlatest').textContent = '—';
+      }
       const raw = DB.calLog.slice(-10).reverse();
       document.getElementById('db-raw').innerHTML = raw.length
         ? `<table style="width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:9px;color:var(--text2)">
@@ -4271,6 +4861,7 @@
           updateTimerPrimaryButton(false);
           updateTimerDisplay(getTimerInputMs());
           renderDash();
+          renderRunScreen();
 
           document.getElementById('loading').classList.add('gone');
         })();
