@@ -73,42 +73,42 @@
       flex-direction: column;
       visibility: hidden;
       pointer-events: none;
-      transform: translateX(100%);
+      transform: translate3d(108%, 0, 0);
       opacity: 0;
+      transition: transform .34s cubic-bezier(.22, 1, .36, 1), opacity .24s ease;
+      will-change: transform, opacity;
+      backface-visibility: hidden
     }
 
     .screen.is-active {
       visibility: visible;
       pointer-events: all;
-      transform: translateX(0);
-      opacity: 1;
-      transition: transform .38s cubic-bezier(.4, 0, .2, 1), opacity .38s cubic-bezier(.4, 0, .2, 1);
+      transform: translate3d(0, 0, 0);
+      opacity: 1
     }
 
     .screen.exit-left {
       visibility: visible;
       pointer-events: none;
-      transform: translateX(-40%);
-      opacity: 0;
-      transition: transform .38s cubic-bezier(.4, 0, .2, 1), opacity .38s cubic-bezier(.4, 0, .2, 1);
+      transform: translate3d(-18%, 0, 0);
+      opacity: 0
     }
 
     .screen.exit-right {
       visibility: visible;
       pointer-events: none;
-      transform: translateX(100%);
-      opacity: 0;
-      transition: transform .38s cubic-bezier(.4, 0, .2, 1), opacity .38s cubic-bezier(.4, 0, .2, 1);
+      transform: translate3d(18%, 0, 0);
+      opacity: 0
     }
 
     .screen.prepare-right {
-      transform: translateX(100%);
+      transform: translate3d(108%, 0, 0);
       opacity: 0;
       visibility: visible
     }
 
     .screen.prepare-left {
-      transform: translateX(-40%);
+      transform: translate3d(-18%, 0, 0);
       opacity: 0;
       visibility: visible
     }
@@ -733,6 +733,175 @@
 
     .dbtn:hover {
       color: var(--red)
+    }
+
+    .egg-trigger {
+      display: block;
+      width: 100%;
+      margin: 12px 0 0;
+      padding: 8px 0 2px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, .2);
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      transition: color .18s ease, opacity .18s ease;
+      opacity: .55
+    }
+
+    .egg-trigger:hover {
+      color: rgba(255, 255, 255, .42);
+      opacity: 1
+    }
+
+    .lb-swipe {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface3);
+      touch-action: pan-y
+    }
+
+    .lb-swipe:last-child {
+      border-bottom: none
+    }
+
+    .lb-delete {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 92px;
+      border: none;
+      background: #ff5d5d;
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 1
+    }
+
+    .lb-row {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      width: 100%;
+      transition: transform .2s ease
+    }
+
+    .lb-row.me {
+      background: var(--surface2)
+    }
+
+    .lb-swipe.show-delete .lb-row {
+      transform: translateX(-92px)
+    }
+
+    .about-screen {
+      background: var(--green);
+      color: #050505
+    }
+
+    .about-screen .topbar {
+      background: var(--green);
+      border-bottom: 1px solid rgba(5, 5, 5, .14)
+    }
+
+    .about-screen .brand,
+    .about-screen .back-btn,
+    .about-screen .icon-btn {
+      color: #050505
+    }
+
+    .about-screen .scroll {
+      padding-bottom: 28px
+    }
+
+    .about-phase {
+      color: rgba(5, 5, 5, .48)
+    }
+
+    .about-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 58px;
+      line-height: .96;
+      letter-spacing: 1.5px;
+      margin: 18px 0 18px
+    }
+
+    .about-card {
+      background: rgba(5, 5, 5, .08);
+      border: 1px solid rgba(5, 5, 5, .14);
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 14px
+    }
+
+    .about-label {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(5, 5, 5, .48);
+      margin-bottom: 12px
+    }
+
+    .about-copy {
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(5, 5, 5, .9)
+    }
+
+    .about-copy strong {
+      color: #050505
+    }
+
+    .about-links {
+      display: grid;
+      gap: 10px
+    }
+
+    .about-link,
+    .coffee-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 56px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      transition: transform .18s ease, background .18s ease, color .18s ease
+    }
+
+    .about-link {
+      background: rgba(5, 5, 5, .08);
+      border: 1px solid rgba(5, 5, 5, .14);
+      color: #050505
+    }
+
+    .coffee-btn {
+      border: none;
+      background: #050505;
+      color: var(--green);
+      cursor: pointer
+    }
+
+    .about-link:hover,
+    .coffee-btn:hover {
+      transform: translateY(-1px)
     }
 
     /* ── DROPDOWN ────────────────────────────────────────── */
@@ -2167,6 +2336,7 @@
           <span class="flbl">LAST 10 CALORIE ENTRIES</span>
           <div id="db-raw"></div>
         </div>
+        <button class="egg-trigger" onclick="go('forge-about')">quiet mode: disabled</button>
       </div>
     </div>
 
@@ -2179,7 +2349,7 @@
       </div>
       <div class="scroll">
         <div class="phase">SOCIAL</div>
-        <div class="h1b">LEADER<br>BOARD.</div>
+        <div class="h1b">LEADERBOARD.</div>
         
         <div class="fb" style="background:var(--accent-dim); border-color:var(--accent); text-align:center; padding-top:24px;">
           <div style="font-size:12px; font-weight:700; color:var(--text2); letter-spacing:2px">YOUR STATS</div>
@@ -2209,6 +2379,43 @@
             <span class="flbl" style="margin-bottom:8px">PENDING REQUESTS</span>
             <div id="lb-requests-list" style="display:flex; flex-direction:column; gap:8px"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen about-screen" id="s-forge-about">
+      <div class="topbar">
+        <button class="back-btn" onclick="back()"><i class="fa-solid fa-arrow-left"></i>BACK</button>
+        <div class="brand">FORGE</div>
+        <div style="width:36px"></div>
+      </div>
+      <div class="scroll">
+        <div class="phase about-phase">EASTER EGG</div>
+        <div class="about-title">ASWIN<br>MENON</div>
+        <div class="about-card">
+          <span class="about-label">About The Builder</span>
+          <div class="about-copy">
+            <strong>FORGE</strong> is built to make consistency feel sharp, fast, and a little addictive.
+            It combines a static single-file frontend, Supabase auth/data, and a server-side Gemini layer so the app stays lightweight while the smart features stay private.
+          </div>
+        </div>
+        <div class="about-card">
+          <span class="about-label">Why It Exists</span>
+          <div class="about-copy">
+            The idea behind FORGE is simple: fewer excuses, cleaner tracking, better momentum.
+            Calories, workouts, AI support, streaks, and social competition all live in one focused system designed by <strong>Aswin Menon</strong>.
+          </div>
+        </div>
+        <div class="about-links">
+          <a class="about-link" href="https://www.linkedin.com/in/aswinpmenon/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-linkedin"></i> LinkedIn
+          </a>
+          <a class="about-link" href="https://github.com/aswinpmenon" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-github"></i> GitHub
+          </a>
+          <button class="coffee-btn" onclick="window.open('https://www.buymeacoffee.com/', '_blank', 'noopener,noreferrer')">
+            <i class="fa-solid fa-mug-hot"></i> Buy Me A Coffee
+          </button>
         </div>
       </div>
     </div>
@@ -2317,7 +2524,7 @@
     let userStats = { xp: 0, level: 1, streak: 0 };
     let friendsList = [];
     let friendRequests = [];
-    const APP_VERSION = '3.3.0';
+    const APP_VERSION = '3.6.0';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -2366,9 +2573,18 @@
     // ══════════════════════════════════════════════
     //  NAVIGATION  — fully rebuilt, race-condition free
     // ══════════════════════════════════════════════
-    const SCREEN_IDS = ['dashboard', 'record-calorie', 'record-workout', 'progress-daily', 'progress-weekly', 'database'];
-    // Depth: dashboard=0, everything else=1
-    function depth(id) { return id === 'dashboard' ? 0 : 1; }
+    const SCREEN_IDS = ['dashboard', 'record-calorie', 'record-workout', 'progress-daily', 'progress-weekly', 'database', 'leaderboard', 'forge-about'];
+    const SCREEN_DEPTHS = {
+      dashboard: 0,
+      'record-calorie': 1,
+      'record-workout': 1,
+      'progress-daily': 1,
+      'progress-weekly': 1,
+      database: 1,
+      leaderboard: 1,
+      'forge-about': 2
+    };
+    function depth(id) { return SCREEN_DEPTHS[id] ?? 1; }
 
     let CUR = null;   // current screen id
     let locked = false;  // true while animation runs
@@ -2382,15 +2598,18 @@
       el.style.visibility = '';
       el.style.opacity = '';
       el.style.transform = '';
+      el.style.zIndex = '';
+      el.style.pointerEvents = '';
     }
 
     function go(to, { direction = null, pushHistory = true } = {}) {
       if (to === CUR || locked) return;
+      const toEl = document.getElementById('s-' + to);
+      if (!toEl) return;
       locked = true;
       clearTimeout(navTimer);
 
       const fromEl = CUR ? document.getElementById('s-' + CUR) : null;
-      const toEl = document.getElementById('s-' + to);
       const deeper = direction ? direction === 'forward' : depth(to) >= depth(CUR || 'dashboard');
 
       SCREEN_IDS.forEach(id => {
@@ -2404,6 +2623,8 @@
       toEl.classList.add(deeper ? 'prepare-right' : 'prepare-left');
       toEl.style.visibility = 'visible';
       toEl.style.opacity = '0';
+      toEl.style.zIndex = '3';
+      if (fromEl) fromEl.style.zIndex = '2';
 
       // 2. Force browser to paint the off-screen position before enabling transitions
       toEl.getBoundingClientRect(); // reflow
@@ -2411,10 +2632,11 @@
       // 3. Restore transition, then animate
       toEl.style.transition = '';
 
-      requestAnimationFrame(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
         // Exit current screen
         if (fromEl) {
           resetScreenState(fromEl);
+          fromEl.style.zIndex = '2';
           fromEl.classList.remove('is-active');
           fromEl.classList.add(deeper ? 'exit-left' : 'exit-right');
         }
@@ -2445,7 +2667,7 @@
           NAV_STACK = [to];
         }
         onEnter(to);
-      });
+      }));
     }
 
     function back() {
@@ -2466,6 +2688,10 @@
       if (s === 'progress-daily') renderDaily();
       if (s === 'progress-weekly') renderWeekly();
       if (s === 'database') renderDB();
+      if (s === 'leaderboard') {
+        updateGamificationUI();
+        loadSocialData();
+      }
     }
 
     // ══════════════════════════════════════════════
@@ -3662,6 +3888,8 @@
           .select('id, sender_id')
           .eq('status', 'pending')
           .eq('receiver_id', currentUser.id);
+       const { data: friends } = await supabaseClient.from('friends').select('friend_id').eq('user_id', currentUser.id);
+       friendsList = friends || [];
        
        const pendingBox = document.getElementById('lb-pending');
        const reqList = document.getElementById('lb-requests-list');
@@ -3687,6 +3915,16 @@
        fetchLeaderboard();
     }
 
+    async function cleanupFriendRelationship(friendId) {
+      if (!supabaseClient || !currentUser || !friendId) return;
+      await Promise.allSettled([
+        supabaseClient.from('friends').delete().match({ user_id: currentUser.id, friend_id: friendId }),
+        supabaseClient.from('friends').delete().match({ user_id: friendId, friend_id: currentUser.id }),
+        supabaseClient.from('friend_requests').delete().match({ sender_id: currentUser.id, receiver_id: friendId }),
+        supabaseClient.from('friend_requests').delete().match({ sender_id: friendId, receiver_id: currentUser.id })
+      ]);
+    }
+
     async function sendFriendRequest() {
       if (!supabaseClient || !currentUser) { toast('Please sign in first.', false, true); return; }
       const emailObj = document.getElementById('lb-add-email');
@@ -3701,7 +3939,22 @@
       const friend_id = friendRow.user_id;
       if (friend_id === currentUser.id) { toast('You cannot add yourself.', false, true); return; }
 
-      const { error } = await supabaseClient.from('friend_requests').insert({ sender_id: currentUser.id, receiver_id: friend_id });
+      const { data: existingFriend } = await supabaseClient.from('friends')
+        .select('friend_id')
+        .eq('user_id', currentUser.id)
+        .eq('friend_id', friend_id)
+        .maybeSingle();
+      if (existingFriend) {
+        toast('Already connected.', false, true);
+        return;
+      }
+
+      let { error } = await supabaseClient.from('friend_requests').insert({ sender_id: currentUser.id, receiver_id: friend_id });
+      if (error) {
+        await cleanupFriendRelationship(friend_id);
+        const retry = await supabaseClient.from('friend_requests').insert({ sender_id: currentUser.id, receiver_id: friend_id });
+        error = retry.error;
+      }
       if (error) { toast('Already requested or error.', false, true); }
       else { toast('Request Sent!', true); emailObj.value = ''; }
     }
@@ -3716,11 +3969,50 @@
        toast('Friend added!', true);
        loadSocialData();
     }
+
+    async function removeFriendConnection(friendId, friendName) {
+      if (!supabaseClient || !currentUser || !friendId) return;
+      try {
+        await cleanupFriendRelationship(friendId);
+        toast(`${String(friendName || 'Friend').toUpperCase()} REMOVED`, true);
+        loadSocialData();
+      } catch (e) {
+        toast('REMOVE FAILED', false, true);
+      }
+    }
+
+    function lbSwipeStart(event, friendId) {
+      const el = document.getElementById(`lb-swipe-${friendId}`);
+      if (!el) return;
+      document.querySelectorAll('.lb-swipe.show-delete').forEach(row => {
+        if (row !== el) row.classList.remove('show-delete');
+      });
+      el.dataset.startX = String(event.changedTouches[0].clientX);
+    }
+
+    function lbSwipeMove(event, friendId) {
+      const el = document.getElementById(`lb-swipe-${friendId}`);
+      if (!el || !el.dataset.startX) return;
+      const delta = event.changedTouches[0].clientX - Number(el.dataset.startX);
+      if (delta < -36) el.classList.add('show-delete');
+      if (delta > 24) el.classList.remove('show-delete');
+    }
+
+    function lbSwipeEnd(event, friendId) {
+      const el = document.getElementById(`lb-swipe-${friendId}`);
+      if (!el || !el.dataset.startX) return;
+      const delta = event.changedTouches[0].clientX - Number(el.dataset.startX);
+      if (delta < -36) el.classList.add('show-delete');
+      if (delta > -20) el.classList.remove('show-delete');
+      delete el.dataset.startX;
+    }
     
     window.fetchLeaderboard = async function() {
       if (!supabaseClient || !currentUser) return;
       
       const { data: friends } = await supabaseClient.from('friends').select('friend_id').eq('user_id', currentUser.id);
+      friendsList = friends || [];
+      const friendIdSet = new Set((friends || []).map(f => f.friend_id));
       let userIds = [currentUser.id];
       if (friends) {
          userIds = userIds.concat(friends.map(f => f.friend_id));
@@ -3741,21 +4033,28 @@
             const rankEmoji = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : null));
             const rankNum = rankEmoji ? `<span style="font-size:18px">${rankEmoji}</span>` : `<span style="font-size:18px; font-family:'Bebas Neue'; color:var(--text2); width:24px; display:inline-block; text-align:center">${index + 1}</span>`;
             const borderLeft = isMe ? 'border-left: 3px solid var(--green);' : 'border-left: 3px solid transparent;';
-            const rowBg = isMe ? 'background:var(--surface2);' : 'background:transparent;';
             const namePart = isMe
               ? `<span style="font-size:15px; font-weight:800; letter-spacing:0.5px; color:var(--text)">YOU</span>`
               : `<span style="font-size:15px; font-weight:700; letter-spacing:0.5px; color:var(--text)">${name}</span>`;
+            const isFriend = !isMe && friendIdSet.has(s.user_id);
+            const rowClass = isMe ? 'lb-row me' : 'lb-row';
+            const rowMarkup = `
+              <div class="${rowClass}" style="${borderLeft} padding:12px 16px; display:flex; align-items:center; gap:14px; z-index:2;">
+                <div style="width:28px; text-align:center; flex-shrink:0">${rankNum}</div>
+                <div style="flex:1; min-width:0">
+                  <div style="display:flex; gap:8px; align-items:center">
+                    ${namePart}
+                    <span style="font-family:'Space Mono'; font-size:9px; background:var(--surface); padding:2px 7px; border-radius:4px; color:var(--text2); letter-spacing:1px; flex-shrink:0">LVL ${s.level}</span>
+                  </div>
+                  <div style="font-size:11px; color:var(--text3); margin-top:3px"><i class="fa-solid fa-fire" style="color:var(--green); font-size:9px; margin-right:3px"></i>${s.streak} day streak</div>
+                </div>
+                <div style="font-family:'Space Mono'; font-weight:700; color:var(--text); font-size:17px; flex-shrink:0">${s.xp}<span style="font-size:10px; color:var(--text2); font-weight:400; margin-left:3px">XP</span></div>
+              </div>
+            `;
             return `
-              <div style="${rowBg} ${borderLeft} padding:12px 16px; display:flex; align-items:center; gap:14px; ${index < (stats.length - 1) ? 'border-bottom:1px solid var(--surface3)' : ''}">
-                 <div style="width:28px; text-align:center; flex-shrink:0">${rankNum}</div>
-                 <div style="flex:1; min-width:0">
-                    <div style="display:flex; gap:8px; align-items:center">
-                       ${namePart}
-                       <span style="font-family:'Space Mono'; font-size:9px; background:var(--surface); padding:2px 7px; border-radius:4px; color:var(--text2); letter-spacing:1px; flex-shrink:0">LVL ${s.level}</span>
-                    </div>
-                    <div style="font-size:11px; color:var(--text3); margin-top:3px"><i class="fa-solid fa-fire" style="color:var(--green); font-size:9px; margin-right:3px"></i>${s.streak} day streak</div>
-                 </div>
-                 <div style="font-family:'Space Mono'; font-weight:700; color:var(--text); font-size:17px; flex-shrink:0">${s.xp}<span style="font-size:10px; color:var(--text2); font-weight:400; margin-left:3px">XP</span></div>
+              <div class="lb-swipe${isFriend ? '' : ' static'}" ${isFriend ? `id="lb-swipe-${s.user_id}" ontouchstart="lbSwipeStart(event,'${s.user_id}')" ontouchmove="lbSwipeMove(event,'${s.user_id}')" ontouchend="lbSwipeEnd(event,'${s.user_id}')"` : ''}>
+                ${isFriend ? `<button class="lb-delete" onclick="removeFriendConnection('${s.user_id}', '${name.replace(/'/g, "\\'")}')">Delete</button>` : ''}
+                ${rowMarkup}
               </div>
             `;
          }).join('');
