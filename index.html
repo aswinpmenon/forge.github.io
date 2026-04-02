@@ -992,13 +992,24 @@
     }
 
     .run-actions {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
       margin-bottom: 14px
     }
 
     .run-actions .sbtn {
       padding: 15px
+    }
+
+    .run-actions .dbtn {
+      margin-top: 0;
+      min-height: 54px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 68, 68, .18);
+      background: rgba(255, 68, 68, .08);
+      color: var(--red);
+      font-size: 10px
     }
 
     .run-history-row {
@@ -2607,7 +2618,8 @@
           </div>
           <div class="run-actions">
             <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START RUN</button>
-            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH</button>
+            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH RUN</button>
+            <button class="dbtn" id="run-cancel-btn" onclick="cancelRunTracking()">CANCEL RUN</button>
           </div>
         </div>
         <div class="fb">
@@ -4658,11 +4670,14 @@
       if (pointsEl) pointsEl.textContent = fmt(pts);
       const primary = document.getElementById('run-primary-btn');
       const secondary = document.getElementById('run-secondary-btn');
+      const cancelBtn = document.getElementById('run-cancel-btn');
       if (primary) primary.textContent = runTrackingActive ? 'PAUSE RUN' : (runSessionPoints.length ? 'RESUME RUN' : 'START RUN');
       if (secondary) {
-        secondary.disabled = runSessionPoints.length < 2;
-        secondary.style.opacity = runSessionPoints.length < 2 ? '.45' : '1';
+        const canFinish = Boolean(runStartedAt) && (runSessionPoints.length >= 1 || durationSec >= 5);
+        secondary.disabled = !canFinish;
+        secondary.style.opacity = canFinish ? '1' : '.55';
       }
+      if (cancelBtn) cancelBtn.style.opacity = runStartedAt ? '1' : '.55';
     }
 
     function resetRunSessionState() {
@@ -4786,7 +4801,7 @@
       runWatchId = navigator.geolocation.watchPosition(
         appendRunPoint,
         handleRunPositionError,
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+        { enableHighAccuracy: true, maximumAge: 5000, timeout: 60000 }
       );
     }
 
@@ -4817,13 +4832,26 @@
       const point = {
         lat: Number(position.coords.latitude),
         lng: Number(position.coords.longitude),
+        accuracy: Number(position.coords.accuracy || 0),
         timestamp: new Date(position.timestamp || Date.now()).toISOString()
       };
       if (!Number.isFinite(point.lat) || !Number.isFinite(point.lng)) return;
+      if (Number.isFinite(point.accuracy) && point.accuracy > 65) {
+        setRunStatus(`GPS WEAK • ${Math.round(point.accuracy)}M`, false);
+        return;
+      }
       if (!runStartedAt) runStartedAt = Date.now();
       if (runLastPoint) {
         const segment = haversineKm(runLastPoint, point);
-        if (segment > 0 && segment < 1) runDistanceKm += segment;
+        const prevMs = new Date(runLastPoint.timestamp).getTime();
+        const currMs = new Date(point.timestamp).getTime();
+        const dtSec = Math.max(1, Math.round((currMs - prevMs) / 1000));
+        const speedKmh = segment / (dtSec / 3600);
+        const looksLikeJitter = segment < 0.002;
+        const implausibleSpeed = speedKmh > 25;
+        if (!looksLikeJitter && !implausibleSpeed && segment < 1) {
+          runDistanceKm += segment;
+        }
       }
       runSessionPoints.push(point);
       runLastPoint = point;
@@ -4833,10 +4861,22 @@
 
     function handleRunPositionError(error) {
       const code = error?.code;
+      if (code === 3) {
+        setRunStatus('GPS WEAK - RETRYING', false);
+        return;
+      }
       const message = code === 1 ? 'LOCATION PERMISSION DENIED' : (code === 2 ? 'GPS UNAVAILABLE' : 'LOCATION UPDATE FAILED');
       toast(message, false, true);
       setRunStatus(message, false);
-      if (runTrackingActive) toggleRunTracking();
+      if (runTrackingActive) {
+        stopRunWatch();
+        runTrackingActive = false;
+        if (runTickInterval) {
+          clearInterval(runTickInterval);
+          runTickInterval = null;
+        }
+        updateRunMetrics();
+      }
     }
 
     window.toggleRunTracking = function() {
@@ -4870,7 +4910,8 @@
     };
 
     window.finishRunTracking = async function() {
-      if (runSessionPoints.length < 2 || !runStartedAt) {
+      const durationSecLive = getRunElapsedSec();
+      if (!runStartedAt || (runSessionPoints.length < 1 && durationSecLive < 5)) {
         toast('START A RUN FIRST', false, true);
         return;
       }
@@ -4909,6 +4950,16 @@
       openRunFinishModal(row);
       resetRunSessionState();
       if (CUR === 'database') renderDB();
+    };
+
+    window.cancelRunTracking = function() {
+      if (!runStartedAt && !runSessionPoints.length) {
+        toast('NO ACTIVE RUN', false, true);
+        return;
+      }
+      if (!window.confirm('Cancel this run? Unsaved run data will be discarded.')) return;
+      resetRunSessionState();
+      toast('RUN CANCELED', true);
     };
 
     function renderRunScreen() {
