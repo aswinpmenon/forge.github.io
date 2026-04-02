@@ -19,6 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     *,
     *::before,
@@ -917,6 +918,11 @@
       background: var(--surface2)
     }
 
+    .run-map.popup {
+      height: 240px;
+      margin-bottom: 0
+    }
+
     .run-map-status {
       display: flex;
       align-items: center;
@@ -932,6 +938,26 @@
 
     .run-map-status .tag {
       flex-shrink: 0
+    }
+
+    .run-gps-btn {
+      min-width: 88px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text2);
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer
+    }
+
+    .run-gps-btn.on {
+      background: rgba(200, 255, 0, .08);
+      border-color: rgba(200, 255, 0, .24);
+      color: var(--green)
     }
 
     .run-grid {
@@ -1044,9 +1070,107 @@
       padding: 6px 0
     }
 
+    .run-finish-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 5, .88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 1250;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease
+    }
+
+    .run-finish-modal.show {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .run-finish-card {
+      width: min(100%, 380px);
+      max-height: calc(100dvh - 36px);
+      overflow-y: auto;
+      background: #111;
+      border: 1px solid #232323;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .52)
+    }
+
+    .run-finish-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px
+    }
+
+    .run-finish-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 34px;
+      letter-spacing: 1.5px;
+      line-height: 1
+    }
+
+    .run-finish-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 6px
+    }
+
+    .run-finish-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0
+    }
+
+    .run-finish-metric {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px
+    }
+
+    .run-finish-metric .mini {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    .run-finish-metric .val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: .8px
+    }
+
+    .run-finish-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px
+    }
+
+    .run-finish-actions .sbtn {
+      padding: 14px
+    }
+
     @media (max-width:390px) {
       .run-history-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .run-finish-actions {
+        flex-direction: column
       }
     }
 
@@ -2446,9 +2570,8 @@
         <div class="fb">
           <div class="run-map-status">
             <span id="run-status-text">READY TO TRACK</span>
-            <span class="tag" id="run-gps-tag">GPS OFF</span>
+            <button class="run-gps-btn on" id="run-gps-toggle" onclick="toggleRunGps()">GPS ON</button>
           </div>
-          <div id="run-map" class="run-map"></div>
           <div class="run-grid">
             <div class="run-stat">
               <span class="run-stat-label">Distance</span>
@@ -2487,6 +2610,30 @@
           <div id="run-history">
             <div class="run-empty">No runs saved yet.</div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="run-finish-modal" id="run-finish-modal">
+      <div class="run-finish-card" id="run-finish-card">
+        <div class="run-finish-head">
+          <div>
+            <div class="run-finish-title">RUN COMPLETE</div>
+            <div class="run-finish-sub" id="run-finish-sub">Session saved</div>
+          </div>
+          <button class="icon-btn" onclick="closeRunFinishModal()" aria-label="Close run summary"><i
+              class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="run-finish-map" class="run-map popup"></div>
+        <div class="run-finish-grid">
+          <div class="run-finish-metric"><span class="mini">Distance</span><span class="val" id="run-finish-distance">0.00 km</span></div>
+          <div class="run-finish-metric"><span class="mini">Duration</span><span class="val" id="run-finish-duration">00:00</span></div>
+          <div class="run-finish-metric"><span class="mini">Pace</span><span class="val" id="run-finish-pace">--:--</span></div>
+          <div class="run-finish-metric"><span class="mini">Steps</span><span class="val" id="run-finish-steps">0</span></div>
+        </div>
+        <div class="run-finish-actions">
+          <button class="sbtn alt" onclick="downloadRunSummaryImage()">DOWNLOAD IMAGE</button>
+          <button class="sbtn" onclick="closeRunFinishModal()">DONE</button>
         </div>
       </div>
     </div>
@@ -2740,13 +2887,15 @@
     let runMap = null;
     let runPathLine = null;
     let runHistoryLayer = null;
+    let runGpsEnabled = true;
     let runSessionPoints = [];
     let runDistanceKm = 0;
     let runStartedAt = null;
     let runLastPoint = null;
     let runTrackingActive = false;
     let runSupabaseEnabled = true;
-    const APP_VERSION = '3.7.0';
+    let runPreviewRow = null;
+    const APP_VERSION = '3.7.1';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -4453,25 +4602,24 @@
     function ensureRunMap() {
       if (!window.L) return null;
       if (runMap) return runMap;
-      const mapEl = document.getElementById('run-map');
+      const mapEl = document.getElementById('run-finish-map');
       if (!mapEl) return null;
       runMap = L.map(mapEl, { zoomControl: false, attributionControl: true }).setView([-33.8688, 151.2093], 14);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap'
       }).addTo(runMap);
-      runPathLine = L.polyline([], { color: '#c8ff00', weight: 5, opacity: .95 }).addTo(runMap);
       runHistoryLayer = L.layerGroup().addTo(runMap);
       return runMap;
     }
 
     function setRunStatus(text, gpsReady = false) {
       const statusEl = document.getElementById('run-status-text');
-      const gpsEl = document.getElementById('run-gps-tag');
+      const gpsEl = document.getElementById('run-gps-toggle');
       if (statusEl) statusEl.textContent = text;
       if (gpsEl) {
-        gpsEl.textContent = gpsReady ? 'GPS LIVE' : 'GPS OFF';
-        gpsEl.className = gpsReady ? 'tag g' : 'tag';
+        gpsEl.textContent = runGpsEnabled ? (gpsReady ? 'GPS ON' : 'GPS READY') : 'GPS OFF';
+        gpsEl.className = runGpsEnabled ? 'run-gps-btn on' : 'run-gps-btn';
       }
     }
 
@@ -4508,7 +4656,6 @@
       runStartedAt = null;
       runLastPoint = null;
       runTrackingActive = false;
-      if (runPathLine) runPathLine.setLatLngs([]);
       if (runHistoryLayer) runHistoryLayer.clearLayers();
       setRunStatus('READY TO TRACK', false);
       updateRunMetrics();
@@ -4530,7 +4677,7 @@
       const coords = safeParsePath(latest.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
       if (!coords.length) return;
       const poly = L.polyline(coords, { color: '#ffffff', weight: 3, opacity: .55, dashArray: '6 5' }).addTo(runHistoryLayer);
-      if (!runTrackingActive && !runSessionPoints.length) {
+      if (!runTrackingActive && !runSessionPoints.length && runMap) {
         runMap.fitBounds(poly.getBounds(), { padding: [18, 18] });
       }
     }
@@ -4561,21 +4708,87 @@
           </div>
         </div>
       `).join('');
-      drawRunHistoryPreview();
     }
 
     window.previewRunRoute = function(runId) {
       const row = DB.runLog.find(item => Number(item.ID) === Number(runId));
       if (!row) return;
+      openRunFinishModal(row);
+    };
+
+    function renderRunFinishModal(row) {
+      runPreviewRow = row;
       const map = ensureRunMap();
       if (!map || !runHistoryLayer) return;
       runHistoryLayer.clearLayers();
       const coords = safeParsePath(row.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
+      document.getElementById('run-finish-sub').textContent = `${row.Date} · ${row.Day || dow(row.Date)}`;
+      document.getElementById('run-finish-distance').textContent = `${Number(row.Distance_Km || 0).toFixed(2)} km`;
+      document.getElementById('run-finish-duration').textContent = formatDurationShort(row.Duration_Sec);
+      document.getElementById('run-finish-pace').textContent = formatPace(row.Avg_Pace_Sec_Per_Km);
+      document.getElementById('run-finish-steps').textContent = fmt(row.Estimated_Steps || 0);
       if (!coords.length) return;
       const poly = L.polyline(coords, { color: '#ffffff', weight: 4, opacity: .9 }).addTo(runHistoryLayer);
       L.circleMarker(coords[0], { radius: 6, color: '#050505', fillColor: '#c8ff00', fillOpacity: 1 }).addTo(runHistoryLayer);
       L.circleMarker(coords[coords.length - 1], { radius: 6, color: '#050505', fillColor: '#ffffff', fillOpacity: 1 }).addTo(runHistoryLayer);
       map.fitBounds(poly.getBounds(), { padding: [18, 18] });
+      setTimeout(() => map.invalidateSize(), 60);
+    }
+
+    function openRunFinishModal(row) {
+      document.getElementById('run-finish-modal').classList.add('show');
+      renderRunFinishModal(row);
+    }
+
+    window.closeRunFinishModal = function() {
+      document.getElementById('run-finish-modal').classList.remove('show');
+    };
+
+    window.downloadRunSummaryImage = async function() {
+      const card = document.getElementById('run-finish-card');
+      if (!card || !window.html2canvas) {
+        toast('IMAGE EXPORT UNAVAILABLE', false, true);
+        return;
+      }
+      const canvas = await window.html2canvas(card, { backgroundColor: '#111111', scale: 2, useCORS: true });
+      const link = document.createElement('a');
+      const stamp = (runPreviewRow?.Date || TODAY).replace(/[^0-9-]/g, '');
+      link.download = `forge-run-${stamp}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+
+    function beginRunWatch() {
+      if (!navigator.geolocation || !runGpsEnabled) return;
+      if (runWatchId !== null) navigator.geolocation.clearWatch(runWatchId);
+      runWatchId = navigator.geolocation.watchPosition(
+        appendRunPoint,
+        handleRunPositionError,
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+      );
+    }
+
+    function stopRunWatch() {
+      if (runWatchId !== null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(runWatchId);
+        runWatchId = null;
+      }
+    }
+
+    window.toggleRunGps = function() {
+      runGpsEnabled = !runGpsEnabled;
+      if (runTrackingActive) {
+        if (runGpsEnabled) {
+          beginRunWatch();
+          setRunStatus('SEARCHING FOR GPS...', false);
+        } else {
+          stopRunWatch();
+          setRunStatus('GPS PAUSED', false);
+        }
+      } else {
+        setRunStatus(runGpsEnabled ? 'READY TO TRACK' : 'GPS OFF', false);
+      }
+      updateRunMetrics();
     };
 
     function appendRunPoint(position) {
@@ -4592,8 +4805,6 @@
       }
       runSessionPoints.push(point);
       runLastPoint = point;
-      if (runPathLine) runPathLine.setLatLngs(runSessionPoints.map(p => [p.lat, p.lng]));
-      if (runMap) runMap.setView([point.lat, point.lng], Math.max(runMap.getZoom(), 16), { animate: true });
       setRunStatus(`TRACKING ${runSessionPoints.length} GPS POINTS`, true);
       updateRunMetrics();
     }
@@ -4612,26 +4823,20 @@
         return;
       }
       if (runTrackingActive) {
-        navigator.geolocation.clearWatch(runWatchId);
-        runWatchId = null;
+        stopRunWatch();
         runTrackingActive = false;
         if (runTickInterval) {
           clearInterval(runTickInterval);
           runTickInterval = null;
         }
-        setRunStatus('RUN PAUSED', false);
+        setRunStatus(runGpsEnabled ? 'RUN PAUSED' : 'GPS PAUSED', false);
         updateRunMetrics();
         return;
       }
-      ensureRunMap();
       runTrackingActive = true;
       if (!runStartedAt) runStartedAt = Date.now();
-      setRunStatus(runSessionPoints.length ? 'RESUMING GPS...' : 'SEARCHING FOR GPS...', false);
-      runWatchId = navigator.geolocation.watchPosition(
-        appendRunPoint,
-        handleRunPositionError,
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
-      );
+      setRunStatus(runGpsEnabled ? (runSessionPoints.length ? 'RESUMING GPS...' : 'SEARCHING FOR GPS...') : 'GPS OFF - TIMER ONLY', false);
+      beginRunWatch();
       if (runTickInterval) clearInterval(runTickInterval);
       runTickInterval = setInterval(updateRunMetrics, 1000);
       updateRunMetrics();
@@ -4642,10 +4847,7 @@
         toast('START A RUN FIRST', false, true);
         return;
       }
-      if (runWatchId !== null && navigator.geolocation) {
-        navigator.geolocation.clearWatch(runWatchId);
-        runWatchId = null;
-      }
+      stopRunWatch();
       if (runTickInterval) {
         clearInterval(runTickInterval);
         runTickInterval = null;
@@ -4677,20 +4879,15 @@
       renderRunHistory();
       setRunStatus('RUN SAVED', false);
       toast(`RUN SAVED • ${row.Distance_Km.toFixed(2)} KM`, true);
+      openRunFinishModal(row);
       resetRunSessionState();
-      previewRunRoute(row.ID);
       if (CUR === 'database') renderDB();
     };
 
     function renderRunScreen() {
-      ensureRunMap();
-      setTimeout(() => {
-        if (runMap) runMap.invalidateSize();
-        drawRunHistoryPreview();
-      }, 40);
       updateRunMetrics();
       renderRunHistory();
-      if (!runTrackingActive && !runSessionPoints.length) setRunStatus('READY TO TRACK', false);
+      if (!runTrackingActive && !runSessionPoints.length) setRunStatus(runGpsEnabled ? 'READY TO TRACK' : 'GPS OFF', false);
     }
 
     function renderDash() {
