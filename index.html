@@ -1002,19 +1002,19 @@
     }
 
     .run-actions .sbtn {
-      min-height: 96px;
+      min-height: 64px;
       margin-top: 0;
       border-radius: 999px;
       font-family: 'Space Mono', monospace;
-      font-size: 12px;
+      font-size: 14px;
       letter-spacing: 3px;
-      white-space: pre-line;
-      line-height: 1.06;
+      white-space: nowrap;
+      line-height: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 16px 12px;
+      padding: 0 20px;
       transition: transform .18s ease, opacity .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
       box-shadow: none
     }
@@ -1226,6 +1226,22 @@
       box-shadow: 0 30px 70px rgba(0, 0, 0, .52), inset 0 1px 0 rgba(255, 255, 255, .04)
     }
 
+    .run-finish-card.run-finish-exporting {
+      background: #030e08 !important
+    }
+
+    .run-finish-card.run-finish-exporting .run-finish-panel {
+      background: #101813 !important;
+      border-color: rgba(255, 255, 255, .045) !important;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, .46) !important
+    }
+
+    .run-finish-card.run-finish-exporting .run-finish-map-wrap::after {
+      background:
+        linear-gradient(180deg, rgba(2, 10, 5, .16) 0%, rgba(2, 10, 5, .08) 18%, rgba(2, 10, 5, .48) 62%, rgba(2, 10, 5, .92) 100%),
+        radial-gradient(ellipse 70% 50% at 50% 24%, rgba(60, 220, 130, .08), transparent 70%) !important
+    }
+
     .run-finish-sub {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
@@ -1330,8 +1346,8 @@
     .run-finish-actions {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px
+      justify-content: flex-start;
+      gap: 12px
     }
 
     .run-finish-actions-left {
@@ -1364,19 +1380,6 @@
       transform: scale(.94)
     }
 
-    .run-finish-powered {
-      font-family: 'Space Mono', monospace;
-      font-size: 9.5px;
-      letter-spacing: 1.2px;
-      color: rgba(255, 255, 255, .50);
-      text-transform: uppercase
-    }
-
-    .run-finish-powered strong {
-      color: var(--forge-green);
-      font-weight: 700
-    }
-
     .run-finish-exporting .run-finish-actions,
     .run-finish-exporting .run-close-btn {
       display: none !important
@@ -1392,9 +1395,9 @@
       }
 
       .run-actions .sbtn {
-        min-height: 88px;
-        font-size: 11px;
-        letter-spacing: 2.2px
+        min-height: 58px;
+        font-size: 12px;
+        letter-spacing: 2.4px
       }
 
       .run-finish-title {
@@ -2837,10 +2840,8 @@
             </div>
           </div>
           <div class="run-actions">
-            <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START
-RUN</button>
-            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH
-RUN</button>
+            <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START RUN</button>
+            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH</button>
           </div>
         </div>
         <div class="fb">
@@ -2890,7 +2891,6 @@ RUN</button>
                 <i class="fa-solid fa-download"></i>
               </button>
             </div>
-            <div class="run-finish-powered">POWERED BY <strong>VLT_LAB</strong></div>
           </div>
         </div>
       </div>
@@ -3155,7 +3155,7 @@ RUN</button>
     let runPreviewRow = null;
     let runPausedAccumMs = 0;
     let runPauseBeganAt = null;
-    const APP_VERSION = '3.7.4';
+    const APP_VERSION = '3.7.5';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -4946,12 +4946,12 @@ RUN</button>
       if (pointsEl) pointsEl.textContent = fmt(pts);
       const primary = document.getElementById('run-primary-btn');
       const secondary = document.getElementById('run-secondary-btn');
-      if (primary) primary.textContent = runTrackingActive ? 'PAUSE\nRUN' : (runSessionPoints.length ? 'RESUME\nRUN' : 'START\nRUN');
+      if (primary) primary.textContent = runTrackingActive ? 'PAUSE RUN' : (runSessionPoints.length ? 'RESUME RUN' : 'START RUN');
       if (secondary) {
         const canFinish = Boolean(runStartedAt) && (runSessionPoints.length >= 1 || durationSec >= 5);
         secondary.disabled = !canFinish;
         secondary.style.opacity = canFinish ? '1' : '.55';
-        secondary.textContent = 'FINISH\nRUN';
+        secondary.textContent = 'FINISH';
       }
     }
 
@@ -5091,35 +5091,58 @@ RUN</button>
       document.getElementById('run-finish-modal').classList.remove('show');
     };
 
+    async function generateRunSummaryImageFile() {
+      const card = document.getElementById('run-finish-card');
+      if (!card || !window.html2canvas) {
+        throw new Error('IMAGE_EXPORT_UNAVAILABLE');
+      }
+      card.classList.add('run-finish-exporting');
+      try {
+        const canvas = await window.html2canvas(card, {
+          backgroundColor: '#040e08',
+          scale: 2,
+          useCORS: true,
+          logging: false
+        });
+        const stamp = (runPreviewRow?.Date || TODAY).replace(/[^0-9-]/g, '');
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        if (!blob) throw new Error('IMAGE_BLOB_FAILED');
+        return new File([blob], `forge-run-${stamp}.png`, { type: 'image/png' });
+      } finally {
+        card.classList.remove('run-finish-exporting');
+      }
+    }
+
     window.shareRunSummary = async function() {
+      const summaryText = `Just finished ${Number(runPreviewRow?.Distance_Km || 0).toFixed(2)} KM with FORGE.`;
       if (!navigator.share) {
         toast('SHARE NOT SUPPORTED', false, true);
         return;
       }
       try {
-        await navigator.share({
-          title: 'Forge Run',
-          text: `Just finished ${Number(runPreviewRow?.Distance_Km || 0).toFixed(2)} KM with FORGE.`
-        });
-      } catch (e) {}
+        const file = await generateRunSummaryImageFile();
+        const payload = { title: 'Forge Run', text: summaryText };
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          payload.files = [file];
+        }
+        await navigator.share(payload);
+      } catch (e) {
+        if (String(e?.message || '') !== 'AbortError' && e?.name !== 'AbortError') {
+          toast('SHARE FAILED', false, true);
+        }
+      }
     };
 
     window.downloadRunSummaryImage = async function() {
-      const card = document.getElementById('run-finish-card');
-      if (!card || !window.html2canvas) {
-        toast('IMAGE EXPORT UNAVAILABLE', false, true);
-        return;
-      }
       try {
-        card.classList.add('run-finish-exporting');
-        const canvas = await window.html2canvas(card, { backgroundColor: '#040e08', scale: 2, useCORS: true });
+        const file = await generateRunSummaryImageFile();
         const link = document.createElement('a');
-        const stamp = (runPreviewRow?.Date || TODAY).replace(/[^0-9-]/g, '');
-        link.download = `forge-run-${stamp}.png`;
-        link.href = canvas.toDataURL('image/png');
+        link.download = file.name;
+        link.href = URL.createObjectURL(file);
         link.click();
-      } finally {
-        card.classList.remove('run-finish-exporting');
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      } catch (e) {
+        toast('IMAGE EXPORT UNAVAILABLE', false, true);
       }
     };
 
