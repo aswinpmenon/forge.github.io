@@ -994,22 +994,50 @@
     .run-actions {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-bottom: 14px
+      gap: 14px;
+      margin: 16px 0 12px
     }
 
-    .run-actions .sbtn {
-      padding: 15px
-    }
-
+    .run-actions .sbtn,
     .run-actions .dbtn {
+      min-height: 96px;
       margin-top: 0;
-      min-height: 54px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 68, 68, .18);
-      background: rgba(255, 68, 68, .08);
-      color: var(--red);
-      font-size: 10px
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 3px;
+      white-space: pre-line;
+      line-height: 1.06;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 12px;
+      transition: transform .18s ease, opacity .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
+      box-shadow: none
+    }
+
+    .run-actions .sbtn:active,
+    .run-actions .dbtn:active {
+      transform: scale(.985)
+    }
+
+    #run-primary-btn {
+      background: #f3f3f3;
+      color: #050505;
+      border: 1px solid #ffffff
+    }
+
+    #run-secondary-btn {
+      background: rgba(17, 17, 17, .96);
+      color: rgba(240, 240, 240, .74);
+      border: 1px solid rgba(255, 255, 255, .09)
+    }
+
+    #run-cancel-btn {
+      background: rgba(39, 20, 20, .72);
+      color: #dd5048;
+      border: 1px solid rgba(170, 58, 58, .28)
     }
 
     .run-history-row {
@@ -1084,15 +1112,14 @@
     .run-finish-modal {
       position: fixed;
       inset: 0;
-      background: rgba(5, 5, 5, .88);
+      background: rgba(2, 5, 3, .92);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 18px;
       z-index: 1250;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .22s ease
+      transition: opacity .24s ease
     }
 
     .run-finish-modal.show {
@@ -1101,74 +1128,234 @@
     }
 
     .run-finish-card {
-      width: min(100%, 380px);
-      max-height: calc(100dvh - 36px);
-      overflow-y: auto;
-      background: #111;
-      border: 1px solid #232323;
-      border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, .52)
+      position: relative;
+      width: min(100vw, 430px);
+      height: 100dvh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 36% 26%, rgba(35, 255, 167, .22), transparent 16%),
+        radial-gradient(circle at 62% 68%, rgba(24, 150, 92, .18), transparent 26%),
+        linear-gradient(180deg, rgba(4, 16, 11, .84), rgba(4, 8, 6, .98));
+      box-shadow: 0 28px 70px rgba(0, 0, 0, .58)
     }
 
-    .run-finish-head {
+    .run-finish-map-wrap {
+      position: absolute;
+      inset: 0
+    }
+
+    .run-finish-map-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(2, 7, 5, .22) 0%, rgba(2, 7, 5, .1) 18%, rgba(2, 7, 5, .48) 65%, rgba(2, 7, 5, .88) 100%),
+        radial-gradient(circle at 45% 30%, rgba(72, 255, 176, .14), transparent 22%);
+      pointer-events: none;
+      z-index: 2
+    }
+
+    #run-finish-map {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      filter: saturate(.8) contrast(1.06) brightness(.76)
+    }
+
+    .run-finish-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 4;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px
+      padding: 22px 18px 0
     }
 
-    .run-finish-title {
+    .run-finish-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--green);
+      text-shadow: 0 0 18px rgba(200, 255, 0, .18)
+    }
+
+    .run-finish-brand-mark {
+      width: 8px;
+      height: 42px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 16px rgba(200, 255, 0, .62)
+    }
+
+    .run-finish-brand-word {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 38px;
-      letter-spacing: 1.2px;
-      line-height: 1
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: 3px
+    }
+
+    .run-close-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(10, 14, 12, .72);
+      color: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(10px)
+    }
+
+    .run-close-btn:hover {
+      background: rgba(18, 24, 21, .88);
+      color: #fff
+    }
+
+    .run-finish-panel {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 18px;
+      z-index: 4;
+      border-radius: 34px;
+      padding: 18px 18px 16px;
+      background:
+        linear-gradient(135deg, rgba(20, 26, 23, .96), rgba(16, 28, 20, .88));
+      border: 1px solid rgba(255, 255, 255, .06);
+      box-shadow:
+        0 28px 60px rgba(0, 0, 0, .48),
+        inset 0 1px 0 rgba(255, 255, 255, .04)
     }
 
     .run-finish-sub {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      color: var(--text3);
+      color: rgba(255, 255, 255, .5);
+      letter-spacing: 1.8px;
+      text-transform: uppercase
+    }
+
+    .run-finish-session-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 8px
+    }
+
+    .run-finish-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 54px;
+      line-height: .88;
+      letter-spacing: -.6px;
+      font-weight: 700
+    }
+
+    .run-finish-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      padding-top: 6px;
+      text-align: right
+    }
+
+    .run-finish-day {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
       letter-spacing: 1px;
+      color: var(--green);
       text-transform: uppercase;
-      margin-top: 6px
+      font-weight: 700
+    }
+
+    .run-finish-time {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      color: rgba(255, 255, 255, .64);
+      font-weight: 600
     }
 
     .run-finish-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 14px 0
+      gap: 14px;
+      margin: 20px 0 18px
     }
 
     .run-finish-metric {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px
+      min-height: 138px;
+      padding: 16px;
+      border-radius: 24px;
+      background: rgba(24, 27, 25, .9);
+      border: 1px solid rgba(255, 255, 255, .05)
     }
 
     .run-finish-metric .mini {
       display: block;
       font-family: 'Space Mono', monospace;
-      font-size: 8px;
-      color: var(--text3);
-      letter-spacing: 1px;
+      font-size: 9px;
+      color: rgba(255, 255, 255, .48);
+      letter-spacing: 1.6px;
       text-transform: uppercase;
-      margin-bottom: 6px
+      margin-bottom: 20px
     }
 
     .run-finish-metric .val {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 26px;
-      letter-spacing: .8px
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px;
+      letter-spacing: -.3px;
+      font-weight: 700;
+      line-height: .95
+    }
+
+    .run-finish-metric.accent .val {
+      color: var(--green)
     }
 
     .run-finish-actions {
       display: flex;
-      gap: 8px;
-      margin-top: 14px
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px
+    }
+
+    .run-finish-actions-left {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .run-finish-round {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, .06);
+      background: rgba(22, 25, 23, .9);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04)
+    }
+
+    .run-finish-round:hover {
+      background: rgba(28, 32, 29, .96)
+    }
+
+    .run-finish-powered {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, .68);
+      text-transform: uppercase
+    }
+
+    .run-finish-powered strong {
+      color: var(--green);
+      font-weight: 700
     }
 
     .run-finish-exporting .run-finish-actions,
@@ -1176,17 +1363,40 @@
       display: none !important
     }
 
-    .run-finish-actions .sbtn {
-      padding: 14px
-    }
-
     @media (max-width:390px) {
       .run-history-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr))
       }
 
+      .run-actions {
+        gap: 10px
+      }
+
+      .run-actions .sbtn,
+      .run-actions .dbtn {
+        min-height: 88px;
+        font-size: 11px;
+        letter-spacing: 2.2px
+      }
+
+      .run-finish-title {
+        font-size: 44px
+      }
+
+      .run-finish-grid {
+        gap: 10px
+      }
+
+      .run-finish-metric {
+        min-height: 120px
+      }
+
+      .run-finish-metric .val {
+        font-size: 28px
+      }
+
       .run-finish-actions {
-        flex-direction: column
+        gap: 10px
       }
     }
 
@@ -2617,9 +2827,12 @@
             </div>
           </div>
           <div class="run-actions">
-            <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START RUN</button>
-            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH RUN</button>
-            <button class="dbtn" id="run-cancel-btn" onclick="cancelRunTracking()">CANCEL RUN</button>
+            <button class="sbtn" id="run-primary-btn" onclick="toggleRunTracking()">START
+RUN</button>
+            <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH
+RUN</button>
+            <button class="dbtn" id="run-cancel-btn" onclick="cancelRunTracking()">CANCEL
+RUN</button>
           </div>
         </div>
         <div class="fb">
@@ -2633,24 +2846,40 @@
 
     <div class="run-finish-modal" id="run-finish-modal">
       <div class="run-finish-card" id="run-finish-card">
-        <div class="run-finish-head">
-          <div>
-            <div class="run-finish-title">FORGE RUN COMPLETE</div>
-            <div class="run-finish-sub" id="run-finish-sub">Session saved</div>
+        <div class="run-finish-map-wrap">
+          <div id="run-finish-map"></div>
+        </div>
+        <div class="run-finish-top">
+          <div class="run-finish-brand">
+            <div class="run-finish-brand-mark"></div>
+            <div class="run-finish-brand-word">FORGE</div>
           </div>
           <button class="icon-btn run-close-btn" onclick="closeRunFinishModal()" aria-label="Close run summary"><i
               class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="run-finish-map" class="run-map popup"></div>
-        <div class="run-finish-grid">
-          <div class="run-finish-metric"><span class="mini">Distance</span><span class="val" id="run-finish-distance">0.00 km</span></div>
-          <div class="run-finish-metric"><span class="mini">Duration</span><span class="val" id="run-finish-duration">00:00</span></div>
-          <div class="run-finish-metric"><span class="mini">Pace</span><span class="val" id="run-finish-pace">--:--</span></div>
-          <div class="run-finish-metric"><span class="mini">Steps</span><span class="val" id="run-finish-steps">0</span></div>
-        </div>
-        <div class="run-finish-actions">
-          <button class="sbtn alt" onclick="downloadRunSummaryImage()">DOWNLOAD IMAGE</button>
-          <button class="sbtn" onclick="closeRunFinishModal()">DONE</button>
+        <div class="run-finish-panel">
+          <div class="run-finish-sub">FORGE RUN COMPLETE</div>
+          <div class="run-finish-session-row">
+            <div class="run-finish-title" id="run-finish-title">Night Run</div>
+            <div class="run-finish-meta">
+              <div class="run-finish-day" id="run-finish-day">TODAY</div>
+              <div class="run-finish-time" id="run-finish-time">6:42 PM</div>
+            </div>
+          </div>
+          <div class="run-finish-grid">
+            <div class="run-finish-metric accent"><span class="mini">Distance</span><span class="val" id="run-finish-distance">0.00 km</span></div>
+            <div class="run-finish-metric"><span class="mini">Duration</span><span class="val" id="run-finish-duration">00:00</span></div>
+            <div class="run-finish-metric"><span class="mini">Avg Pace</span><span class="val" id="run-finish-pace">--:-- <span style="font-size:.58em;opacity:.8">/km</span></span></div>
+            <div class="run-finish-metric"><span class="mini">Steps</span><span class="val" id="run-finish-steps">0</span></div>
+          </div>
+          <div class="run-finish-actions">
+            <div class="run-finish-actions-left">
+              <button class="run-finish-round" onclick="downloadRunSummaryImage()" aria-label="Download run summary">
+                <i class="fa-solid fa-download"></i>
+              </button>
+            </div>
+            <div class="run-finish-powered">Powered by <strong>FORGE</strong></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2914,7 +3143,7 @@
     let runPreviewRow = null;
     let runPausedAccumMs = 0;
     let runPauseBeganAt = null;
-    const APP_VERSION = '3.7.2';
+    const APP_VERSION = '3.7.3';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -2957,6 +3186,24 @@
       const mins = Math.floor(rounded / 60);
       const secs = rounded % 60;
       return `${S(mins)}:${S(secs)}`;
+    }
+    function formatClockFromIso(value) {
+      const d = value ? new Date(value) : new Date();
+      if (Number.isNaN(d.getTime())) return nowTime();
+      let h = d.getHours();
+      const m = d.getMinutes();
+      const ap = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${S(m)} ${ap}`;
+    }
+    function getRunSessionTitle(row) {
+      const stamp = row?.End_Timestamp || row?.Start_Timestamp || new Date().toISOString();
+      const d = new Date(stamp);
+      const hour = Number.isNaN(d.getTime()) ? new Date().getHours() : d.getHours();
+      if (hour < 11) return 'Morning Rush';
+      if (hour < 16) return 'Daylight Drive';
+      if (hour < 19) return 'Sunset Sprint';
+      return 'Night Run';
     }
     function estimateRunSteps(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 1300); }
     function estimateRunCalories(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 60); }
@@ -4630,8 +4877,18 @@
       if (runMap) return runMap;
       const mapEl = document.getElementById('run-finish-map');
       if (!mapEl) return null;
-      runMap = L.map(mapEl, { zoomControl: false, attributionControl: true }).setView([-33.8688, 151.2093], 14);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+      runMap = L.map(mapEl, {
+        zoomControl: false,
+        attributionControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        tap: false
+      }).setView([-33.8688, 151.2093], 14);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd',
         attribution: '&copy; OpenStreetMap &copy; CARTO'
@@ -4671,13 +4928,17 @@
       const primary = document.getElementById('run-primary-btn');
       const secondary = document.getElementById('run-secondary-btn');
       const cancelBtn = document.getElementById('run-cancel-btn');
-      if (primary) primary.textContent = runTrackingActive ? 'PAUSE RUN' : (runSessionPoints.length ? 'RESUME RUN' : 'START RUN');
+      if (primary) primary.textContent = runTrackingActive ? 'PAUSE\nRUN' : (runSessionPoints.length ? 'RESUME\nRUN' : 'START\nRUN');
       if (secondary) {
         const canFinish = Boolean(runStartedAt) && (runSessionPoints.length >= 1 || durationSec >= 5);
         secondary.disabled = !canFinish;
         secondary.style.opacity = canFinish ? '1' : '.55';
+        secondary.textContent = 'FINISH\nRUN';
       }
-      if (cancelBtn) cancelBtn.style.opacity = runStartedAt ? '1' : '.55';
+      if (cancelBtn) {
+        cancelBtn.style.opacity = runStartedAt ? '1' : '.55';
+        cancelBtn.textContent = 'CANCEL\nRUN';
+      }
     }
 
     function resetRunSessionState() {
@@ -4752,19 +5013,52 @@
       runPreviewRow = row;
       const map = ensureRunMap();
       if (!map || !runHistoryLayer) return;
-      runHistoryLayer.clearLayers();
       const coords = safeParsePath(row.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
-      document.getElementById('run-finish-sub').textContent = `${row.Date} · ${row.Day || dow(row.Date)}`;
+      document.getElementById('run-finish-title').textContent = getRunSessionTitle(row);
+      document.getElementById('run-finish-day').textContent = row.Date === TODAY ? 'TODAY' : (row.Day || dow(row.Date)).toUpperCase();
+      document.getElementById('run-finish-time').textContent = formatClockFromIso(row.End_Timestamp || row.Start_Timestamp);
       document.getElementById('run-finish-distance').textContent = `${Number(row.Distance_Km || 0).toFixed(2)} km`;
       document.getElementById('run-finish-duration').textContent = formatDurationShort(row.Duration_Sec);
-      document.getElementById('run-finish-pace').textContent = formatPace(row.Avg_Pace_Sec_Per_Km);
+      document.getElementById('run-finish-pace').innerHTML = `${formatPace(row.Avg_Pace_Sec_Per_Km)} <span style="font-size:.58em;opacity:.8">/km</span>`;
       document.getElementById('run-finish-steps').textContent = fmt(row.Estimated_Steps || 0);
-      if (!coords.length) return;
-      const poly = L.polyline(coords, { color: '#c8ff00', weight: 5, opacity: .95, lineCap: 'round', lineJoin: 'round' }).addTo(runHistoryLayer);
-      L.circleMarker(coords[0], { radius: 7, color: '#050505', weight: 2, fillColor: '#c8ff00', fillOpacity: 1 }).addTo(runHistoryLayer);
-      L.circleMarker(coords[coords.length - 1], { radius: 7, color: '#050505', weight: 2, fillColor: '#111111', fillOpacity: 1 }).addTo(runHistoryLayer);
-      map.fitBounds(poly.getBounds(), { padding: [18, 18] });
-      setTimeout(() => map.invalidateSize(), 60);
+      runHistoryLayer.clearLayers();
+      setTimeout(() => {
+        map.invalidateSize();
+        runHistoryLayer.clearLayers();
+        if (!coords.length) {
+          map.setView([-33.8688, 151.2093], 13);
+          return;
+        }
+        const glow = L.polyline(coords, {
+          color: '#36ffb7',
+          weight: 16,
+          opacity: .2,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(runHistoryLayer);
+        const poly = L.polyline(coords, {
+          color: '#4effa8',
+          weight: 7,
+          opacity: .96,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(runHistoryLayer);
+        L.circleMarker(coords[0], {
+          radius: 7,
+          color: 'rgba(78,255,168,.28)',
+          weight: 10,
+          fillColor: '#72ffc4',
+          fillOpacity: .9
+        }).addTo(runHistoryLayer);
+        L.circleMarker(coords[coords.length - 1], {
+          radius: 6,
+          color: '#0d1511',
+          weight: 2,
+          fillColor: '#c8ff00',
+          fillOpacity: 1
+        }).addTo(runHistoryLayer);
+        map.fitBounds(poly.getBounds(), { padding: [34, 110] });
+      }, 120);
     }
 
     function openRunFinishModal(row) {
