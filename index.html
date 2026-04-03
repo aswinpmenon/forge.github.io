@@ -43,6 +43,9 @@
       --accent-dim: rgba(255, 255, 255, .08);
       --green: #c8ff00;
       --red: #ff4444;
+      --forge-green: #b8ff00;
+      --forge-teal: #4effa8;
+      --forge-bg: #030e08;
       --radius: 14px;
       --radius-sm: 8px;
       --nav-h: 68px;
@@ -993,13 +996,12 @@
 
     .run-actions {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin: 16px 0 12px
     }
 
-    .run-actions .sbtn,
-    .run-actions .dbtn {
+    .run-actions .sbtn {
       min-height: 96px;
       margin-top: 0;
       border-radius: 999px;
@@ -1017,8 +1019,7 @@
       box-shadow: none
     }
 
-    .run-actions .sbtn:active,
-    .run-actions .dbtn:active {
+    .run-actions .sbtn:active {
       transform: scale(.985)
     }
 
@@ -1032,12 +1033,6 @@
       background: rgba(17, 17, 17, .96);
       color: rgba(240, 240, 240, .74);
       border: 1px solid rgba(255, 255, 255, .09)
-    }
-
-    #run-cancel-btn {
-      background: rgba(39, 20, 20, .72);
-      color: #dd5048;
-      border: 1px solid rgba(170, 58, 58, .28)
     }
 
     .run-history-row {
@@ -1131,11 +1126,10 @@
       position: relative;
       width: min(100vw, 430px);
       height: 100dvh;
+      max-height: 800px;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 36% 26%, rgba(35, 255, 167, .22), transparent 16%),
-        radial-gradient(circle at 62% 68%, rgba(24, 150, 92, .18), transparent 26%),
-        linear-gradient(180deg, rgba(4, 16, 11, .84), rgba(4, 8, 6, .98));
+      border-radius: 28px;
+      background: var(--forge-bg);
       box-shadow: 0 28px 70px rgba(0, 0, 0, .58)
     }
 
@@ -1149,8 +1143,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(180deg, rgba(2, 7, 5, .22) 0%, rgba(2, 7, 5, .1) 18%, rgba(2, 7, 5, .48) 65%, rgba(2, 7, 5, .88) 100%),
-        radial-gradient(circle at 45% 30%, rgba(72, 255, 176, .14), transparent 22%);
+        linear-gradient(180deg, rgba(2, 10, 5, .18) 0%, rgba(2, 10, 5, .08) 18%, rgba(2, 10, 5, .52) 62%, rgba(2, 10, 5, .94) 100%),
+        radial-gradient(ellipse 70% 50% at 50% 24%, rgba(60, 220, 130, .10), transparent 70%);
       pointer-events: none;
       z-index: 2
     }
@@ -1159,7 +1153,7 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      filter: saturate(.8) contrast(1.06) brightness(.76)
+      filter: saturate(.75) contrast(1.08) brightness(.72)
     }
 
     .run-finish-top {
@@ -1171,7 +1165,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      padding: 22px 18px 0
+      padding: 22px 20px 0
     }
 
     .run-finish-brand {
@@ -1183,28 +1177,35 @@
     }
 
     .run-finish-brand-mark {
-      width: 8px;
-      height: 42px;
+      width: 7px;
+      height: 40px;
       border-radius: 999px;
-      background: var(--green);
-      box-shadow: 0 0 16px rgba(200, 255, 0, .62)
+      background: var(--forge-green);
+      box-shadow: 0 0 18px rgba(184, 255, 0, .55)
     }
 
     .run-finish-brand-word {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 34px;
+      font-size: 32px;
       line-height: 1;
-      letter-spacing: 3px
+      letter-spacing: 3px;
+      color: var(--forge-green);
+      text-shadow: 0 0 20px rgba(184, 255, 0, .28)
     }
 
     .run-close-btn {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, .08);
-      background: rgba(10, 14, 12, .72);
+      background: rgba(8, 14, 10, .72);
       color: rgba(255, 255, 255, .92);
-      backdrop-filter: blur(10px)
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px
     }
 
     .run-close-btn:hover {
@@ -1214,25 +1215,22 @@
 
     .run-finish-panel {
       position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 18px;
-      z-index: 4;
-      border-radius: 34px;
-      padding: 18px 18px 16px;
-      background:
-        linear-gradient(135deg, rgba(20, 26, 23, .96), rgba(16, 28, 20, .88));
-      border: 1px solid rgba(255, 255, 255, .06);
-      box-shadow:
-        0 28px 60px rgba(0, 0, 0, .48),
-        inset 0 1px 0 rgba(255, 255, 255, .04)
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 10;
+      border-radius: 30px;
+      padding: 18px 18px 14px;
+      background: linear-gradient(145deg, rgba(18, 25, 20, .97) 0%, rgba(11, 20, 15, .93) 100%);
+      border: 1px solid rgba(255, 255, 255, .055);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, .52), inset 0 1px 0 rgba(255, 255, 255, .04)
     }
 
     .run-finish-sub {
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      color: rgba(255, 255, 255, .5);
-      letter-spacing: 1.8px;
+      color: rgba(255, 255, 255, .42);
+      letter-spacing: 2px;
       text-transform: uppercase
     }
 
@@ -1240,32 +1238,33 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 16px;
-      margin-top: 8px
+      gap: 12px;
+      margin-top: 6px
     }
 
     .run-finish-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 54px;
+      font-weight: 700;
       line-height: .88;
-      letter-spacing: -.6px;
-      font-weight: 700
+      letter-spacing: -.5px;
+      color: #fff
     }
 
     .run-finish-meta {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 4px;
-      padding-top: 6px;
+      gap: 3px;
+      padding-top: 4px;
       text-align: right
     }
 
     .run-finish-day {
       font-family: 'Space Mono', monospace;
       font-size: 11px;
-      letter-spacing: 1px;
-      color: var(--green);
+      letter-spacing: 1.2px;
+      color: var(--forge-green);
       text-transform: uppercase;
       font-weight: 700
     }
@@ -1273,45 +1272,59 @@
     .run-finish-time {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 20px;
-      color: rgba(255, 255, 255, .64);
+      color: rgba(255, 255, 255, .52);
       font-weight: 600
+    }
+
+    .run-finish-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, .06);
+      margin: 14px 0
     }
 
     .run-finish-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin: 20px 0 18px
+      gap: 10px 24px;
+      margin-bottom: 16px
     }
 
     .run-finish-metric {
-      min-height: 138px;
-      padding: 16px;
-      border-radius: 24px;
-      background: rgba(24, 27, 25, .9);
-      border: 1px solid rgba(255, 255, 255, .05)
+      min-height: 0;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0
     }
 
     .run-finish-metric .mini {
       display: block;
       font-family: 'Space Mono', monospace;
       font-size: 9px;
-      color: rgba(255, 255, 255, .48);
+      color: rgba(255, 255, 255, .38);
       letter-spacing: 1.6px;
       text-transform: uppercase;
-      margin-bottom: 20px
+      margin-bottom: 4px
     }
 
     .run-finish-metric .val {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 32px;
-      letter-spacing: -.3px;
+      letter-spacing: -.2px;
       font-weight: 700;
-      line-height: .95
+      line-height: 1;
+      color: #fff
     }
 
-    .run-finish-metric.accent .val {
-      color: var(--green)
+    .run-finish-metric .val.accent {
+      color: var(--forge-green)
+    }
+
+    .run-finish-metric .val em {
+      font-style: normal;
+      font-size: .54em;
+      opacity: .72;
+      font-weight: 600
     }
 
     .run-finish-actions {
@@ -1328,33 +1341,39 @@
     }
 
     .run-finish-round {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, .06);
-      background: rgba(22, 25, 23, .9);
-      color: var(--green);
+      border: 1px solid rgba(255, 255, 255, .07);
+      background: rgba(18, 22, 20, .90);
+      color: var(--forge-green);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      font-size: 14px;
+      transition: background .18s, transform .12s;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04)
     }
 
     .run-finish-round:hover {
-      background: rgba(28, 32, 29, .96)
+      background: rgba(30, 36, 32, .95)
+    }
+
+    .run-finish-round:active {
+      transform: scale(.94)
     }
 
     .run-finish-powered {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      color: rgba(255, 255, 255, .68);
+      font-size: 9.5px;
+      letter-spacing: 1.2px;
+      color: rgba(255, 255, 255, .50);
       text-transform: uppercase
     }
 
     .run-finish-powered strong {
-      color: var(--green);
+      color: var(--forge-green);
       font-weight: 700
     }
 
@@ -1372,8 +1391,7 @@
         gap: 10px
       }
 
-      .run-actions .sbtn,
-      .run-actions .dbtn {
+      .run-actions .sbtn {
         min-height: 88px;
         font-size: 11px;
         letter-spacing: 2.2px
@@ -1384,15 +1402,7 @@
       }
 
       .run-finish-grid {
-        gap: 10px
-      }
-
-      .run-finish-metric {
-        min-height: 120px
-      }
-
-      .run-finish-metric .val {
-        font-size: 28px
+        gap: 10px 18px
       }
 
       .run-finish-actions {
@@ -2831,8 +2841,6 @@
 RUN</button>
             <button class="sbtn alt" id="run-secondary-btn" onclick="finishRunTracking()">FINISH
 RUN</button>
-            <button class="dbtn" id="run-cancel-btn" onclick="cancelRunTracking()">CANCEL
-RUN</button>
           </div>
         </div>
         <div class="fb">
@@ -2858,7 +2866,7 @@ RUN</button>
               class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="run-finish-panel">
-          <div class="run-finish-sub">FORGE RUN COMPLETE</div>
+          <div class="run-finish-sub">SESSION COMPLETE</div>
           <div class="run-finish-session-row">
             <div class="run-finish-title" id="run-finish-title">Night Run</div>
             <div class="run-finish-meta">
@@ -2866,19 +2874,23 @@ RUN</button>
               <div class="run-finish-time" id="run-finish-time">6:42 PM</div>
             </div>
           </div>
+          <div class="run-finish-divider"></div>
           <div class="run-finish-grid">
-            <div class="run-finish-metric accent"><span class="mini">Distance</span><span class="val" id="run-finish-distance">0.00 km</span></div>
+            <div class="run-finish-metric"><span class="mini">Distance</span><span class="val accent" id="run-finish-distance">0.00 <em>KM</em></span></div>
             <div class="run-finish-metric"><span class="mini">Duration</span><span class="val" id="run-finish-duration">00:00</span></div>
-            <div class="run-finish-metric"><span class="mini">Avg Pace</span><span class="val" id="run-finish-pace">--:-- <span style="font-size:.58em;opacity:.8">/km</span></span></div>
+            <div class="run-finish-metric"><span class="mini">Avg Pace</span><span class="val" id="run-finish-pace">--:-- <em>/KM</em></span></div>
             <div class="run-finish-metric"><span class="mini">Steps</span><span class="val" id="run-finish-steps">0</span></div>
           </div>
           <div class="run-finish-actions">
             <div class="run-finish-actions-left">
+              <button class="run-finish-round" onclick="shareRunSummary()" aria-label="Share run summary">
+                <i class="fa-solid fa-share-nodes"></i>
+              </button>
               <button class="run-finish-round" onclick="downloadRunSummaryImage()" aria-label="Download run summary">
                 <i class="fa-solid fa-download"></i>
               </button>
             </div>
-            <div class="run-finish-powered">Powered by <strong>FORGE</strong></div>
+            <div class="run-finish-powered">POWERED BY <strong>VLT_LAB</strong></div>
           </div>
         </div>
       </div>
@@ -3143,7 +3155,7 @@ RUN</button>
     let runPreviewRow = null;
     let runPausedAccumMs = 0;
     let runPauseBeganAt = null;
-    const APP_VERSION = '3.7.3';
+    const APP_VERSION = '3.7.4';
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
     const SUPABASE_URL = window.ARCHITECT_SUPABASE_URL || '';
@@ -3187,6 +3199,13 @@ RUN</button>
       const secs = rounded % 60;
       return `${S(mins)}:${S(secs)}`;
     }
+    function formatFinishPace(secPerKm) {
+      if (!Number.isFinite(secPerKm) || secPerKm <= 0) return `--'--"`;
+      const rounded = Math.max(1, Math.round(secPerKm));
+      const mins = Math.floor(rounded / 60);
+      const secs = rounded % 60;
+      return `${mins}'${S(secs)}"`;
+    }
     function formatClockFromIso(value) {
       const d = value ? new Date(value) : new Date();
       if (Number.isNaN(d.getTime())) return nowTime();
@@ -3200,10 +3219,10 @@ RUN</button>
       const stamp = row?.End_Timestamp || row?.Start_Timestamp || new Date().toISOString();
       const d = new Date(stamp);
       const hour = Number.isNaN(d.getTime()) ? new Date().getHours() : d.getHours();
-      if (hour < 11) return 'Morning Rush';
-      if (hour < 16) return 'Daylight Drive';
-      if (hour < 19) return 'Sunset Sprint';
-      return 'Night Run';
+      if (hour < 11) return 'Morning<br>Rush';
+      if (hour < 16) return 'Daylight<br>Drive';
+      if (hour < 19) return 'Sunset<br>Sprint';
+      return 'Night<br>Run';
     }
     function estimateRunSteps(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 1300); }
     function estimateRunCalories(distanceKm) { return Math.round(Math.max(0, Number(distanceKm) || 0) * 60); }
@@ -4927,17 +4946,12 @@ RUN</button>
       if (pointsEl) pointsEl.textContent = fmt(pts);
       const primary = document.getElementById('run-primary-btn');
       const secondary = document.getElementById('run-secondary-btn');
-      const cancelBtn = document.getElementById('run-cancel-btn');
       if (primary) primary.textContent = runTrackingActive ? 'PAUSE\nRUN' : (runSessionPoints.length ? 'RESUME\nRUN' : 'START\nRUN');
       if (secondary) {
         const canFinish = Boolean(runStartedAt) && (runSessionPoints.length >= 1 || durationSec >= 5);
         secondary.disabled = !canFinish;
         secondary.style.opacity = canFinish ? '1' : '.55';
         secondary.textContent = 'FINISH\nRUN';
-      }
-      if (cancelBtn) {
-        cancelBtn.style.opacity = runStartedAt ? '1' : '.55';
-        cancelBtn.textContent = 'CANCEL\nRUN';
       }
     }
 
@@ -5014,12 +5028,12 @@ RUN</button>
       const map = ensureRunMap();
       if (!map || !runHistoryLayer) return;
       const coords = safeParsePath(row.Path_JSON).map(point => [point.lat, point.lng]).filter(point => Number.isFinite(point[0]) && Number.isFinite(point[1]));
-      document.getElementById('run-finish-title').textContent = getRunSessionTitle(row);
+      document.getElementById('run-finish-title').innerHTML = getRunSessionTitle(row);
       document.getElementById('run-finish-day').textContent = row.Date === TODAY ? 'TODAY' : (row.Day || dow(row.Date)).toUpperCase();
       document.getElementById('run-finish-time').textContent = formatClockFromIso(row.End_Timestamp || row.Start_Timestamp);
-      document.getElementById('run-finish-distance').textContent = `${Number(row.Distance_Km || 0).toFixed(2)} km`;
+      document.getElementById('run-finish-distance').innerHTML = `${Number(row.Distance_Km || 0).toFixed(2)} <em>KM</em>`;
       document.getElementById('run-finish-duration').textContent = formatDurationShort(row.Duration_Sec);
-      document.getElementById('run-finish-pace').innerHTML = `${formatPace(row.Avg_Pace_Sec_Per_Km)} <span style="font-size:.58em;opacity:.8">/km</span>`;
+      document.getElementById('run-finish-pace').innerHTML = `${formatFinishPace(row.Avg_Pace_Sec_Per_Km)} <em>/KM</em>`;
       document.getElementById('run-finish-steps').textContent = fmt(row.Estimated_Steps || 0);
       runHistoryLayer.clearLayers();
       setTimeout(() => {
@@ -5029,32 +5043,39 @@ RUN</button>
           map.setView([-33.8688, 151.2093], 13);
           return;
         }
-        const glow = L.polyline(coords, {
+        L.polyline(coords, {
           color: '#36ffb7',
-          weight: 16,
-          opacity: .2,
+          weight: 18,
+          opacity: .18,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(runHistoryLayer);
+        L.polyline(coords, {
+          color: '#4effa8',
+          weight: 9,
+          opacity: .42,
           lineCap: 'round',
           lineJoin: 'round'
         }).addTo(runHistoryLayer);
         const poly = L.polyline(coords, {
           color: '#4effa8',
-          weight: 7,
-          opacity: .96,
+          weight: 3.5,
+          opacity: .97,
           lineCap: 'round',
           lineJoin: 'round'
         }).addTo(runHistoryLayer);
         L.circleMarker(coords[0], {
           radius: 7,
-          color: 'rgba(78,255,168,.28)',
-          weight: 10,
+          color: 'rgba(78,255,168,.30)',
+          weight: 9,
           fillColor: '#72ffc4',
-          fillOpacity: .9
+          fillOpacity: .92
         }).addTo(runHistoryLayer);
         L.circleMarker(coords[coords.length - 1], {
           radius: 6,
-          color: '#0d1511',
+          color: '#0c1510',
           weight: 2,
-          fillColor: '#c8ff00',
+          fillColor: '#b8ff00',
           fillOpacity: 1
         }).addTo(runHistoryLayer);
         map.fitBounds(poly.getBounds(), { padding: [34, 110] });
@@ -5070,6 +5091,19 @@ RUN</button>
       document.getElementById('run-finish-modal').classList.remove('show');
     };
 
+    window.shareRunSummary = async function() {
+      if (!navigator.share) {
+        toast('SHARE NOT SUPPORTED', false, true);
+        return;
+      }
+      try {
+        await navigator.share({
+          title: 'Forge Run',
+          text: `Just finished ${Number(runPreviewRow?.Distance_Km || 0).toFixed(2)} KM with FORGE.`
+        });
+      } catch (e) {}
+    };
+
     window.downloadRunSummaryImage = async function() {
       const card = document.getElementById('run-finish-card');
       if (!card || !window.html2canvas) {
@@ -5078,7 +5112,7 @@ RUN</button>
       }
       try {
         card.classList.add('run-finish-exporting');
-        const canvas = await window.html2canvas(card, { backgroundColor: '#111111', scale: 2, useCORS: true });
+        const canvas = await window.html2canvas(card, { backgroundColor: '#040e08', scale: 2, useCORS: true });
         const link = document.createElement('a');
         const stamp = (runPreviewRow?.Date || TODAY).replace(/[^0-9-]/g, '');
         link.download = `forge-run-${stamp}.png`;
