@@ -73,31 +73,262 @@
       touch-action: manipulation
     }
 
-    
+
     /* ── ROUTINE ─────────────────────────────────────────── */
-    .timeline-list { margin-top: 14px; position: relative; border-left: 1px solid var(--border); margin-left: 60px; padding-left: 20px; padding-bottom: 20px;}
-    .t-row { position: relative; margin-bottom: 16px; opacity: 0.6; transition: opacity 0.3s; }
-    .t-row.active { opacity: 1; }
-    .t-row.done .t-title { text-decoration: line-through; color: var(--text3); }
-    .t-row.done .t-sub { text-decoration: line-through; color: var(--text3); }
-    .t-time { position: absolute; left: -80px; width: 50px; text-align: right; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text2); top: 12px; }
-    .t-content { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; cursor: pointer; transition: transform 0.15s, border-color 0.2s; -webkit-tap-highlight-color: transparent; }
-    .t-content:active { transform: scale(0.98); }
-    .t-content:hover { border-color: var(--border2); }
-    .t-dot { width: 12px; height: 12px; border-radius: 50%; position: absolute; left: -26px; top: 12px; background: var(--border2); border: 2px solid var(--bg); box-sizing: content-box; }
-    .t-dot.d-sleep { background: #ED93B1; }
-    .t-dot.d-wake { background: #FAC775; }
-    .t-dot.d-gym { background: #85B7EB; }
-    .t-dot.d-cardio { background: #97C459; }
-    .t-dot.d-work { background: #B4B2A9; }
-    .t-dot.d-meal { background: #5DCAA5; }
-    .t-dot.d-rest { background: #D3D1C7; }
-    .t-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
-    .t-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
-    .t-check { width: 20px; height: 20px; border-radius: 4px; border: 1px solid var(--border2); display: flex; align-items: center; justify-content: center; color: transparent; transition: all 0.2s; }
-    .t-row.done .t-check { background: var(--green); border-color: var(--green); color: #000; }
-    .routine-dashboard-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .routine-dashboard-card:active { transform: scale(0.98); }
+    .timeline-list {
+      margin-top: 14px;
+      position: relative;
+      border-left: 1px solid var(--border);
+      margin-left: 60px;
+      padding-left: 20px;
+      padding-bottom: 20px;
+    }
+
+    .t-row {
+      position: relative;
+      margin-bottom: 16px;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+
+    .t-row.active {
+      opacity: 1;
+    }
+
+    .t-row.done .t-title {
+      text-decoration: line-through;
+      color: var(--text3);
+    }
+
+    .t-row.done .t-sub {
+      text-decoration: line-through;
+      color: var(--text3);
+    }
+
+    .t-time {
+      position: absolute;
+      left: -80px;
+      width: 50px;
+      text-align: right;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--text2);
+      top: 12px;
+    }
+
+    .t-content {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .t-content:active {
+      transform: scale(0.98);
+    }
+
+    .t-content:hover {
+      border-color: var(--border2);
+    }
+
+    .t-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      position: absolute;
+      left: -26px;
+      top: 12px;
+      background: var(--border2);
+      border: 2px solid var(--bg);
+      box-sizing: content-box;
+    }
+
+    .t-dot.d-sleep {
+      background: #ED93B1;
+    }
+
+    .t-dot.d-wake {
+      background: #FAC775;
+    }
+
+    .t-dot.d-gym {
+      background: #85B7EB;
+    }
+
+    .t-dot.d-cardio {
+      background: #97C459;
+    }
+
+    .t-dot.d-work {
+      background: #B4B2A9;
+    }
+
+    .t-dot.d-meal {
+      background: #5DCAA5;
+    }
+
+    .t-dot.d-rest {
+      background: #D3D1C7;
+    }
+
+    .t-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .t-sub {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .t-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      transition: all 0.2s;
+    }
+
+    .t-row.done .t-check {
+      background: var(--green);
+      border-color: var(--green);
+      color: #000;
+    }
+
+    .routine-dashboard-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .routine-dashboard-card:active {
+      transform: scale(0.98);
+    }
+
+
+    /* ── FEATURE EXPANSION ─────────────────────────────────────────── */
+    .wind-down body {
+      background: #000;
+      filter: brightness(0.85);
+      transition: filter 2s, background 2s;
+    }
+
+    .wind-down .pcard,
+    .wind-down .routine-dashboard-card,
+    .wind-down .bnav,
+    .wind-down .topbar {
+      filter: grayscale(0.8);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+    }
+
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .std-input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-family: 'Space Mono', monospace;
+      font-size: 16px;
+      width: 100%;
+      outline: none;
+    }
+
+    .std-input:focus {
+      border-color: var(--green);
+    }
+
+    .prep-card {
+      background: #1a2e1a;
+      color: #b8ff00;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid #27500A;
+      text-align: left;
+    }
+
+    .prep-check {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .prep-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: #b8ff00;
+    }
+
+    .shift-widget {
+      background: var(--surface3);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
 
     /* ── SCREENS ─────────────────────────────────────────── */
     .screen {
@@ -2518,7 +2749,7 @@
 </head>
 
 <body>
-    <div id="app">
+  <div id="app">
 
     <!-- LOADING -->
     <div class="loading" id="loading">
@@ -2553,7 +2784,7 @@
     </div>
 
     <!-- ════════ SCREEN: DASHBOARD ════════ -->
-    
+
     <div class="screen" id="s-today-routine">
       <div class="topbar">
         <button class="back-btn" onclick="go('dashboard')"><i class="fa-solid fa-arrow-left"></i>HOME</button>
@@ -2564,9 +2795,9 @@
         <div class="phase">YOUR ROUTINE</div>
         <div class="h1">TODAY.</div>
         <div class="desc" id="routine-day-desc">Loading your schedule...</div>
-        
+
         <div class="timeline-list" id="routine-timeline">
-            <!-- Populated by JS -->
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
@@ -2588,12 +2819,15 @@
       <div class="scroll">
         <div class="phase">DASHBOARD_01</div>
         <div class="h1">WELCOME,<br><span id="dash-name">ATHLETE</span>.</div>
-        
+
         <div class="routine-dashboard-card" onclick="go('today-routine')">
-          <div class="ghost dashboard-ghost" style="font-size:60px; right:10px; top:10px;"><i class="fa-solid fa-calendar-day"></i></div>
+          <div class="ghost dashboard-ghost" style="font-size:60px; right:10px; top:10px;"><i
+              class="fa-solid fa-calendar-day"></i></div>
           <div class="pcard-lbl">TODAY'S ROUTINE</div>
           <div class="pcard-sub" id="dash-routine-tag">LOADING...</div>
-          <div style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--green); margin-bottom: 4px; line-height: 1" id="dash-routine-next">UP NEXT: --</div>
+          <div
+            style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--green); margin-bottom: 4px; line-height: 1"
+            id="dash-routine-next">UP NEXT: --</div>
           <div style="font-size: 13px; color: var(--text2);" id="dash-routine-meta">-- completed</div>
           <div class="bar-track" style="margin-top: 12px;">
             <div class="bar-fill" id="dash-routine-bar" style="width: 0%"></div>
@@ -2607,7 +2841,8 @@
           <div class="prow">
             <div>
               <div class="big-pct" id="d-pct">—%</div>
-              <div class="pct-lbl">COMPLETION RATE • <span id="d-pct-cals">0 KCAL</span></div>
+              <div class="pct-lbl">COMPLETION RATE • <span id="d-pct-cals">0 KCAL</span> &bull; <span id="d-pct-pro"
+                  style="color:var(--forge-teal)">0g PRO</span></div>
             </div>
             <div class="ring-btn" onclick="go('progress-daily')">
               <i class="fa-solid fa-bolt"></i>
@@ -2637,17 +2872,10 @@
             <div class="fw-lbl">VS LAST WEEK</div>
           </div>
         </div>
-        <div class="pcard" style="margin-top:16px" id="coach-card">
-          <div class="ghost dashboard-ghost" style="font-size:60px">AI</div>
-          <div class="pcard-lbl" style="display:flex;align-items:center;gap:6px"><i class="fa-solid fa-robot"
-              style="color:var(--green)"></i> AI PERSONAL COACH</div>
-          <div class="pcard-sub" id="coach-status" style="margin-bottom:12px">ANALYZING WEEKLY DATA...</div>
-          <div class="desc" id="coach-feedback"
-            style="margin-bottom:0;color:var(--text);font-size:14px;font-style:italic">Loading insights...</div>
-        </div>
       </div>
     </div>
 
+    <div id="shift-widget-container" style="text-align: center;"></div>
     <!-- ════════ SCREEN: RECORD CALORIE ════════ -->
     <div class="screen" id="s-record-calorie">
       <div class="topbar">
@@ -2686,22 +2914,13 @@
         </div>
         <div class="fb" style="padding:14px;margin-bottom:10px">
           <span class="flbl">CALORIC VALUE (KCAL)</span>
-          <div class="cal-disp-wrap" style="padding:16px">
-            <div class="cal-disp" id="calDisp" style="font-size:52px;min-height:60px">0000</div>
-            <div class="cal-unit">KILOCALORIES</div>
+          <div class="input-row">
+            <span class="flbl">KCAL</span>
+            <input type="number" id="cal-input-kcal" class="std-input" placeholder="e.g. 450">
           </div>
-          <div class="npad" style="gap:6px;margin-top:10px">
-            <button class="nb" style="padding:11px;font-size:20px" onclick="np('1')">1</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('2')">2</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('3')">3</button>
-            <button class="nb" style="padding:11px;font-size:20px" onclick="np('4')">4</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('5')">5</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('6')">6</button>
-            <button class="nb" style="padding:11px;font-size:20px" onclick="np('7')">7</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('8')">8</button><button class="nb"
-              style="padding:11px;font-size:20px" onclick="np('9')">9</button>
-            <button class="nb z2" style="padding:11px;font-size:20px" onclick="np('0')">0</button><button class="nb del"
-              style="padding:11px" onclick="nd()">⌫</button>
+          <div class="input-row" style="margin-top: 12px">
+            <span class="flbl">PROTEIN (g)</span>
+            <input type="number" id="cal-input-pro" class="std-input" placeholder="e.g. 30">
           </div>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:10px">
@@ -2738,29 +2957,21 @@
           </div>
         </div>
         <div class="wk-grid" id="wk-split-grid">
-          <button class="wk-card" data-split="back_biceps" onclick="selDay('back_biceps')">
-            <div class="wk-card-main">BACK +<br>BICEPS</div>
-            <div class="wk-card-sub">PULL + CURL</div>
+          <button class="wk-card" data-split="push" onclick="selDay('push')">
+            <div class="wk-card-main">PUSH</div>
+            <div class="wk-card-sub">CHEST, SHOULDERS</div>
           </button>
-          <button class="wk-card" data-split="shoulders_arms" onclick="selDay('shoulders_arms')">
-            <div class="wk-card-main">SHOULDER +<br>ARMS</div>
-            <div class="wk-card-sub">PRESS + ISOLATION</div>
+          <button class="wk-card" data-split="pull" onclick="selDay('pull')">
+            <div class="wk-card-main">PULL</div>
+            <div class="wk-card-sub">BACK, BICEPS</div>
           </button>
-          <button class="wk-card" data-split="abs_chest" onclick="selDay('abs_chest')">
-            <div class="wk-card-main">ABS +<br>CHEST</div>
-            <div class="wk-card-sub">CORE + PRESS</div>
+          <button class="wk-card" data-split="legs" onclick="selDay('legs')">
+            <div class="wk-card-main">LEGS</div>
+            <div class="wk-card-sub">QUADS, HAMSTRINGS</div>
           </button>
-          <button class="wk-card" data-split="legs_abs" onclick="selDay('legs_abs')">
-            <div class="wk-card-main">LEGS +<br>ABS</div>
-            <div class="wk-card-sub">LOWER BODY</div>
-          </button>
-          <button class="wk-card" data-split="chest_biceps_pump" onclick="selDay('chest_biceps_pump')">
-            <div class="wk-card-main">CHEST +<br>BICEPS PUMP</div>
-            <div class="wk-card-sub">UPPER PUMP</div>
-          </button>
-          <button class="wk-card" data-split="rest" onclick="selDay('rest')">
-            <div class="wk-card-main">REST</div>
-            <div class="wk-card-sub">RECOVERY DAY</div>
+          <button class="wk-card" data-split="cardio" onclick="selDay('cardio')">
+            <div class="wk-card-main">CARDIO+ABS</div>
+            <div class="wk-card-sub">CORE & STAMINA</div>
           </button>
         </div>
         <div id="wk-content"></div>
@@ -2779,12 +2990,15 @@
       <div class="scroll">
         <div class="phase">DASHBOARD_02</div>
         <div class="h1b">DAILY<br>PROGRESS.</div>
-        
+
         <div class="routine-dashboard-card" onclick="go('today-routine')">
-          <div class="ghost dashboard-ghost" style="font-size:60px; right:10px; top:10px;"><i class="fa-solid fa-calendar-day"></i></div>
+          <div class="ghost dashboard-ghost" style="font-size:60px; right:10px; top:10px;"><i
+              class="fa-solid fa-calendar-day"></i></div>
           <div class="pcard-lbl">TODAY'S ROUTINE</div>
           <div class="pcard-sub" id="dash-routine-tag">LOADING...</div>
-          <div style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--green); margin-bottom: 4px; line-height: 1" id="dash-routine-next">UP NEXT: --</div>
+          <div
+            style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--green); margin-bottom: 4px; line-height: 1"
+            id="dash-routine-next">UP NEXT: --</div>
           <div style="font-size: 13px; color: var(--text2);" id="dash-routine-meta">-- completed</div>
           <div class="bar-track" style="margin-top: 12px;">
             <div class="bar-fill" id="dash-routine-bar" style="width: 0%"></div>
@@ -2840,6 +3054,9 @@
       </div>
       <div class="scroll">
         <div class="phase">DASHBOARD_03</div>
+        <button class="sbtn"
+          style="padding:12px;font-size:14px;margin-bottom:16px;background:var(--surface3);color:var(--text);border:1px solid var(--border)"
+          onclick="openBodyStats()"><i class="fa-solid fa-weight-scale"></i> LOG WEEKLY BODY STATS</button>
         <div class="h1b">WEEKLY<br>PROGRESS.</div>
         <div class="fb">
           <span class="flbl">CALORIE VOLUME</span>
@@ -2875,7 +3092,8 @@
       <div class="scroll">
         <div class="phase">ENDURANCE</div>
         <div class="h1b">RUN<br>TRACKER.</div>
-        <div class="desc" style="margin-bottom:14px">Live GPS distance, pace, route mapping, and saved session history built right into FORGE.</div>
+        <div class="desc" style="margin-bottom:14px">Live GPS distance, pace, route mapping, and saved session history
+          built right into FORGE.</div>
         <div class="fb">
           <div class="run-map-status">
             <span id="run-status-text">READY TO TRACK</span>
@@ -2946,10 +3164,14 @@
           </div>
           <div class="run-finish-divider"></div>
           <div class="run-finish-grid">
-            <div class="run-finish-metric"><span class="mini">Distance</span><span class="val accent" id="run-finish-distance">0.00 <em>KM</em></span></div>
-            <div class="run-finish-metric"><span class="mini">Duration</span><span class="val" id="run-finish-duration">00:00</span></div>
-            <div class="run-finish-metric"><span class="mini">Avg Pace</span><span class="val" id="run-finish-pace">--:-- <em>/KM</em></span></div>
-            <div class="run-finish-metric"><span class="mini">Steps</span><span class="val" id="run-finish-steps">0</span></div>
+            <div class="run-finish-metric"><span class="mini">Distance</span><span class="val accent"
+                id="run-finish-distance">0.00 <em>KM</em></span></div>
+            <div class="run-finish-metric"><span class="mini">Duration</span><span class="val"
+                id="run-finish-duration">00:00</span></div>
+            <div class="run-finish-metric"><span class="mini">Avg Pace</span><span class="val"
+                id="run-finish-pace">--:-- <em>/KM</em></span></div>
+            <div class="run-finish-metric"><span class="mini">Steps</span><span class="val"
+                id="run-finish-steps">0</span></div>
           </div>
           <div class="run-finish-actions">
             <div class="run-finish-actions-left">
@@ -3035,14 +3257,21 @@
       <div class="scroll">
         <div class="phase">SOCIAL</div>
         <div class="h1b">LEADERBOARD.</div>
-        
-        <div class="fb" style="background:var(--accent-dim); border-color:var(--accent); text-align:center; padding-top:24px;">
+
+        <div class="fb"
+          style="background:var(--accent-dim); border-color:var(--accent); text-align:center; padding-top:24px;">
           <div style="font-size:12px; font-weight:700; color:var(--text2); letter-spacing:2px">YOUR STATS</div>
-          <div style="font-size:52px; font-weight:800; font-family:'Bebas Neue'; line-height:1;margin-top:8px">LEVEL <span id="lb-level">1</span></div>
-          <div style="font-size:16px; color:var(--green); font-weight:600; margin-top:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#1c2502; padding:4px 12px; border-radius:99px; border:1px solid #c8ff0040"><i class="fa-solid fa-fire"></i> <span id="lb-streak">0</span> DAY STREAK</div>
-          
-          <div style="margin-top:20px; background:var(--surface); border-radius:100px; height:10px; overflow:hidden; position:relative; width:80%; margin-left:auto; margin-right:auto">
-            <div id="lb-progress" style="background:var(--accent); height:100%; width:0%; border-radius:100px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1)"></div>
+          <div style="font-size:52px; font-weight:800; font-family:'Bebas Neue'; line-height:1;margin-top:8px">LEVEL
+            <span id="lb-level">1</span></div>
+          <div
+            style="font-size:16px; color:var(--green); font-weight:600; margin-top:8px; display:inline-flex; align-items:center; justify-content:center; gap:6px; background:#1c2502; padding:4px 12px; border-radius:99px; border:1px solid #c8ff0040">
+            <i class="fa-solid fa-fire"></i> <span id="lb-streak">0</span> DAY STREAK</div>
+
+          <div
+            style="margin-top:20px; background:var(--surface); border-radius:100px; height:10px; overflow:hidden; position:relative; width:80%; margin-left:auto; margin-right:auto">
+            <div id="lb-progress"
+              style="background:var(--accent); height:100%; width:0%; border-radius:100px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1)">
+            </div>
           </div>
           <div style="font-size:12px; margin-top:8px; color:var(--text2)"><span id="lb-xp">0</span> XP TOTAL</div>
         </div>
@@ -3050,7 +3279,8 @@
         <div class="fb" style="padding:0; overflow:hidden">
           <div style="padding:16px 16px 8px;"><span class="flbl">GLOBAL LEADERBOARD</span></div>
           <div id="lb-list" style="display:flex; flex-direction:column">
-            <div style="color:var(--text2); font-size:13px; text-align:center; padding:16px"><i class="fa-solid fa-spinner fa-spin"></i> Fetching rankings...</div>
+            <div style="color:var(--text2); font-size:13px; text-align:center; padding:16px"><i
+                class="fa-solid fa-spinner fa-spin"></i> Fetching rankings...</div>
           </div>
         </div>
 
@@ -3058,7 +3288,8 @@
           <span class="flbl">ADD FRIEND</span>
           <div style="display:flex; gap:8px">
             <input type="text" id="lb-add-email" class="wk-select" placeholder="Friend's Email address" style="flex:1">
-            <button class="db-acts dba" style="margin:0; flex:0 0 auto; padding:0 20px" onclick="sendFriendRequest()">ADD</button>
+            <button class="db-acts dba" style="margin:0; flex:0 0 auto; padding:0 20px"
+              onclick="sendFriendRequest()">ADD</button>
           </div>
           <div id="lb-pending" style="margin-top:16px; display:none;">
             <span class="flbl" style="margin-bottom:8px">PENDING REQUESTS</span>
@@ -3081,24 +3312,28 @@
           <span class="about-label">About The Builder</span>
           <div class="about-copy">
             <strong>FORGE</strong> is built to make consistency feel sharp, fast, and a little addictive.
-            It combines a static single-file frontend, Supabase auth/data, and a server-side Gemini layer so the app stays lightweight while the smart features stay private.
+            It combines a static single-file frontend, Supabase auth/data, and a server-side Gemini layer so the app
+            stays lightweight while the smart features stay private.
           </div>
         </div>
         <div class="about-card">
           <span class="about-label">Why It Exists</span>
           <div class="about-copy">
             The idea behind FORGE is simple: fewer excuses, cleaner tracking, better momentum.
-            Calories, workouts, AI support, streaks, and social competition all live in one focused system designed by <strong>Aswin Menon</strong>.
+            Calories, workouts, AI support, streaks, and social competition all live in one focused system designed by
+            <strong>Aswin Menon</strong>.
           </div>
         </div>
         <div class="about-links">
-          <a class="about-link" href="https://www.linkedin.com/in/aswinpmenon/" target="_blank" rel="noopener noreferrer">
+          <a class="about-link" href="https://www.linkedin.com/in/aswinpmenon/" target="_blank"
+            rel="noopener noreferrer">
             <i class="fa-brands fa-linkedin"></i> LinkedIn
           </a>
           <a class="about-link" href="https://github.com/aswinpmenon" target="_blank" rel="noopener noreferrer">
             <i class="fa-brands fa-github"></i> GitHub
           </a>
-          <button class="coffee-btn" onclick="window.open('https://www.buymeacoffee.com/', '_blank', 'noopener,noreferrer')">
+          <button class="coffee-btn"
+            onclick="window.open('https://www.buymeacoffee.com/', '_blank', 'noopener,noreferrer')">
             <i class="fa-solid fa-mug-hot"></i> Buy Me A Coffee
           </button>
         </div>
@@ -3116,6 +3351,34 @@
             class="fa-solid fa-calendar-day"></i></span><span class="ni-label">Today</span></button>
       <button class="ni" onclick="go('leaderboard')"><span class="ni-icon"><i
             class="fa-solid fa-gamepad"></i></span><span class="ni-label">Social</span></button>
+    </div>
+
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="checkin-modal">
+      <div class="modal-content">
+        <div class="h1b" style="font-size:32px;margin-bottom:8px">MORNING CHECK-IN</div>
+        <div class="desc">How many hours did you sleep?</div>
+        <input type="range" id="sleep-slider" min="4" max="10" step="0.5" value="7"
+          style="width:100%; margin-bottom: 12px;">
+        <div style="font-family:'Space Mono'; font-size: 24px; color: var(--green); margin-bottom: 24px;"><span
+            id="sleep-val">7.0</span> HRS</div>
+        <button class="sbtn" onclick="submitCheckin()">START DAY</button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="body-stats-modal">
+      <div class="modal-content">
+        <div class="h1b" style="font-size:32px;margin-bottom:8px">WEEKLY STATS</div>
+        <div class="desc">Log your Sunday weigh-in.</div>
+        <div class="input-row">
+          <span class="flbl">WEIGHT (KG)</span>
+          <input type="number" id="body-weight" class="std-input" placeholder="e.g. 75.5" step="0.1">
+        </div>
+        <button class="sbtn" onclick="submitBodyStats()">LOG STATS</button>
+        <button class="dbtn"
+          onclick="document.getElementById('body-stats-modal').classList.remove('show')">Cancel</button>
+      </div>
     </div>
 
     <div class="toast" id="toast"></div>
@@ -3224,576 +3487,716 @@
     let runPreviewRow = null;
     let runPausedAccumMs = 0;
     let runPauseBeganAt = null;
-    const APP_VERSION = '4.0';
-const WEEKLY_ROUTINE = {
-  "mon": {
-    "tag": "Free day",
-    "blocks": [
-      {
-        "id": "mon-1130pm",
-        "time": "11:30 PM",
-        "type": "sleep",
-        "title": "Bedtime (prev Sun)",
-        "subtitle": "target 8 hrs"
+    const APP_VERSION = '4.1';
+    const WORKOUT_PLAN = {
+      "push": [
+        {
+          "name": "Flat barbell bench press",
+          "target": "4 \u00d7 6\u20138",
+          "note": "Primary chest builder"
+        },
+        {
+          "name": "Incline dumbbell press",
+          "target": "3 \u00d7 8\u201310",
+          "note": "Upper chest + shoulder"
+        },
+        {
+          "name": "Overhead press (barbell)",
+          "target": "4 \u00d7 6\u20138",
+          "note": "Shoulder mass"
+        },
+        {
+          "name": "Cable lateral raises",
+          "target": "4 \u00d7 12\u201315",
+          "note": "Wide shoulder look"
+        },
+        {
+          "name": "Rear delt cable fly",
+          "target": "3 \u00d7 15",
+          "note": "3D shoulder shape"
+        },
+        {
+          "name": "Cable chest fly",
+          "target": "3 \u00d7 12",
+          "note": "Inner chest definition"
+        },
+        {
+          "name": "Tricep pushdown (rope)",
+          "target": "3 \u00d7 12",
+          "note": "Arm thickness"
+        },
+        {
+          "name": "Overhead tricep extension",
+          "target": "3 \u00d7 12",
+          "note": "Long head definition"
+        }
+      ],
+      "pull": [
+        {
+          "name": "Weighted pull-ups",
+          "target": "4 \u00d7 6\u20138",
+          "note": "V-taper builder"
+        },
+        {
+          "name": "Barbell bent-over row",
+          "target": "4 \u00d7 8",
+          "note": "Back thickness"
+        },
+        {
+          "name": "Cable seated row",
+          "target": "3 \u00d7 10\u201312",
+          "note": "Mid-back"
+        },
+        {
+          "name": "Face pulls (cable)",
+          "target": "3 \u00d7 15",
+          "note": "Rear delts + rotator"
+        },
+        {
+          "name": "Barbell curl",
+          "target": "4 \u00d7 8\u201310",
+          "note": "Bicep peak + size"
+        },
+        {
+          "name": "Incline dumbbell curl",
+          "target": "3 \u00d7 10\u201312",
+          "note": "Long head stretch"
+        },
+        {
+          "name": "Hammer curl",
+          "target": "3 \u00d7 12",
+          "note": "Brachialis + forearm"
+        }
+      ],
+      "legs": [
+        {
+          "name": "Barbell back squat",
+          "target": "4 \u00d7 6\u20138",
+          "note": "Foundation movement"
+        },
+        {
+          "name": "Romanian deadlift",
+          "target": "4 \u00d7 8\u201310",
+          "note": "Hamstring + glutes"
+        },
+        {
+          "name": "Leg press",
+          "target": "3 \u00d7 10\u201312",
+          "note": "Volume on quads"
+        },
+        {
+          "name": "Walking lunges",
+          "target": "3 \u00d7 12 each",
+          "note": "Balance + shape"
+        },
+        {
+          "name": "Leg curl (machine)",
+          "target": "3 \u00d7 12",
+          "note": "Hamstring isolation"
+        },
+        {
+          "name": "Standing calf raises",
+          "target": "4 \u00d7 20",
+          "note": "Slow + full range"
+        }
+      ],
+      "cardio": [
+        {
+          "name": "Treadmill incline walk or jog",
+          "target": "25\u201330 min",
+          "note": "Incline 6\u20138, warm indoors"
+        },
+        {
+          "name": "Hanging leg raises",
+          "target": "3 \u00d7 15",
+          "note": "Lower abs key for visible 6-pack"
+        },
+        {
+          "name": "Cable crunches",
+          "target": "3 \u00d7 15",
+          "note": "Weighted \u2014 builds the ab shape"
+        },
+        {
+          "name": "Plank hold",
+          "target": "3 \u00d7 60 sec",
+          "note": "Full tension, no sagging"
+        },
+        {
+          "name": "Russian twists",
+          "target": "3 \u00d7 20",
+          "note": "Oblique definition"
+        }
+      ]
+    };
+    const WEEKLY_ROUTINE = {
+      "mon": {
+        "tag": "Free day",
+        "blocks": [
+          {
+            "id": "mon-1130pm",
+            "time": "11:30 PM",
+            "type": "sleep",
+            "title": "Bedtime (prev Sun)",
+            "subtitle": "target 8 hrs"
+          },
+          {
+            "id": "mon-730am",
+            "time": "7:30 AM",
+            "type": "wake",
+            "title": "Wake up",
+            "subtitle": "8 hrs sleep"
+          },
+          {
+            "id": "mon-745am",
+            "time": "7:45 AM",
+            "type": "meal",
+            "title": "Pre-workout meal \u2014 rice + chicken",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-815am",
+            "time": "8:15 AM",
+            "type": "cardio",
+            "title": "Cardio \u2014 30 min treadmill/bike (gym)",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-850am",
+            "time": "8:50 AM",
+            "type": "gym",
+            "title": "Abs circuit \u2014 15 min",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-930am",
+            "time": "9:30 AM",
+            "type": "meal",
+            "title": "Post-workout shake (NitroTech + banana)",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-100pm",
+            "time": "1:00 PM",
+            "type": "meal",
+            "title": "Lunch \u2014 chicken curry + rice",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-430pm",
+            "time": "4:30 PM",
+            "type": "meal",
+            "title": "Snack \u2014 Greek yogurt + nuts",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-730pm",
+            "time": "7:30 PM",
+            "type": "meal",
+            "title": "Dinner \u2014 chicken + roti + dal",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-1030pm",
+            "time": "10:30 PM",
+            "type": "meal",
+            "title": "Before bed \u2014 cottage cheese / paneer",
+            "subtitle": ""
+          },
+          {
+            "id": "mon-1100pm",
+            "time": "11:00 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "target 8 hrs"
+          }
+        ]
       },
-      {
-        "id": "mon-730am",
-        "time": "7:30 AM",
-        "type": "wake",
-        "title": "Wake up",
-        "subtitle": "8 hrs sleep"
+      "tue": {
+        "tag": "Work 4:30\u20139:30 PM",
+        "blocks": [
+          {
+            "id": "tue-1100pm",
+            "time": "11:00 PM",
+            "type": "sleep",
+            "title": "Bedtime (Mon)",
+            "subtitle": "8 hrs planned"
+          },
+          {
+            "id": "tue-700am",
+            "time": "7:00 AM",
+            "type": "wake",
+            "title": "Wake up",
+            "subtitle": "8 hrs sleep"
+          },
+          {
+            "id": "tue-715am",
+            "time": "7:15 AM",
+            "type": "meal",
+            "title": "Pre-workout \u2014 oats + NitroTech shake",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-800am",
+            "time": "8:00 AM",
+            "type": "gym",
+            "title": "Gym \u2014 Pull day (back + biceps) ~65 min",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-915am",
+            "time": "9:15 AM",
+            "type": "meal",
+            "title": "Post-workout shake",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-1230pm",
+            "time": "12:30 PM",
+            "type": "meal",
+            "title": "Lunch \u2014 chicken rice + veggies (batch cooked)",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-330pm",
+            "time": "3:30 PM",
+            "type": "meal",
+            "title": "Pre-work meal \u2014 packed chicken box",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-430pm",
+            "time": "4:30 PM",
+            "type": "work",
+            "title": "Work shift starts",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-930pm",
+            "time": "9:30 PM",
+            "type": "work",
+            "title": "Work ends",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-1000pm",
+            "time": "10:00 PM",
+            "type": "rest",
+            "title": "Home \u2014 change, relax briefly",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-1015pm",
+            "time": "10:15 PM",
+            "type": "meal",
+            "title": "Dinner \u2014 reheated chicken + roti (prepped)",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-1045pm",
+            "time": "10:45 PM",
+            "type": "rest",
+            "title": "Wind down \u2014 no screens",
+            "subtitle": ""
+          },
+          {
+            "id": "tue-1130pm",
+            "time": "11:30 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "7.5 hrs to Wed 7 AM"
+          }
+        ]
       },
-      {
-        "id": "mon-745am",
-        "time": "7:45 AM",
-        "type": "meal",
-        "title": "Pre-workout meal \u2014 rice + chicken",
-        "subtitle": ""
+      "wed": {
+        "tag": "Work 4:30\u20139:30 PM",
+        "blocks": [
+          {
+            "id": "wed-1130pm",
+            "time": "11:30 PM",
+            "type": "sleep",
+            "title": "Bedtime (Tue)",
+            "subtitle": "7.5 hrs"
+          },
+          {
+            "id": "wed-700am",
+            "time": "7:00 AM",
+            "type": "wake",
+            "title": "Wake up",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-715am",
+            "time": "7:15 AM",
+            "type": "meal",
+            "title": "Pre-workout \u2014 oats + NitroTech",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-800am",
+            "time": "8:00 AM",
+            "type": "gym",
+            "title": "Gym \u2014 Legs day ~70 min",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-920am",
+            "time": "9:20 AM",
+            "type": "meal",
+            "title": "Post-workout shake",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-1230pm",
+            "time": "12:30 PM",
+            "type": "meal",
+            "title": "Lunch \u2014 chicken + rice + rasam",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-330pm",
+            "time": "3:30 PM",
+            "type": "meal",
+            "title": "Pre-work meal \u2014 packed chicken box",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-430pm",
+            "time": "4:30 PM",
+            "type": "work",
+            "title": "Work shift starts",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-930pm",
+            "time": "9:30 PM",
+            "type": "work",
+            "title": "Work ends",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-1000pm",
+            "time": "10:00 PM",
+            "type": "rest",
+            "title": "Home",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-1015pm",
+            "time": "10:15 PM",
+            "type": "meal",
+            "title": "Dinner \u2014 prepped chicken + roti",
+            "subtitle": ""
+          },
+          {
+            "id": "wed-1130pm",
+            "time": "11:30 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "7.5 hrs to Thu 7 AM"
+          }
+        ]
       },
-      {
-        "id": "mon-815am",
-        "time": "8:15 AM",
-        "type": "cardio",
-        "title": "Cardio \u2014 30 min treadmill/bike (gym)",
-        "subtitle": ""
+      "thu": {
+        "tag": "Work 10 AM\u20132 PM",
+        "blocks": [
+          {
+            "id": "thu-1130pm",
+            "time": "11:30 PM",
+            "type": "sleep",
+            "title": "Bedtime (Wed)",
+            "subtitle": "7.5 hrs"
+          },
+          {
+            "id": "thu-700am",
+            "time": "7:00 AM",
+            "type": "wake",
+            "title": "Wake up",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-710am",
+            "time": "7:10 AM",
+            "type": "meal",
+            "title": "Light pre-cardio \u2014 banana",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-730am",
+            "time": "7:30 AM",
+            "type": "cardio",
+            "title": "Cardio \u2014 25 min treadmill + abs 10 min",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-815am",
+            "time": "8:15 AM",
+            "type": "meal",
+            "title": "Post-cardio shake + get ready for work",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-1000am",
+            "time": "10:00 AM",
+            "type": "work",
+            "title": "Work starts",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-200pm",
+            "time": "2:00 PM",
+            "type": "work",
+            "title": "Work ends",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-230pm",
+            "time": "2:30 PM",
+            "type": "gym",
+            "title": "Gym \u2014 Push day (chest + shoulders) ~70 min",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-400pm",
+            "time": "4:00 PM",
+            "type": "meal",
+            "title": "Post-gym shake + lunch (big meal)",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-730pm",
+            "time": "7:30 PM",
+            "type": "meal",
+            "title": "Dinner \u2014 chicken stir fry + roti",
+            "subtitle": ""
+          },
+          {
+            "id": "thu-1100pm",
+            "time": "11:00 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "8.5 hrs to Fri 7:30 AM"
+          }
+        ]
       },
-      {
-        "id": "mon-850am",
-        "time": "8:50 AM",
-        "type": "gym",
-        "title": "Abs circuit \u2014 15 min",
-        "subtitle": ""
+      "fri": {
+        "tag": "Work 9 AM\u20133 PM",
+        "blocks": [
+          {
+            "id": "fri-1100pm",
+            "time": "11:00 PM",
+            "type": "sleep",
+            "title": "Bedtime (Thu)",
+            "subtitle": "8.5 hrs"
+          },
+          {
+            "id": "fri-730am",
+            "time": "7:30 AM",
+            "type": "wake",
+            "title": "Wake up",
+            "subtitle": "8.5 hrs sleep"
+          },
+          {
+            "id": "fri-745am",
+            "time": "7:45 AM",
+            "type": "meal",
+            "title": "Breakfast \u2014 oats + NitroTech shake",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-900am",
+            "time": "9:00 AM",
+            "type": "work",
+            "title": "Work starts",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-1200pm",
+            "time": "12:00 PM",
+            "type": "meal",
+            "title": "Work lunch \u2014 packed chicken box",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-300pm",
+            "time": "3:00 PM",
+            "type": "work",
+            "title": "Work ends",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-330pm",
+            "time": "3:30 PM",
+            "type": "gym",
+            "title": "Gym \u2014 Pull day + abs ~75 min",
+            "subtitle": "best session of week"
+          },
+          {
+            "id": "fri-500pm",
+            "time": "5:00 PM",
+            "type": "meal",
+            "title": "Post-gym shake + snack",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-800pm",
+            "time": "8:00 PM",
+            "type": "meal",
+            "title": "Dinner \u2014 chicken biriyani-style rice or curry",
+            "subtitle": ""
+          },
+          {
+            "id": "fri-1030pm",
+            "time": "10:30 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "7 hrs to Sat 5:30 AM"
+          }
+        ]
       },
-      {
-        "id": "mon-930am",
-        "time": "9:30 AM",
-        "type": "meal",
-        "title": "Post-workout shake (NitroTech + banana)",
-        "subtitle": ""
+      "sat": {
+        "tag": "Work 6 AM\u20133 PM",
+        "blocks": [
+          {
+            "id": "sat-1030pm",
+            "time": "10:30 PM",
+            "type": "sleep",
+            "title": "Bedtime (Fri)",
+            "subtitle": "7 hrs sleep"
+          },
+          {
+            "id": "sat-530am",
+            "time": "5:30 AM",
+            "type": "wake",
+            "title": "Wake up \u2014 quick meal, no gym",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-545am",
+            "time": "5:45 AM",
+            "type": "meal",
+            "title": "Early meal \u2014 banana + NitroTech shake",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-600am",
+            "time": "6:00 AM",
+            "type": "work",
+            "title": "Work starts (long shift)",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-1000am",
+            "time": "10:00 AM",
+            "type": "meal",
+            "title": "Mid-shift meal \u2014 packed chicken box",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-100pm",
+            "time": "1:00 PM",
+            "type": "meal",
+            "title": "Packed snack \u2014 yogurt + nuts",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-300pm",
+            "time": "3:00 PM",
+            "type": "work",
+            "title": "Work ends",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-330pm",
+            "time": "3:30 PM",
+            "type": "rest",
+            "title": "Rest \u2014 full recovery, no training",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-600pm",
+            "time": "6:00 PM",
+            "type": "meal",
+            "title": "Big recovery dinner \u2014 chicken curry + rice",
+            "subtitle": ""
+          },
+          {
+            "id": "sat-1000pm",
+            "time": "10:00 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "9 hrs to Sun 7 AM"
+          }
+        ]
       },
-      {
-        "id": "mon-100pm",
-        "time": "1:00 PM",
-        "type": "meal",
-        "title": "Lunch \u2014 chicken curry + rice",
-        "subtitle": ""
-      },
-      {
-        "id": "mon-430pm",
-        "time": "4:30 PM",
-        "type": "meal",
-        "title": "Snack \u2014 Greek yogurt + nuts",
-        "subtitle": ""
-      },
-      {
-        "id": "mon-730pm",
-        "time": "7:30 PM",
-        "type": "meal",
-        "title": "Dinner \u2014 chicken + roti + dal",
-        "subtitle": ""
-      },
-      {
-        "id": "mon-1030pm",
-        "time": "10:30 PM",
-        "type": "meal",
-        "title": "Before bed \u2014 cottage cheese / paneer",
-        "subtitle": ""
-      },
-      {
-        "id": "mon-1100pm",
-        "time": "11:00 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "target 8 hrs"
+      "sun": {
+        "tag": "Free + prep day",
+        "blocks": [
+          {
+            "id": "sun-1000pm",
+            "time": "10:00 PM",
+            "type": "sleep",
+            "title": "Bedtime (Sat)",
+            "subtitle": "9 hrs sleep"
+          },
+          {
+            "id": "sun-700am",
+            "time": "7:00 AM",
+            "type": "wake",
+            "title": "Wake up \u2014 best rested day",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-715am",
+            "time": "7:15 AM",
+            "type": "meal",
+            "title": "Breakfast \u2014 puttu + kadala curry or oats",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-830am",
+            "time": "8:30 AM",
+            "type": "gym",
+            "title": "Gym \u2014 Legs day ~70 min",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-1000am",
+            "time": "10:00 AM",
+            "type": "meal",
+            "title": "Post-gym shake",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-100pm",
+            "time": "1:00 PM",
+            "type": "meal",
+            "title": "Lunch \u2014 proper Kerala meal (rice + sambar + chicken)",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-300pm",
+            "time": "3:00 PM",
+            "type": "rest",
+            "title": "Batch cook \u2014 600g chicken, rice, dal for week",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-600pm",
+            "time": "6:00 PM",
+            "type": "meal",
+            "title": "Light dinner \u2014 chicken soup or stir fry",
+            "subtitle": ""
+          },
+          {
+            "id": "sun-1100pm",
+            "time": "11:00 PM",
+            "type": "sleep",
+            "title": "Bedtime",
+            "subtitle": "8 hrs to Mon 7 AM"
+          }
+        ]
       }
-    ]
-  },
-  "tue": {
-    "tag": "Work 4:30\u20139:30 PM",
-    "blocks": [
-      {
-        "id": "tue-1100pm",
-        "time": "11:00 PM",
-        "type": "sleep",
-        "title": "Bedtime (Mon)",
-        "subtitle": "8 hrs planned"
-      },
-      {
-        "id": "tue-700am",
-        "time": "7:00 AM",
-        "type": "wake",
-        "title": "Wake up",
-        "subtitle": "8 hrs sleep"
-      },
-      {
-        "id": "tue-715am",
-        "time": "7:15 AM",
-        "type": "meal",
-        "title": "Pre-workout \u2014 oats + NitroTech shake",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-800am",
-        "time": "8:00 AM",
-        "type": "gym",
-        "title": "Gym \u2014 Pull day (back + biceps) ~65 min",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-915am",
-        "time": "9:15 AM",
-        "type": "meal",
-        "title": "Post-workout shake",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-1230pm",
-        "time": "12:30 PM",
-        "type": "meal",
-        "title": "Lunch \u2014 chicken rice + veggies (batch cooked)",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-330pm",
-        "time": "3:30 PM",
-        "type": "meal",
-        "title": "Pre-work meal \u2014 packed chicken box",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-430pm",
-        "time": "4:30 PM",
-        "type": "work",
-        "title": "Work shift starts",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-930pm",
-        "time": "9:30 PM",
-        "type": "work",
-        "title": "Work ends",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-1000pm",
-        "time": "10:00 PM",
-        "type": "rest",
-        "title": "Home \u2014 change, relax briefly",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-1015pm",
-        "time": "10:15 PM",
-        "type": "meal",
-        "title": "Dinner \u2014 reheated chicken + roti (prepped)",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-1045pm",
-        "time": "10:45 PM",
-        "type": "rest",
-        "title": "Wind down \u2014 no screens",
-        "subtitle": ""
-      },
-      {
-        "id": "tue-1130pm",
-        "time": "11:30 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "7.5 hrs to Wed 7 AM"
-      }
-    ]
-  },
-  "wed": {
-    "tag": "Work 4:30\u20139:30 PM",
-    "blocks": [
-      {
-        "id": "wed-1130pm",
-        "time": "11:30 PM",
-        "type": "sleep",
-        "title": "Bedtime (Tue)",
-        "subtitle": "7.5 hrs"
-      },
-      {
-        "id": "wed-700am",
-        "time": "7:00 AM",
-        "type": "wake",
-        "title": "Wake up",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-715am",
-        "time": "7:15 AM",
-        "type": "meal",
-        "title": "Pre-workout \u2014 oats + NitroTech",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-800am",
-        "time": "8:00 AM",
-        "type": "gym",
-        "title": "Gym \u2014 Legs day ~70 min",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-920am",
-        "time": "9:20 AM",
-        "type": "meal",
-        "title": "Post-workout shake",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-1230pm",
-        "time": "12:30 PM",
-        "type": "meal",
-        "title": "Lunch \u2014 chicken + rice + rasam",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-330pm",
-        "time": "3:30 PM",
-        "type": "meal",
-        "title": "Pre-work meal \u2014 packed chicken box",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-430pm",
-        "time": "4:30 PM",
-        "type": "work",
-        "title": "Work shift starts",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-930pm",
-        "time": "9:30 PM",
-        "type": "work",
-        "title": "Work ends",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-1000pm",
-        "time": "10:00 PM",
-        "type": "rest",
-        "title": "Home",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-1015pm",
-        "time": "10:15 PM",
-        "type": "meal",
-        "title": "Dinner \u2014 prepped chicken + roti",
-        "subtitle": ""
-      },
-      {
-        "id": "wed-1130pm",
-        "time": "11:30 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "7.5 hrs to Thu 7 AM"
-      }
-    ]
-  },
-  "thu": {
-    "tag": "Work 10 AM\u20132 PM",
-    "blocks": [
-      {
-        "id": "thu-1130pm",
-        "time": "11:30 PM",
-        "type": "sleep",
-        "title": "Bedtime (Wed)",
-        "subtitle": "7.5 hrs"
-      },
-      {
-        "id": "thu-700am",
-        "time": "7:00 AM",
-        "type": "wake",
-        "title": "Wake up",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-710am",
-        "time": "7:10 AM",
-        "type": "meal",
-        "title": "Light pre-cardio \u2014 banana",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-730am",
-        "time": "7:30 AM",
-        "type": "cardio",
-        "title": "Cardio \u2014 25 min treadmill + abs 10 min",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-815am",
-        "time": "8:15 AM",
-        "type": "meal",
-        "title": "Post-cardio shake + get ready for work",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-1000am",
-        "time": "10:00 AM",
-        "type": "work",
-        "title": "Work starts",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-200pm",
-        "time": "2:00 PM",
-        "type": "work",
-        "title": "Work ends",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-230pm",
-        "time": "2:30 PM",
-        "type": "gym",
-        "title": "Gym \u2014 Push day (chest + shoulders) ~70 min",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-400pm",
-        "time": "4:00 PM",
-        "type": "meal",
-        "title": "Post-gym shake + lunch (big meal)",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-730pm",
-        "time": "7:30 PM",
-        "type": "meal",
-        "title": "Dinner \u2014 chicken stir fry + roti",
-        "subtitle": ""
-      },
-      {
-        "id": "thu-1100pm",
-        "time": "11:00 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "8.5 hrs to Fri 7:30 AM"
-      }
-    ]
-  },
-  "fri": {
-    "tag": "Work 9 AM\u20133 PM",
-    "blocks": [
-      {
-        "id": "fri-1100pm",
-        "time": "11:00 PM",
-        "type": "sleep",
-        "title": "Bedtime (Thu)",
-        "subtitle": "8.5 hrs"
-      },
-      {
-        "id": "fri-730am",
-        "time": "7:30 AM",
-        "type": "wake",
-        "title": "Wake up",
-        "subtitle": "8.5 hrs sleep"
-      },
-      {
-        "id": "fri-745am",
-        "time": "7:45 AM",
-        "type": "meal",
-        "title": "Breakfast \u2014 oats + NitroTech shake",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-900am",
-        "time": "9:00 AM",
-        "type": "work",
-        "title": "Work starts",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-1200pm",
-        "time": "12:00 PM",
-        "type": "meal",
-        "title": "Work lunch \u2014 packed chicken box",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-300pm",
-        "time": "3:00 PM",
-        "type": "work",
-        "title": "Work ends",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-330pm",
-        "time": "3:30 PM",
-        "type": "gym",
-        "title": "Gym \u2014 Pull day + abs ~75 min",
-        "subtitle": "best session of week"
-      },
-      {
-        "id": "fri-500pm",
-        "time": "5:00 PM",
-        "type": "meal",
-        "title": "Post-gym shake + snack",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-800pm",
-        "time": "8:00 PM",
-        "type": "meal",
-        "title": "Dinner \u2014 chicken biriyani-style rice or curry",
-        "subtitle": ""
-      },
-      {
-        "id": "fri-1030pm",
-        "time": "10:30 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "7 hrs to Sat 5:30 AM"
-      }
-    ]
-  },
-  "sat": {
-    "tag": "Work 6 AM\u20133 PM",
-    "blocks": [
-      {
-        "id": "sat-1030pm",
-        "time": "10:30 PM",
-        "type": "sleep",
-        "title": "Bedtime (Fri)",
-        "subtitle": "7 hrs sleep"
-      },
-      {
-        "id": "sat-530am",
-        "time": "5:30 AM",
-        "type": "wake",
-        "title": "Wake up \u2014 quick meal, no gym",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-545am",
-        "time": "5:45 AM",
-        "type": "meal",
-        "title": "Early meal \u2014 banana + NitroTech shake",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-600am",
-        "time": "6:00 AM",
-        "type": "work",
-        "title": "Work starts (long shift)",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-1000am",
-        "time": "10:00 AM",
-        "type": "meal",
-        "title": "Mid-shift meal \u2014 packed chicken box",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-100pm",
-        "time": "1:00 PM",
-        "type": "meal",
-        "title": "Packed snack \u2014 yogurt + nuts",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-300pm",
-        "time": "3:00 PM",
-        "type": "work",
-        "title": "Work ends",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-330pm",
-        "time": "3:30 PM",
-        "type": "rest",
-        "title": "Rest \u2014 full recovery, no training",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-600pm",
-        "time": "6:00 PM",
-        "type": "meal",
-        "title": "Big recovery dinner \u2014 chicken curry + rice",
-        "subtitle": ""
-      },
-      {
-        "id": "sat-1000pm",
-        "time": "10:00 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "9 hrs to Sun 7 AM"
-      }
-    ]
-  },
-  "sun": {
-    "tag": "Free + prep day",
-    "blocks": [
-      {
-        "id": "sun-1000pm",
-        "time": "10:00 PM",
-        "type": "sleep",
-        "title": "Bedtime (Sat)",
-        "subtitle": "9 hrs sleep"
-      },
-      {
-        "id": "sun-700am",
-        "time": "7:00 AM",
-        "type": "wake",
-        "title": "Wake up \u2014 best rested day",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-715am",
-        "time": "7:15 AM",
-        "type": "meal",
-        "title": "Breakfast \u2014 puttu + kadala curry or oats",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-830am",
-        "time": "8:30 AM",
-        "type": "gym",
-        "title": "Gym \u2014 Legs day ~70 min",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-1000am",
-        "time": "10:00 AM",
-        "type": "meal",
-        "title": "Post-gym shake",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-100pm",
-        "time": "1:00 PM",
-        "type": "meal",
-        "title": "Lunch \u2014 proper Kerala meal (rice + sambar + chicken)",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-300pm",
-        "time": "3:00 PM",
-        "type": "rest",
-        "title": "Batch cook \u2014 600g chicken, rice, dal for week",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-600pm",
-        "time": "6:00 PM",
-        "type": "meal",
-        "title": "Light dinner \u2014 chicken soup or stir fry",
-        "subtitle": ""
-      },
-      {
-        "id": "sun-1100pm",
-        "time": "11:00 PM",
-        "type": "sleep",
-        "title": "Bedtime",
-        "subtitle": "8 hrs to Mon 7 AM"
-      }
-    ]
-  }
-};
+    };
 
     const FOOD_AI_API_URL = window.FORGE_AI_API_URL || 'http://127.0.0.1:5001/api/food/analyze';
     const AI_COACH_API_URL = window.FORGE_AI_COACH_URL || 'http://127.0.0.1:5001/api/health/coach';
@@ -4021,8 +4424,11 @@ const WEEKLY_ROUTINE = {
 
     function onEnter(s) {
       if (s === 'dashboard') renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+      checkMorning();
+      checkWindDown();
+      updateShiftWidget();
+      renderRoutine();
+      updateRoutineDashboard();
       if (s === 'record-calorie') { updateCalClock(); }
       if (s === 'record-workout') { updateWorkoutMeta(); }
       if (s === 'progress-daily') renderDaily();
@@ -4211,6 +4617,9 @@ const WEEKLY_ROUTINE = {
           WB = buildStarterWB();
           parseWB(WB);
           renderDash();
+          checkMorning();
+          checkWindDown();
+          updateShiftWidget();
           renderRoutine();
           updateRoutineDashboard();
           renderDaily();
@@ -4287,8 +4696,11 @@ const WEEKLY_ROUTINE = {
       if (!WB) WB = buildStarterWB();
       syncWB();
       renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+      checkMorning();
+      checkWindDown();
+      updateShiftWidget();
+      renderRoutine();
+      updateRoutineDashboard();
       renderDaily();
       renderWeekly();
       renderRunScreen();
@@ -4399,8 +4811,11 @@ const WEEKLY_ROUTINE = {
         syncWB();
         try { localStorage.removeItem('arch_wb'); } catch (e) { }
         renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+        checkMorning();
+        checkWindDown();
+        updateShiftWidget();
+        renderRoutine();
+        updateRoutineDashboard();
         renderDaily();
         renderWeekly();
         renderRunScreen();
@@ -4426,8 +4841,11 @@ const WEEKLY_ROUTINE = {
         DB.workoutLog = DB.workoutLog.filter(r => r.Date !== TODAY);
         syncWB();
         renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+        checkMorning();
+        checkWindDown();
+        updateShiftWidget();
+        renderRoutine();
+        updateRoutineDashboard();
         renderDaily();
         renderWeekly();
         if (CUR === 'database') renderDB();
@@ -4447,8 +4865,11 @@ const WEEKLY_ROUTINE = {
         DB.calLog = DB.calLog.filter(r => r.ID !== id);
         syncWB();
         renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+        checkMorning();
+        checkWindDown();
+        updateShiftWidget();
+        renderRoutine();
+        updateRoutineDashboard();
         renderDaily();
         renderWeekly();
         if (CUR === 'database') renderDB();
@@ -4473,8 +4894,11 @@ const WEEKLY_ROUTINE = {
         }
         syncWB();
         renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+        checkMorning();
+        checkWindDown();
+        updateShiftWidget();
+        renderRoutine();
+        updateRoutineDashboard();
         renderDaily();
         renderWeekly();
         if (CUR === 'database') renderDB();
@@ -4493,6 +4917,9 @@ const WEEKLY_ROUTINE = {
           if (supabaseClient) await seedSupabaseFromDB();
           toast('IMPORTED ✓', true);
           renderDash();
+          checkMorning();
+          checkWindDown();
+          updateShiftWidget();
           renderRoutine();
           updateRoutineDashboard();
           if (CUR === 'database') renderDB();
@@ -4687,8 +5114,11 @@ const WEEKLY_ROUTINE = {
       updCalDisp();
       closeVoiceModal();
       renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+      checkMorning();
+      checkWindDown();
+      updateShiftWidget();
+      renderRoutine();
+      updateRoutineDashboard();
       renderDaily();
       if (CUR === 'database') renderDB();
       toast(`${itemInput.toUpperCase()}: ${fmt(calorieInput)} KCAL LOGGED`, true);
@@ -4784,8 +5214,11 @@ const WEEKLY_ROUTINE = {
       renderAiFoodResults();
       toast('AI CALORIES SAVED', true);
       renderDash();
-          renderRoutine();
-          updateRoutineDashboard();
+      checkMorning();
+      checkWindDown();
+      updateShiftWidget();
+      renderRoutine();
+      updateRoutineDashboard();
       renderDaily();
     }
     async function submitCal() {
@@ -4801,13 +5234,13 @@ const WEEKLY_ROUTINE = {
       }
       DB.calLog.push(row);
       syncWB();
-      
-      const currentCals = DB.calLog.filter(r => r.Date === TODAY).reduce((s, r) => s + (r.Calories_kcal||0), 0);
+
+      const currentCals = DB.calLog.filter(r => r.Date === TODAY).reduce((s, r) => s + (r.Calories_kcal || 0), 0);
       const prevCals = currentCals - k;
       if (prevCals < GOAL && currentCals >= GOAL) {
         addXP(10, 'Daily Calorie Goal Met!');
       }
-      
+
       toast(selCourseVal.toUpperCase() + ': ' + fmt(k) + ' KCAL LOGGED', true);
       calVal = ''; updCalDisp();
       setTimeout(() => go('dashboard'), 900);
@@ -5193,54 +5626,54 @@ const WEEKLY_ROUTINE = {
     function calcLevel(xp) {
       return Math.floor(Math.sqrt(xp / 10)) + 1;
     }
-    
+
     function xpForLevel(level) {
       if (level <= 1) return 0;
       return 10 * Math.pow(level - 1, 2);
     }
-    
+
     function updateGamificationUI() {
       if (document.getElementById('lb-level')) document.getElementById('lb-level').innerText = userStats.level;
       if (document.getElementById('lb-xp')) document.getElementById('lb-xp').innerText = userStats.xp;
       if (document.getElementById('lb-streak')) document.getElementById('lb-streak').innerText = userStats.streak;
-      
+
       const elProg = document.getElementById('lb-progress');
       const currentLevelXP = xpForLevel(userStats.level);
       const nextLevelXP = xpForLevel(userStats.level + 1);
       const progressXP = userStats.xp - currentLevelXP;
       const requiredXP = nextLevelXP - currentLevelXP;
       const pct = Math.min(100, Math.max(0, (progressXP / requiredXP) * 100));
-      if(elProg) elProg.style.width = pct + '%';
+      if (elProg) elProg.style.width = pct + '%';
     }
 
     async function addXP(amount, reason) {
       if (!amount || !supabaseClient || !currentUser) return;
-      
+
       // Always read the LIVE value from DB first to avoid race conditions
       const { data: liveRow } = await supabaseClient.from('user_stats').select('xp, level, streak, last_active').eq('user_id', currentUser.id).single();
-      
+
       const baseXP = liveRow ? (liveRow.xp || 0) : 0;
       const newXP = baseXP + amount;
       const newLevel = calcLevel(newXP);
       const oldLevel = liveRow ? (liveRow.level || 1) : userStats.level;
-      
+
       // Update in-memory state
       userStats.xp = newXP;
       userStats.level = newLevel;
-      
+
       // Persist to DB atomically — include email so upsert never nulls it out
       const userEmail = currentUser.email || null;
       const { error } = await supabaseClient.from('user_stats').upsert(
         { user_id: currentUser.id, email: userEmail, xp: newXP, level: newLevel, streak: userStats.streak, last_active: TODAY },
         { onConflict: 'user_id' }
       );
-      
+
       if (error) {
         console.error('XP save failed:', error);
         toast('XP SAVE FAILED', false, true);
         return;
       }
-      
+
       // Toast and level-up animation
       if (newLevel > oldLevel) {
         toast(`⚡ LEVEL UP! Now Level ${newLevel}`, true);
@@ -5248,17 +5681,17 @@ const WEEKLY_ROUTINE = {
       } else {
         toast(`+${amount} XP — ${reason}`, true);
       }
-      
+
       updateGamificationUI();
       if (typeof fetchLeaderboard === 'function') fetchLeaderboard();
     }
 
     async function refreshActiveStreak() {
       if (!currentUser || !supabaseClient) return;
-      
+
       const userEmail = currentUser.email || null;
       let { data } = await supabaseClient.from('user_stats').select('streak, last_active, xp, level').eq('user_id', currentUser.id).single();
-      
+
       // Auto-create row for this user if it doesn't exist
       if (!data) {
         await supabaseClient.from('user_stats').upsert(
@@ -5267,26 +5700,26 @@ const WEEKLY_ROUTINE = {
         );
         data = { xp: 0, level: 1, streak: 0, last_active: null };
       }
-      
+
       // Load XP/level into memory WITHOUT overwriting in-progress addXP calls
       // Only set if memory is at default (first load)
       if (userStats.xp === 0) userStats.xp = data.xp || 0;
       if (userStats.level === 1) userStats.level = data.level || calcLevel(data.xp || 0);
-      
+
       // ── Streak Logic ──────────────────────────────
       let currentStreak = data.streak || 0;
       const lastDate = data.last_active;
       let diffDays = -1; // -1 = never logged before
-      
+
       if (lastDate) {
         const t1 = new Date(lastDate).setHours(0, 0, 0, 0);
         const t2 = new Date(TODAY).setHours(0, 0, 0, 0);
         diffDays = Math.floor((t2 - t1) / (1000 * 60 * 60 * 24));
       }
-      
+
       const hasLoggedToday = DB.calLog.some(r => r.Date === TODAY) || DB.workoutLog.some(r => r.Date === TODAY);
       let needsStreakUpdate = false;
-      
+
       if (hasLoggedToday) {
         if (diffDays === 0) {
           // Already updated today — keep the existing streak value
@@ -5310,47 +5743,47 @@ const WEEKLY_ROUTINE = {
           needsStreakUpdate = true;
         }
       }
-      
+
       userStats.streak = currentStreak;
-      
+
       if (needsStreakUpdate) {
         await supabaseClient.from('user_stats').update({ streak: currentStreak, last_active: TODAY }).eq('user_id', currentUser.id);
       }
-      
+
       updateGamificationUI();
     }
 
     async function loadSocialData() {
-       if (!currentUser || !supabaseClient) return;
-       const { data: reqs } = await supabaseClient.from('friend_requests')
-          .select('id, sender_id')
-          .eq('status', 'pending')
-          .eq('receiver_id', currentUser.id);
-       const { data: friends } = await supabaseClient.from('friends').select('friend_id').eq('user_id', currentUser.id);
-       friendsList = friends || [];
-       
-       const pendingBox = document.getElementById('lb-pending');
-       const reqList = document.getElementById('lb-requests-list');
-       if (reqs && reqs.length > 0) {
-           const senderIds = reqs.map(r => r.sender_id);
-           const { data: senders } = await supabaseClient.from('user_stats').select('user_id, email').in('user_id', senderIds);
-           const emailMap = {};
-           if (senders) senders.forEach(s => emailMap[s.user_id] = s.email || 'UID:...'+s.user_id.slice(-6));
+      if (!currentUser || !supabaseClient) return;
+      const { data: reqs } = await supabaseClient.from('friend_requests')
+        .select('id, sender_id')
+        .eq('status', 'pending')
+        .eq('receiver_id', currentUser.id);
+      const { data: friends } = await supabaseClient.from('friends').select('friend_id').eq('user_id', currentUser.id);
+      friendsList = friends || [];
 
-           pendingBox.style.display = 'block';
-           reqList.innerHTML = reqs.map(r => `
+      const pendingBox = document.getElementById('lb-pending');
+      const reqList = document.getElementById('lb-requests-list');
+      if (reqs && reqs.length > 0) {
+        const senderIds = reqs.map(r => r.sender_id);
+        const { data: senders } = await supabaseClient.from('user_stats').select('user_id, email').in('user_id', senderIds);
+        const emailMap = {};
+        if (senders) senders.forEach(s => emailMap[s.user_id] = s.email || 'UID:...' + s.user_id.slice(-6));
+
+        pendingBox.style.display = 'block';
+        reqList.innerHTML = reqs.map(r => `
              <div style="background:var(--surface2); padding:12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center">
-                <span style="font-size:14px; font-family:'Space Mono'; color:var(--text2)">${emailMap[r.sender_id] || 'UID:...'+r.sender_id.slice(-6)}</span>
+                <span style="font-size:14px; font-family:'Space Mono'; color:var(--text2)">${emailMap[r.sender_id] || 'UID:...' + r.sender_id.slice(-6)}</span>
                 <div>
                    <button class="db-acts dba" style="margin:0; padding:4px 12px; border-color:var(--green); color:var(--green)" onclick="acceptFriendRequest('${r.id}', '${r.sender_id}')">ACCEPT</button>
                 </div>
              </div>
            `).join('');
-       } else {
-           pendingBox.style.display = 'none';
-       }
+      } else {
+        pendingBox.style.display = 'none';
+      }
 
-       fetchLeaderboard();
+      fetchLeaderboard();
     }
 
     async function cleanupFriendRelationship(friendId) {
@@ -5367,12 +5800,12 @@ const WEEKLY_ROUTINE = {
       if (!supabaseClient || !currentUser) { toast('Please sign in first.', false, true); return; }
       const emailObj = document.getElementById('lb-add-email');
       const friend_email = String(emailObj.value).trim();
-      if(!friend_email) return;
-      
+      if (!friend_email) return;
+
       const { data: friendRow, error: findError } = await supabaseClient.from('user_stats').select('user_id').eq('email', friend_email).single();
       if (!friendRow || findError) {
-         toast('User not found. Invite them!', false, true);
-         return;
+        toast('User not found. Invite them!', false, true);
+        return;
       }
       const friend_id = friendRow.user_id;
       if (friend_id === currentUser.id) { toast('You cannot add yourself.', false, true); return; }
@@ -5396,16 +5829,16 @@ const WEEKLY_ROUTINE = {
       if (error) { toast('Already requested or error.', false, true); }
       else { toast('Request Sent!', true); emailObj.value = ''; }
     }
-    
+
     async function acceptFriendRequest(req_id, sender_id) {
-       if (!supabaseClient || !currentUser) return;
-       await supabaseClient.from('friend_requests').update({ status: 'accepted' }).eq('id', req_id);
-       await supabaseClient.from('friends').insert([
-          { user_id: currentUser.id, friend_id: sender_id },
-          { user_id: sender_id, friend_id: currentUser.id }
-       ]);
-       toast('Friend added!', true);
-       loadSocialData();
+      if (!supabaseClient || !currentUser) return;
+      await supabaseClient.from('friend_requests').update({ status: 'accepted' }).eq('id', req_id);
+      await supabaseClient.from('friends').insert([
+        { user_id: currentUser.id, friend_id: sender_id },
+        { user_id: sender_id, friend_id: currentUser.id }
+      ]);
+      toast('Friend added!', true);
+      loadSocialData();
     }
 
     async function removeFriendConnection(friendId, friendName) {
@@ -5444,39 +5877,39 @@ const WEEKLY_ROUTINE = {
       if (delta > -20) el.classList.remove('show-delete');
       delete el.dataset.startX;
     }
-    
-    window.fetchLeaderboard = async function() {
+
+    window.fetchLeaderboard = async function () {
       if (!supabaseClient || !currentUser) return;
-      
+
       const { data: friends } = await supabaseClient.from('friends').select('friend_id').eq('user_id', currentUser.id);
       friendsList = friends || [];
       const friendIdSet = new Set((friends || []).map(f => f.friend_id));
       let userIds = [currentUser.id];
       if (friends) {
-         userIds = userIds.concat(friends.map(f => f.friend_id));
+        userIds = userIds.concat(friends.map(f => f.friend_id));
       }
-      
+
       const { data: stats } = await supabaseClient.from('user_stats').select('user_id, email, xp, level, streak').in('user_id', userIds).order('xp', { ascending: false });
-      
+
       const listEl = document.getElementById('lb-list');
       if (stats && stats.length > 0) {
-         listEl.innerHTML = stats.map((s, index) => {
-            const isMe = s.user_id === currentUser.id;
-            let name = isMe ? 'YOU' : 'Friend';
-            if (!isMe && s.email) {
-               name = s.email.split('@')[0].toUpperCase();
-            } else if (!isMe) {
-               name = 'UID:' + s.user_id.slice(-4);
-            }
-            const rankEmoji = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : null));
-            const rankNum = rankEmoji ? `<span style="font-size:18px">${rankEmoji}</span>` : `<span style="font-size:18px; font-family:'Bebas Neue'; color:var(--text2); width:24px; display:inline-block; text-align:center">${index + 1}</span>`;
-            const borderLeft = isMe ? 'border-left: 3px solid var(--green);' : 'border-left: 3px solid transparent;';
-            const namePart = isMe
-              ? `<span style="font-size:15px; font-weight:800; letter-spacing:0.5px; color:var(--text)">YOU</span>`
-              : `<span style="font-size:15px; font-weight:700; letter-spacing:0.5px; color:var(--text)">${name}</span>`;
-            const isFriend = !isMe && friendIdSet.has(s.user_id);
-            const rowClass = isMe ? 'lb-row me' : 'lb-row';
-            const rowMarkup = `
+        listEl.innerHTML = stats.map((s, index) => {
+          const isMe = s.user_id === currentUser.id;
+          let name = isMe ? 'YOU' : 'Friend';
+          if (!isMe && s.email) {
+            name = s.email.split('@')[0].toUpperCase();
+          } else if (!isMe) {
+            name = 'UID:' + s.user_id.slice(-4);
+          }
+          const rankEmoji = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : null));
+          const rankNum = rankEmoji ? `<span style="font-size:18px">${rankEmoji}</span>` : `<span style="font-size:18px; font-family:'Bebas Neue'; color:var(--text2); width:24px; display:inline-block; text-align:center">${index + 1}</span>`;
+          const borderLeft = isMe ? 'border-left: 3px solid var(--green);' : 'border-left: 3px solid transparent;';
+          const namePart = isMe
+            ? `<span style="font-size:15px; font-weight:800; letter-spacing:0.5px; color:var(--text)">YOU</span>`
+            : `<span style="font-size:15px; font-weight:700; letter-spacing:0.5px; color:var(--text)">${name}</span>`;
+          const isFriend = !isMe && friendIdSet.has(s.user_id);
+          const rowClass = isMe ? 'lb-row me' : 'lb-row';
+          const rowMarkup = `
               <div class="${rowClass}" style="${borderLeft} padding:12px 16px; display:flex; align-items:center; gap:14px; z-index:2;">
                 <div style="width:28px; text-align:center; flex-shrink:0">${rankNum}</div>
                 <div style="flex:1; min-width:0">
@@ -5489,15 +5922,15 @@ const WEEKLY_ROUTINE = {
                 <div style="font-family:'Space Mono'; font-weight:700; color:var(--text); font-size:17px; flex-shrink:0">${s.xp}<span style="font-size:10px; color:var(--text2); font-weight:400; margin-left:3px">XP</span></div>
               </div>
             `;
-            return `
+          return `
               <div class="lb-swipe${isFriend ? '' : ' static'}" ${isFriend ? `id="lb-swipe-${s.user_id}" ontouchstart="lbSwipeStart(event,'${s.user_id}')" ontouchmove="lbSwipeMove(event,'${s.user_id}')" ontouchend="lbSwipeEnd(event,'${s.user_id}')"` : ''}>
                 ${isFriend ? `<button class="lb-delete" onclick="removeFriendConnection('${s.user_id}', '${name.replace(/'/g, "\\'")}')">Delete</button>` : ''}
                 ${rowMarkup}
               </div>
             `;
-         }).join('');
+        }).join('');
       } else {
-         listEl.innerHTML = `<div style="color:var(--text2); font-size:13px; text-align:center; padding:16px">No friends yet — add one above!</div>`;
+        listEl.innerHTML = `<div style="color:var(--text2); font-size:13px; text-align:center; padding:16px">No friends yet — add one above!</div>`;
       }
     };
 
@@ -5676,7 +6109,7 @@ const WEEKLY_ROUTINE = {
       `).join('');
     }
 
-    window.previewRunRoute = function(runId) {
+    window.previewRunRoute = function (runId) {
       const row = DB.runLog.find(item => Number(item.ID) === Number(runId));
       if (!row) return;
       openRunFinishModal(row);
@@ -5746,7 +6179,7 @@ const WEEKLY_ROUTINE = {
       renderRunFinishModal(row);
     }
 
-    window.closeRunFinishModal = function() {
+    window.closeRunFinishModal = function () {
       document.getElementById('run-finish-modal').classList.remove('show');
     };
 
@@ -5772,7 +6205,7 @@ const WEEKLY_ROUTINE = {
       }
     }
 
-    window.shareRunSummary = async function() {
+    window.shareRunSummary = async function () {
       const summaryText = `Just finished ${Number(runPreviewRow?.Distance_Km || 0).toFixed(2)} KM with FORGE.`;
       if (!navigator.share) {
         toast('SHARE NOT SUPPORTED', false, true);
@@ -5792,7 +6225,7 @@ const WEEKLY_ROUTINE = {
       }
     };
 
-    window.downloadRunSummaryImage = async function() {
+    window.downloadRunSummaryImage = async function () {
       try {
         const file = await generateRunSummaryImageFile();
         const link = document.createElement('a');
@@ -5822,7 +6255,7 @@ const WEEKLY_ROUTINE = {
       }
     }
 
-    window.toggleRunGps = function() {
+    window.toggleRunGps = function () {
       runGpsEnabled = !runGpsEnabled;
       if (runTrackingActive) {
         if (runGpsEnabled) {
@@ -5889,7 +6322,7 @@ const WEEKLY_ROUTINE = {
       }
     }
 
-    window.toggleRunTracking = function() {
+    window.toggleRunTracking = function () {
       if (!navigator.geolocation) {
         toast('GEOLOCATION NOT SUPPORTED', false, true);
         return;
@@ -5919,7 +6352,7 @@ const WEEKLY_ROUTINE = {
       updateRunMetrics();
     };
 
-    window.finishRunTracking = async function() {
+    window.finishRunTracking = async function () {
       const durationSecLive = getRunElapsedSec();
       if (!runStartedAt || (runSessionPoints.length < 1 && durationSecLive < 5)) {
         toast('START A RUN FIRST', false, true);
@@ -5962,7 +6395,7 @@ const WEEKLY_ROUTINE = {
       if (CUR === 'database') renderDB();
     };
 
-    window.cancelRunTracking = function() {
+    window.cancelRunTracking = function () {
       if (!runStartedAt && !runSessionPoints.length) {
         toast('NO ACTIVE RUN', false, true);
         return;
@@ -6062,6 +6495,9 @@ const WEEKLY_ROUTINE = {
         const map = {};
         DB.calLog.forEach(r => { map[r.Date] = (map[r.Date] || 0) + (r.Calories_kcal || 0); });
         const avg = Math.round(Object.values(map).reduce((s, v) => s + v, 0) / Math.max(Object.keys(map).length, 1));
+        const proMap = {};
+        DB.calLog.forEach(r => { proMap[r.Date] = (proMap[r.Date] || 0) + (r.Protein_g || 0); });
+        const proAvg = Math.round(Object.values(proMap).reduce((s, v) => s + v, 0) / Math.max(Object.keys(proMap).length, 1));
         document.getElementById('db-avg').textContent = fmt(avg) + ' kcal';
       } else { document.getElementById('db-latest').textContent = '—'; document.getElementById('db-avg').textContent = '—'; }
       const ws = DB.workoutLog.length;
@@ -6109,180 +6545,324 @@ const WEEKLY_ROUTINE = {
     // ══════════════════════════════════════════════
     //  INIT
     // ══════════════════════════════════════════════
-    
+
+
+    // --- NON-AI EXPANSION LOGIC ---
+    let morningCheckedIn = false;
+
+    // Checkin slider sync
+    const sleepSlider = document.getElementById('sleep-slider');
+    if (sleepSlider) {
+      sleepSlider.addEventListener('input', (e) => {
+        document.getElementById('sleep-val').textContent = parseFloat(e.target.value).toFixed(1);
+      });
+    }
+
+    function checkMorning() {
+      const now = new Date();
+      const hr = now.getHours();
+      const lastCheckin = localStorage.getItem('last_checkin_date');
+      const today = now.toISOString().split('T')[0];
+      if (hr >= 6 && hr <= 9 && lastCheckin !== today) {
+        document.getElementById('checkin-modal').classList.add('show');
+      }
+    }
+
+    async function submitCheckin() {
+      const hrs = document.getElementById('sleep-slider').value;
+      const today = new Date().toISOString().split('T')[0];
+      localStorage.setItem('last_checkin_date', today);
+      document.getElementById('checkin-modal').classList.remove('show');
+      toast(`Logged ${hrs} hrs sleep! Let's get it.`);
+
+      if (currentUser) {
+        try {
+          // Also add it as a routine block completion for sleep
+          const dayPlan = WEEKLY_ROUTINE[getTodayKey()];
+          let sleepBlock = dayPlan.blocks.find(b => b.type === 'sleep' && b.title === 'Wake up');
+          if (!sleepBlock) sleepBlock = dayPlan.blocks.find(b => b.type === 'wake');
+
+          if (sleepBlock) {
+            await supabaseClient.from('routine_log').insert({
+              user_id: currentUser.id,
+              block_id: sleepBlock.id,
+              activity_type: 'sleep',
+              date: today
+            });
+            loadRoutineLog(); // refresh ui
+          }
+        } catch (e) { }
+      }
+    }
+
+    // Body Stats
+    function openBodyStats() {
+      document.getElementById('body-stats-modal').classList.add('show');
+    }
+
+    async function submitBodyStats() {
+      if (!currentUser) {
+        toast("Please login", false, true);
+        return;
+      }
+      const w = document.getElementById('body-weight').value;
+      if (!w) return;
+
+      try {
+        await supabaseClient.from('body_stats').insert({
+          user_id: currentUser.id,
+          weight_kg: parseFloat(w),
+          date: new Date().toISOString().split('T')[0]
+        });
+        toast("Weekly stats logged!");
+        document.getElementById('body-stats-modal').classList.remove('show');
+      } catch (e) {
+        toast("Error logging stats", false, true);
+      }
+    }
+
+    // Wind Down Check
+    function checkWindDown() {
+      const hr = new Date().getHours();
+      if (hr >= 22 || hr < 4) { // 10 PM to 4 AM
+        document.body.classList.add('wind-down');
+      } else {
+        document.body.classList.remove('wind-down');
+      }
+    }
+    setInterval(checkWindDown, 60000);
+
+    // Update PR check in logSet
+    function checkForPR(exercise, weight) {
+      if (!weight || weight <= 0) return false;
+      const past = DB.workoutLog.filter(l => l.Exercise === exercise && Number(l.Weight_kg) > 0);
+      if (past.length === 0) return false; // first time doesn't count as PR pop for simplicity
+
+      const maxPast = Math.max(...past.map(l => Number(l.Weight_kg)));
+      return Number(weight) > maxPast;
+    }
+
+    // Shift Widget
+    function updateShiftWidget() {
+      const container = document.getElementById('shift-widget-container');
+      if (!container) return;
+
+      const key = getTodayKey();
+      const dayPlan = WEEKLY_ROUTINE[key];
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+
+      let workStart = null;
+      for (let b of dayPlan.blocks) {
+        if (b.type === 'work' && b.title.toLowerCase().includes('start')) {
+          workStart = parseTime(b.time);
+          break;
+        }
+      }
+
+      if (workStart && currentMins < workStart) {
+        const diffMins = workStart - currentMins;
+        const hrs = Math.floor(diffMins / 60);
+        const mins = diffMins % 60;
+        let str = '';
+        if (hrs > 0) str += `${hrs}h `;
+        str += `${mins}m`;
+        container.innerHTML = `<div class="shift-widget"><i class="fa-solid fa-briefcase"></i> WORK IN ${str}</div>`;
+      } else {
+        container.innerHTML = '';
+      }
+    }
+    setInterval(updateShiftWidget, 60000);
+
     // --- ROUTINE LOGIC ---
     let completedBlocks = new Set();
 
     async function loadRoutineLog() {
-        if(!currentUser) return;
-        const today = new Date().toISOString().split('T')[0];
-        try {
-            const { data, error } = await supabaseClient.from('routine_log').select('block_id').eq('user_id', currentUser.id).eq('date', today);
-            if(!error && data) {
-                completedBlocks = new Set(data.map(d => d.block_id));
-            }
-        } catch(e) {}
-        renderRoutine();
-        updateRoutineDashboard();
+      if (!currentUser) return;
+      const today = new Date().toISOString().split('T')[0];
+      try {
+        const { data, error } = await supabaseClient.from('routine_log').select('block_id').eq('user_id', currentUser.id).eq('date', today);
+        if (!error && data) {
+          completedBlocks = new Set(data.map(d => d.block_id));
+        }
+      } catch (e) { }
+      renderRoutine();
+      updateRoutineDashboard();
     }
 
     async function toggleRoutineBlock(e, blockId, type, title) {
-        e.stopPropagation(); // prevent opening logger if clicking checkbox directly
-        if(!currentUser) {
-            toast("Log in to track routine", false, true);
-            return;
-        }
-        const today = new Date().toISOString().split('T')[0];
-        
-        if(completedBlocks.has(blockId)) {
-            toast("Already logged!");
-            return;
-        }
+      e.stopPropagation(); // prevent opening logger if clicking checkbox directly
+      if (!currentUser) {
+        toast("Log in to track routine", false, true);
+        return;
+      }
+      const today = new Date().toISOString().split('T')[0];
 
-        // Mark optimistic
-        completedBlocks.add(blockId);
-        renderRoutine();
-        updateRoutineDashboard();
+      if (completedBlocks.has(blockId)) {
+        toast("Already logged!");
+        return;
+      }
 
-        // Save to db
-        try {
-            await supabaseClient.from('routine_log').insert({
-                user_id: currentUser.id,
-                block_id: blockId,
-                activity_type: type,
-                date: today
-            });
-            toast("Block completed!");
-        } catch(e) {}
+      // Mark optimistic
+      completedBlocks.add(blockId);
+      renderRoutine();
+      updateRoutineDashboard();
+
+      // Save to db
+      try {
+        await supabaseClient.from('routine_log').insert({
+          user_id: currentUser.id,
+          block_id: blockId,
+          activity_type: type,
+          date: today
+        });
+        toast("Block completed!");
+      } catch (e) { }
     }
 
     function handleRoutineBlockClick(blockId, type, title, subtitle) {
-        if(type === 'meal') {
-            go('record-calorie');
-            document.getElementById('ai-input').value = title + " " + subtitle;
-            toast("Ready to analyze meal!");
-        } else if (type === 'gym') {
-            go('record-workout');
-            toast("Workout logger opened");
-        } else if (type === 'cardio') {
-            go('record-workout');
-        } else {
-            toggleRoutineBlock({stopPropagation:()=>{}}, blockId, type, title);
-        }
+      if (type === 'meal') {
+        go('record-calorie');
+        document.getElementById('ai-input').value = title + " " + subtitle;
+        toast("Ready to analyze meal!");
+      } else if (type === 'gym') {
+        go('record-workout');
+        toast("Workout logger opened");
+      } else if (type === 'cardio') {
+        go('record-workout');
+      } else {
+        toggleRoutineBlock({ stopPropagation: () => { } }, blockId, type, title);
+      }
     }
 
     function getTodayKey() {
-        const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-        return days[new Date().getDay()];
+      const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+      return days[new Date().getDay()];
     }
 
     function parseTime(timeStr) {
-        // convert "7:30 AM" to minutes since midnight for comparison
-        const [time, modifier] = timeStr.replace('*','').split(' ');
-        let [hours, minutes] = time.split(':');
-        hours = parseInt(hours, 10);
-        minutes = parseInt(minutes, 10);
-        if (hours === 12) { hours = 0; }
-        if (modifier === 'PM') { hours += 12; }
-        return hours * 60 + minutes;
+      // convert "7:30 AM" to minutes since midnight for comparison
+      const [time, modifier] = timeStr.replace('*', '').split(' ');
+      let [hours, minutes] = time.split(':');
+      hours = parseInt(hours, 10);
+      minutes = parseInt(minutes, 10);
+      if (hours === 12) { hours = 0; }
+      if (modifier === 'PM') { hours += 12; }
+      return hours * 60 + minutes;
     }
 
     function renderRoutine() {
-        const key = getTodayKey();
-        const dayPlan = WEEKLY_ROUTINE[key];
-        const container = document.getElementById('routine-timeline');
-        if(!container) return;
-        
-        document.getElementById('routine-day-desc').textContent = dayPlan.tag;
-        
-        let html = '';
-        const now = new Date();
-        const currentMins = now.getHours() * 60 + now.getMinutes();
+      const key = getTodayKey();
+      const dayPlan = WEEKLY_ROUTINE[key];
+      const container = document.getElementById('routine-timeline');
+      if (!container) return;
 
-        dayPlan.blocks.forEach(b => {
-            const isDone = completedBlocks.has(b.id);
-            const blockMins = parseTime(b.time);
-            const isActive = Math.abs(currentMins - blockMins) <= 120 || (currentMins < 120 && blockMins > 1320); // rough heuristic, including midnight wrap
-            
-            html += `
+      document.getElementById('routine-day-desc').textContent = dayPlan.tag;
+
+      const isSunday = new Date().getDay() === 0;
+      let prepHtml = '';
+      if (isSunday) {
+        prepHtml = `
+                <div class="prep-card">
+                    <div style="font-family:'Barlow Condensed';font-size:20px;letter-spacing:1px;font-weight:700">SUNDAY PREP MODE</div>
+                    <div style="font-size:12px;opacity:0.8;margin-bottom:8px">Knock this out to set up your whole week.</div>
+                    <label class="prep-check"><input type="checkbox"> Marinate chicken</label>
+                    <label class="prep-check"><input type="checkbox"> Cook 600g chicken + rice</label>
+                    <label class="prep-check"><input type="checkbox"> Portion into containers</label>
+                    <label class="prep-check"><input type="checkbox"> Refrigerate</label>
+                </div>
+            `;
+      }
+
+
+      let html = '';
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+
+      dayPlan.blocks.forEach(b => {
+        const isDone = completedBlocks.has(b.id);
+        const blockMins = parseTime(b.time);
+        const isActive = Math.abs(currentMins - blockMins) <= 120 || (currentMins < 120 && blockMins > 1320); // rough heuristic, including midnight wrap
+
+        html += `
                 <div class="t-row ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}">
                     <div class="t-time">${b.time}</div>
                     <div class="t-dot d-${b.type}"></div>
-                    <div class="t-content" onclick="handleRoutineBlockClick('${b.id}', '${b.type}', '${b.title.replace(/'/g,"\\'")}', '${b.subtitle.replace(/'/g,"\\'")}')">
+                    <div class="t-content" onclick="handleRoutineBlockClick('${b.id}', '${b.type}', '${b.title.replace(/'/g, "\\'")}', '${b.subtitle.replace(/'/g, "\\'")}')">
                         <div class="t-title">
                             ${b.title}
-                            <div class="t-check" onclick="toggleRoutineBlock(event, '${b.id}', '${b.type}', '${b.title.replace(/'/g,"\\'")}')"><i class="fa-solid fa-check"></i></div>
+                            <div class="t-check" onclick="toggleRoutineBlock(event, '${b.id}', '${b.type}', '${b.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-check"></i></div>
                         </div>
                         ${b.subtitle ? `<div class="t-sub">${b.subtitle}</div>` : ''}
                     </div>
                 </div>
             `;
-        });
-        container.innerHTML = html;
+      });
+      container.innerHTML = prepHtml + html;
     }
 
     function updateRoutineDashboard() {
-        const key = getTodayKey();
-        const dayPlan = WEEKLY_ROUTINE[key];
-        
-        const elTag = document.getElementById('dash-routine-tag');
-        if(!elTag) return;
+      const key = getTodayKey();
+      const dayPlan = WEEKLY_ROUTINE[key];
 
-        elTag.textContent = dayPlan.tag.toUpperCase();
-        
-        const now = new Date();
-        const currentMins = now.getHours() * 60 + now.getMinutes();
-        
-        let nextBlock = null;
-        for(let b of dayPlan.blocks) {
-            const blockMins = parseTime(b.time);
-            // find next block that is after current time OR if it's past 10PM, find next block (maybe next day's first block, but for now just today)
-            if(blockMins > currentMins && !completedBlocks.has(b.id)) {
-                nextBlock = b;
-                break;
-            }
+      const elTag = document.getElementById('dash-routine-tag');
+      if (!elTag) return;
+
+      elTag.textContent = dayPlan.tag.toUpperCase();
+
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+
+      let nextBlock = null;
+      for (let b of dayPlan.blocks) {
+        const blockMins = parseTime(b.time);
+        // find next block that is after current time OR if it's past 10PM, find next block (maybe next day's first block, but for now just today)
+        if (blockMins > currentMins && !completedBlocks.has(b.id)) {
+          nextBlock = b;
+          break;
         }
-        
-        if(nextBlock) {
-            document.getElementById('dash-routine-next').textContent = "UP NEXT: " + nextBlock.title.toUpperCase();
-        } else {
-            document.getElementById('dash-routine-next').textContent = "ALL CAUGHT UP!";
-        }
-        
-        const pct = Math.round((completedBlocks.size / dayPlan.blocks.length) * 100) || 0;
-        document.getElementById('dash-routine-bar').style.width = pct + '%';
-        document.getElementById('dash-routine-meta').textContent = `${completedBlocks.size} / ${dayPlan.blocks.length} BLOCKS COMPLETED`;
+      }
+
+      if (nextBlock) {
+        document.getElementById('dash-routine-next').textContent = "UP NEXT: " + nextBlock.title.toUpperCase();
+      } else {
+        document.getElementById('dash-routine-next').textContent = "ALL CAUGHT UP!";
+      }
+
+      const pct = Math.round((completedBlocks.size / dayPlan.blocks.length) * 100) || 0;
+      document.getElementById('dash-routine-bar').style.width = pct + '%';
+      document.getElementById('dash-routine-meta').textContent = `${completedBlocks.size} / ${dayPlan.blocks.length} BLOCKS COMPLETED`;
     }
 
     setInterval(updateRoutineDashboard, 60000);
 
     function requestNotificationPermission() {
-        if ("Notification" in window) {
-            Notification.requestPermission().then(permission => {
-                if(permission === "granted") {
-                    console.log("Notifications granted");
-                }
-            });
-        }
+      if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            console.log("Notifications granted");
+          }
+        });
+      }
     }
 
     function checkNotifications() {
-        if (!("Notification" in window) || Notification.permission !== "granted") return;
-        
-        const key = getTodayKey();
-        const dayPlan = WEEKLY_ROUTINE[key];
-        const now = new Date();
-        const currentMins = now.getHours() * 60 + now.getMinutes();
-        
-        dayPlan.blocks.forEach(b => {
-            const blockMins = parseTime(b.time);
-            if (blockMins - currentMins === 10 && !completedBlocks.has(b.id)) {
-                new Notification(`UPCOMING: ${b.title}`, {
-                    body: b.subtitle || `Starts at ${b.time}.`,
-                    icon: './forgewhitee.png'
-                });
-            }
-        });
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+      const key = getTodayKey();
+      const dayPlan = WEEKLY_ROUTINE[key];
+      const now = new Date();
+      const currentMins = now.getHours() * 60 + now.getMinutes();
+
+      dayPlan.blocks.forEach(b => {
+        const blockMins = parseTime(b.time);
+        if (blockMins - currentMins === 10 && !completedBlocks.has(b.id)) {
+          new Notification(`UPCOMING: ${b.title}`, {
+            body: b.subtitle || `Starts at ${b.time}.`,
+            icon: './forgewhitee.png'
+          });
+        }
+      });
     }
 
     setInterval(checkNotifications, 60000);
@@ -6326,6 +6906,9 @@ const WEEKLY_ROUTINE = {
           updateTimerPrimaryButton(false);
           updateTimerDisplay(getTimerInputMs());
           renderDash();
+          checkMorning();
+          checkWindDown();
+          updateShiftWidget();
           renderRoutine();
           updateRoutineDashboard();
           renderRunScreen();
