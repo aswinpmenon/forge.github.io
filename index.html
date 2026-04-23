@@ -5250,63 +5250,49 @@
     //  WORKOUT TRACKER
     // ══════════════════════════════════════════════
     const WP = {
-      back_biceps: {
-        title: 'BACK + BICEPS', groups: ['Back', 'Bicep'], ex: [
-          { n: 'LAT PULLDOWN', t: 'VERTICAL PULL', s: 4, r: '8–10' },
-          { n: 'SEATED CABLE ROW', t: 'HORIZONTAL PULL', s: 3, r: '10–12' },
-          { n: 'MACHINE ROW', t: 'HORIZONTAL PULL', s: 3, r: '10' },
-          { n: 'EZ BAR CURL', t: 'BICEP COMPOUND', s: 4, r: '8–10' },
-          { n: 'INCLINE DB CURL', t: 'BICEP STRETCH', s: 3, r: '10–12' },
-          { n: 'HAMMER CURL', t: 'ISOLATION', s: 3, r: '10–12' },
-          { n: 'CABLE CRUNCH', t: 'ABS', s: 3, r: '15' },
-          { n: 'HANGING KNEE RAISES', t: 'ABS', s: 3, r: '12–15' },
+      push: {
+        title: 'PUSH', groups: ['Chest', 'Shoulder', 'Triceps'], ex: [
+          { n: 'Flat barbell bench press', t: 'Primary chest builder', s: 4, r: '6–8' },
+          { n: 'Incline dumbbell press', t: 'Upper chest + shoulder', s: 3, r: '8–10' },
+          { n: 'Overhead press (barbell)', t: 'Shoulder mass', s: 4, r: '6–8' },
+          { n: 'Cable lateral raises', t: 'Wide shoulder look', s: 4, r: '12–15' },
+          { n: 'Rear delt cable fly', t: '3D shoulder shape', s: 3, r: '15' },
+          { n: 'Cable chest fly', t: 'Inner chest definition', s: 3, r: '12' },
+          { n: 'Tricep pushdown (rope)', t: 'Arm thickness', s: 3, r: '12' },
+          { n: 'Overhead tricep extension', t: 'Long head definition', s: 3, r: '12' }
         ]
       },
-      shoulders_arms: {
-        title: 'SHOULDERS + ARMS', groups: ['Shoulder', 'Bicep', 'Triceps'], ex: [
-          { n: 'DB SHOULDER PRESS', t: 'COMPOUND PUSH', s: 4, r: '8–10' },
-          { n: 'LATERAL RAISES', t: 'ISOLATION', s: 4, r: '12–15' },
-          { n: 'REAR DELT FLY', t: 'REAR DELT', s: 3, r: '12–15' },
-          { n: 'CABLE LATERAL RAISE', t: 'ISOLATION', s: 3, r: '12–15' },
-          { n: 'BARBELL CURL', t: 'BICEP COMPOUND', s: 4, r: '8–10' },
-          { n: 'PREACHER CURL', t: 'ISOLATION', s: 3, r: '10–12' },
-          { n: 'ROPE PUSHDOWN', t: 'TRICEP', s: 3, r: '12–15' },
+      pull: {
+        title: 'PULL', groups: ['Back', 'Bicep'], ex: [
+          { n: 'Weighted pull-ups', t: 'V-taper builder', s: 4, r: '6–8' },
+          { n: 'Barbell bent-over row', t: 'Back thickness', s: 4, r: '8' },
+          { n: 'Cable seated row', t: 'Mid-back', s: 3, r: '10–12' },
+          { n: 'Face pulls (cable)', t: 'Rear delts + rotator', s: 3, r: '15' },
+          { n: 'Barbell curl', t: 'Bicep peak + size', s: 4, r: '8–10' },
+          { n: 'Incline dumbbell curl', t: 'Long head stretch', s: 3, r: '10–12' },
+          { n: 'Hammer curl', t: 'Brachialis + forearm', s: 3, r: '12' }
         ]
       },
-      abs_chest: {
-        title: 'ABS + CHEST', groups: ['Ab', 'Chest'], ex: [
-          { n: 'DECLINE SIT-UPS', t: 'ABS', s: 3, r: '15–20' },
-          { n: 'HANGING LEG RAISES', t: 'ABS', s: 3, r: '12–15' },
-          { n: 'CABLE CRUNCH', t: 'ABS', s: 3, r: '15' },
-          { n: 'PLANK', t: 'CORE', s: 3, r: '45–60s' },
-          { n: 'DB BENCH PRESS', t: 'CHEST COMPOUND', s: 4, r: '8–10' },
-          { n: 'INCLINE DB PRESS', t: 'UPPER CHEST', s: 3, r: '10–12' },
-          { n: 'MACHINE FLY', t: 'ISOLATION', s: 3, r: '12–15' },
+      legs: {
+        title: 'LEGS', groups: ['Leg', 'Glute', 'Calves'], ex: [
+          { n: 'Barbell back squat', t: 'Foundation movement', s: 4, r: '6–8' },
+          { n: 'Romanian deadlift', t: 'Hamstring + glutes', s: 4, r: '8–10' },
+          { n: 'Leg press', t: 'Volume on quads', s: 3, r: '10–12' },
+          { n: 'Walking lunges', t: 'Balance + shape', s: 3, r: '12 each' },
+          { n: 'Leg curl (machine)', t: 'Hamstring isolation', s: 3, r: '12' },
+          { n: 'Standing calf raises', t: 'Slow + full range', s: 4, r: '20' }
         ]
       },
-      legs_abs: {
-        title: 'LEGS + ABS', groups: ['Leg', 'Glute', 'Ab', 'Calves'], ex: [
-          { n: 'LEG PRESS', t: 'COMPOUND', s: 4, r: '10–12' },
-          { n: 'HIP THRUST / SQUAT', t: 'GLUTE DOMINANT', s: 4, r: '8–10' },
-          { n: 'LEG CURL', t: 'HAMSTRINGS', s: 3, r: '10–12' },
-          { n: 'CALF RAISES', t: 'ISOLATION', s: 4, r: '15–20' },
-          { n: 'RUSSIAN TWISTS', t: 'CORE', s: 3, r: '20' },
-          { n: 'PLANK', t: 'CORE', s: 3, r: '45–60s' },
+      cardio: {
+        title: 'CARDIO+ABS', groups: ['Ab', 'Cardio'], ex: [
+          { n: 'Treadmill incline walk or jog', t: 'Incline 6–8, warm indoors', s: 1, r: '25–30 min' },
+          { n: 'Hanging leg raises', t: 'Lower abs key for visible 6-pack', s: 3, r: '15' },
+          { n: 'Cable crunches', t: 'Weighted — builds the ab shape', s: 3, r: '15' },
+          { n: 'Plank hold', t: 'Full tension, no sagging', s: 3, r: '60 sec' },
+          { n: 'Russian twists', t: 'Oblique definition', s: 3, r: '20' }
         ]
       },
-      chest_biceps_pump: {
-        title: 'CHEST + BICEPS PUMP', groups: ['Chest', 'Bicep'], ex: [
-          { n: 'INCLINE DB PRESS', t: 'UPPER CHEST', s: 4, r: '10–12' },
-          { n: 'CABLE FLY', t: 'ISOLATION', s: 3, r: '12–15' },
-          { n: 'PUSH-UPS', t: 'BODYWEIGHT', s: 3, r: '15–20' },
-          { n: 'EZ BAR CURL', t: 'BICEP COMPOUND', s: 4, r: '8–10' },
-          { n: 'CABLE CURL', t: 'ISOLATION', s: 3, r: '12–15' },
-          { n: 'HAMMER CURL', t: 'ISOLATION', s: 3, r: '10–12' },
-          { n: 'LATERAL RAISES', t: 'SHOULDERS', s: 3, r: '12–15' },
-          { n: 'HANGING LEG RAISES', t: 'ABS', s: 3, r: '12–15' },
-        ]
-      },
-      rest: { title: 'REST', rest: true, groups: [], ex: [] },
+      rest: { title: 'REST', rest: true, groups: [], ex: [] }
     };
 
     const EXERCISE_DIRECTORY = {
