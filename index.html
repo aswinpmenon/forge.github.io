@@ -1774,8 +1774,11 @@
     }
 
     .wk-card.sel {
-      border-color: rgba(200, 255, 0, .35);
-      background: rgba(200, 255, 0, .06)
+      border-color: var(--green);
+      background: rgba(200, 255, 0, .08);
+    }
+    .wk-card.sel .wk-card-main {
+      color: var(--green);
     }
 
     .wk-card-main {
@@ -4388,7 +4391,7 @@
         toEl.classList.add('is-active');
 
         // Update bottom nav
-        const navMap = { dashboard: 0, 'record-calorie': 1, 'record-workout': 2, 'progress-daily': 3, 'progress-weekly': 3, 'track-run': 3, leaderboard: 4 };
+        const navMap = { dashboard: 0, 'record-calorie': 1, 'record-workout': 2, 'today-routine': 3, 'progress-daily': 3, 'progress-weekly': 3, 'track-run': 3, leaderboard: 4 };
         document.querySelectorAll('.ni').forEach((n, i) => n.classList.toggle('on', i === navMap[to]));
 
         // Cleanup after transition
@@ -6685,7 +6688,17 @@
       const today = new Date().toISOString().split('T')[0];
 
       if (completedBlocks.has(blockId)) {
-        toast("Already logged!");
+        completedBlocks.delete(blockId);
+        renderRoutine();
+        updateRoutineDashboard();
+        try {
+          await supabaseClient.from('routine_log')
+            .delete()
+            .eq('user_id', currentUser.id)
+            .eq('block_id', blockId)
+            .eq('date', today);
+          toast("Block unchecked.");
+        } catch (e) { }
         return;
       }
 
